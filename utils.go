@@ -14,8 +14,8 @@ func Unicode2Str(raw string, threshold float64) (string, error) {
 		return raw, errors.New(e.InvalidNumber)
 	}
 	quoteStr := strconv.Quote(raw)
-	log.Println("threshold: ", float64(strings.Count(quoteStr, `\\u`)) / float64(len(quoteStr)))
-	if float64(strings.Count(quoteStr, `\\u`)) / float64(len(quoteStr)) < threshold {
+	log.Println("threshold: ", float64(strings.Count(quoteStr, `\\u`))/float64(len(quoteStr)))
+	if float64(strings.Count(quoteStr, `\\u`))/float64(len(quoteStr)) < threshold {
 		return raw, errors.New(e.LessThreshold)
 	}
 	str, err := strconv.Unquote(strings.Replace(quoteStr, `\\u`, `\u`, -1))

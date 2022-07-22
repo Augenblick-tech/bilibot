@@ -41,9 +41,9 @@ type Content struct {
 }
 
 type BriefDynamic struct {
-	IDStr     string  // 动态ID
-	Author    Author  // 动态作者
-	Content   Content // 动态内容
+	IDStr   string  // 动态ID
+	Author  Author  // 动态作者
+	Content Content // 动态内容
 }
 
 func fetch(url string) string {

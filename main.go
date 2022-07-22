@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"os"
 	"time"
@@ -12,11 +13,16 @@ import (
 
 func main() {
 	InitConfig()
-	logFile, err := os.OpenFile("./logs/" + time.Now().Format("2006-01-02") + ".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	_, err := os.Stat("./logs")
+	if err != nil {
+		os.Mkdir("./logs", os.ModePerm)
+	}
+	logFile, err := os.OpenFile("./logs/"+time.Now().Format("2006-01-02")+".log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err)
 	}
-	log.SetOutput(logFile)
+	multiWriter := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(multiWriter)
 	ticker := time.NewTicker(time.Duration(viper.GetInt("user.RefreshTime")) * time.Second)
 	cnt := 1
 	for {
@@ -27,7 +33,7 @@ func main() {
 		}
 		dynamic := GetLatestDynamic(Mid)
 
-		<- ticker.C
+		<-ticker.C
 		log.Println("运行次数：", cnt)
 		cnt++
 		message, err := Unicode2Str(dynamic.Content.Desc.Text, 0.1)
