@@ -27,10 +27,11 @@ func MakeReply(dynamic BriefDynamic, message string) error {
 	if err != nil {
 		return errors.New(e.AddNewDynamicError + ":" + err.Error())
 	} else {
-		_, err := DynamicReply(dynamic, message)
+		body, err := DynamicReply(dynamic, message)
 		if err != nil {
 			return errors.New(e.DynamicReplyError + ":" + err.Error())
 		}
+		log.Println("Reply: ", body)
 	}
 
 	// 写入新数据

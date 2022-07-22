@@ -46,3 +46,15 @@ func AddNewDynamic(dynamics []BriefDynamic, dynamic BriefDynamic) ([]BriefDynami
 
 	return dynamics, nil
 }
+
+func StrUrl2Map(params []string) map[string]string {
+	m := make(map[string]string)
+	for _, v := range params {
+		kv := strings.Split(v, "=")
+		if len(kv) != 2 {
+			continue
+		}
+		m[kv[0]] = kv[1]
+	}
+	return m
+}

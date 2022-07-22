@@ -13,6 +13,9 @@ import (
 
 func main() {
 	InitConfig()
+	account := Login()
+	viper.Set("account.SESSDATA", account.SESSDATA)
+	viper.Set("account.bili_jct", account.BiliJct)
 	_, err := os.Stat("./logs")
 	if err != nil {
 		os.Mkdir("./logs", os.ModePerm)
