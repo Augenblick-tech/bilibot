@@ -1,9 +1,9 @@
 [uploader]
-mid = 
+mid = 13424328 # up主uid
 
 [account]
-SESSDATA = ''
-bili_jct = ''
+username = '12345678910' # 手机号或邮箱
+password = 'password' # 密码
 
 [user]
-RefreshTime = 
+RefreshTime = 10 # 刷新动态间隔时间
