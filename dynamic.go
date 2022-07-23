@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -46,44 +45,31 @@ type BriefDynamic struct {
 	Content Content // 动态内容
 }
 
-func fetch(url string) string {
-	client := &http.Client{}
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Println("Fetch Error: ", err)
-		return ""
-	}
-	if resp.StatusCode != http.StatusOK {
-		log.Println("Error: ", resp.StatusCode)
-		return ""
-	}
-
-	defer resp.Body.Close()
-
-	log.Println(resp.Status)
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-
-	return string(body)
+type CommentResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    struct {
+		SuccessToast string      `json:"success_toast"`
+		Emote        interface{} `json:"emote"`
+	} `json:"data"`
 }
 
-func GetLatestDynamic(mid string) *BriefDynamic {
+func GetLatestDynamic(mid string) (*BriefDynamic, error) {
 	url := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
-	body := fetch(url)
+	body, err := Fetch(url)
+	if err != nil {
+		return nil, err
+	}
 	var dynamic Dynamic
-	json.Unmarshal([]byte(body), &dynamic)
+	json.Unmarshal(body, &dynamic)
 	return &BriefDynamic{
 		IDStr:   dynamic.Data.Items[0].IDStr,
 		Author:  dynamic.Data.Items[0].Modules.Author,
 		Content: dynamic.Data.Items[0].Modules.Content,
-	}
+	}, nil
 }
 
-func CommentReply(typeID int, oid string, message string) (string, error) {
+func CommentReply(typeID int, oid string, message string) (*CommentResponse, error) {
 	cookie := "SESSDATA=" + viper.GetString("account.SESSDATA")
 	url := "http://api.bilibili.com/x/v2/reply/add"
 	client := &http.Client{}
@@ -95,27 +81,42 @@ func CommentReply(typeID int, oid string, message string) (string, error) {
 		),
 	)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	req.Header.Set("Cookie", cookie)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return string(body), errors.New("评论错误")
+	var commentResponse CommentResponse
+	err = json.Unmarshal(body, &commentResponse)
+	if err != nil {
+		return nil, err
 	}
-	return string(body), nil
+
+	if resp.StatusCode != http.StatusOK {
+		return &commentResponse, e.ERR_COMMENT_REPLY_FAIL
+	}
+	return &commentResponse, nil
 }
 
-func DynamicReply(dynamic BriefDynamic, message string) (string, error) {
+func DynamicReply(dynamic BriefDynamic, message string) (*CommentResponse, error) {
 	return CommentReply(e.DynamicCommentCode, dynamic.IDStr, message)
+}
+
+func MakeReply(oldDynamics []BriefDynamic, dynamic BriefDynamic, message string) (*CommentResponse, error) {
+	commentResponse, err := DynamicReply(dynamic, message)
+	if err != nil {
+		return nil, e.ERR_REPLY_DYNAMIC
+	}
+
+	return commentResponse, nil
 }
