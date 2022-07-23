@@ -3,3 +3,6 @@ mid = 13424328 # up主uid
 
 [user]
 RefreshTime = 10 # 刷新动态间隔时间
+
+[cli]
+mhid = '4BTGCg7un84hMHYoKdNVPao' # 草料二维码样式
