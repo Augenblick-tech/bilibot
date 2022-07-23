@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/lonzzi/BiliUpDynamicBot/e"
+	"github.com/spf13/viper"
 )
 
 type QRCodeResponse struct {
@@ -40,7 +41,14 @@ func Login() (*AccountInfo, error) {
 		return nil, err
 	}
 
-	fmt.Println("QR Code: ", qrCodeResponse.Data.Url)
+	fmt.Println("Original QR Code url: ", qrCodeResponse.Data.Url)
+	fmt.Println("QR Code url: ", 
+		fmt.Sprintf(
+			"https://cli.im/api/qrcode/code?text=%s&mhid=%s",
+			qrCodeResponse.Data.Url,
+			viper.GetString("cli.mhid"),
+		),
+	)
 
 	client := &http.Client{}
 	ticker := time.NewTicker(time.Second * 5)
