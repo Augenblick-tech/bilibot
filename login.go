@@ -42,7 +42,7 @@ func Login() (*AccountInfo, error) {
 	}
 
 	fmt.Println("Original QR Code url: ", qrCodeResponse.Data.Url)
-	fmt.Println("QR Code url: ", 
+	fmt.Println("QR Code url: ",
 		fmt.Sprintf(
 			"https://cli.im/api/qrcode/code?text=%s&mhid=%s",
 			qrCodeResponse.Data.Url,
