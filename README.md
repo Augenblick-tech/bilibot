@@ -14,6 +14,24 @@
 - [ ] 自定义回复内容
 ...
 
+## 使用
+
+### Docker 方式
+
+1. 使用 `docker compose`
+将项目 clone 至本地后，运行以下命令：
+
+    ``` sh
+    docker compose up
+    ```
+
+### 命令行方式
+下载 [releases](https://github.com/lonzzi/BiliUpDynamicBot/releases) 目录下的 `BiliUpDynamicBot` 到本地，运行以下命令：
+
+``` sh
+./BiliUpDynamicBot
+```
+
 ## 鸣谢
 
 <https://github.com/SocialSisterYi/bilibili-API-collect>
