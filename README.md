@@ -1,7 +1,5 @@
 # BiliUpDynamicBot
 
----
-
 ## 目前实现的功能
 
 - 扫码登录
@@ -26,6 +24,7 @@
     ```
 
 ### 命令行方式
+
 下载 [releases](https://github.com/lonzzi/BiliUpDynamicBot/releases) 目录下的 `BiliUpDynamicBot` 到本地，运行以下命令：
 
 ``` sh
