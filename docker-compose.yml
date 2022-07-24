@@ -1,0 +1,7 @@
+version: "3.9" # optional since v1.27.0
+services:
+  bilibot:
+    build: .
+    volumes:
+      - ./config.toml:/app/config.toml
+      - ./logs:/app/logs
