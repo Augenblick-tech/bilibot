@@ -5,7 +5,8 @@ WORKDIR /app
 COPY BiliUpDynamicBot /app/BiliUpDynamicBot
 COPY config.toml /app/config.toml
 
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo 'Asia/Shanghai' >/etc/timezone
+RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata
 
 ENTRYPOINT ["/app/BiliUpDynamicBot"]
