@@ -78,6 +78,7 @@ func main() {
 			isPrinted = false
 			continue
 		}
+		message = viper.GetString("uploader.MessageHead") + "\n" + message + "\n" + viper.GetString("uploader.MessageTail")
 		commentResponse, err := MakeReply(oldDynamics, *dynamic, message)
 		if err != nil {
 			log.Println("回复出错：", err)
