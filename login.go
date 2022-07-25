@@ -107,7 +107,7 @@ func Login() (*AccountInfo, error) {
 			log.Println("登录成功")
 			url := loginResponse.Data.(map[string]interface{})["url"].(string)
 			params := strings.Split(url, "&")
-			accountData := StrUrl2Map(params)
+			accountData := StrUrlToMap(params)
 			return &AccountInfo{
 				SESSDATA: accountData["SESSDATA"],
 				BiliJct:  accountData["bili_jct"],

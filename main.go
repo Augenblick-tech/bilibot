@@ -72,11 +72,11 @@ func main() {
 		}
 
 		threshold := 0.1
-		message, err := Unicode2Str(dynamic.Content.Desc.Text, threshold)
+		message, err := UnicodeToStr(dynamic.Content.Desc.Text, threshold)
 		if err != nil {
-			log.Println("动态转换错误: ", err, "阈值为：", threshold)
-			isPrinted = false
-			continue
+			log.Println("转换为字符错误：", err)
+			message = StrToUnicode(dynamic.Content.Desc.Text)
+			log.Println("转换为Unicode：", message)
 		}
 		message = viper.GetString("uploader.MessageHead") + "\n" + message + "\n" + viper.GetString("uploader.MessageTail")
 		commentResponse, err := MakeReply(oldDynamics, *dynamic, message)
@@ -86,7 +86,7 @@ func main() {
 
 		if commentResponse != nil {
 			log.Println(commentResponse.Data.SuccessToast)
-			log.Println("发送内容：", message)
+			log.Println("发送内容：\n", message)
 		} else {
 			log.Println("commentResponse is nil")
 		}

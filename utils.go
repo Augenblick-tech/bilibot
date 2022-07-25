@@ -2,12 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/lonzzi/BiliUpDynamicBot/e"
 	"github.com/spf13/viper"
@@ -37,7 +39,7 @@ func Fetch(url string) ([]byte, error) {
 	return body, nil
 }
 
-func Unicode2Str(raw string, threshold float64) (string, error) {
+func UnicodeToStr(raw string, threshold float64) (string, error) {
 	if threshold < 0 || threshold > 1 {
 		return raw, e.ERR_INVALID_NUMBER
 	}
@@ -51,6 +53,32 @@ func Unicode2Str(raw string, threshold float64) (string, error) {
 		log.Fatal(err)
 	}
 	return str, nil
+}
+
+func StrToUnicode(str string) (string) {
+	DD := []rune(str)
+	finallStr := ""
+	for i := 0; i < len(DD); i++ {
+		if unicode.Is(unicode.Scripts["Han"], DD[i]) {
+			textQuoted := strconv.QuoteToASCII(string(DD[i]))
+			finallStr += textQuoted[1 : len(textQuoted)-1]
+		} else {
+			h := fmt.Sprintf("%x",DD[i])
+			finallStr += "\\u" + isFullFour(h)
+		}
+	}
+	return finallStr
+}
+
+func isFullFour(str string) (string) {
+	if len(str) == 1 {
+		str = "000" + str
+	} else if len(str) == 2 {
+		str = "00" + str
+	} else if len(str) == 3 {
+		str = "0" + str
+	}
+	return str
 }
 
 func IsExistDynamic(dynamics []BriefDynamic, dynamic BriefDynamic) bool {
@@ -86,7 +114,7 @@ func AddNewDynamic(oldDynamics []BriefDynamic, dynamic BriefDynamic) ([]BriefDyn
 	return oldDynamics, nil
 }
 
-func StrUrl2Map(params []string) map[string]string {
+func StrUrlToMap(params []string) map[string]string {
 	m := make(map[string]string)
 	for _, v := range params {
 		kv := strings.Split(v, "=")
