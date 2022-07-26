@@ -4,18 +4,15 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lonzzi/BiliUpDynamicBot/route"
 	"github.com/spf13/viper"
 )
 
 func main() {
 	InitConfig()
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run(":2333")
+	route.InitRoute(r)
+	r.Run(":" + viper.GetString("server.port"))
 }
 
 func InitConfig() {

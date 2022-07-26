@@ -14,17 +14,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Dynamic struct {
+type DynamicObj struct {
 	Code int `json:"code"`
 	Data struct {
-		HasMore bool `json:"has_more"`
-		Items   []struct {
-			IDStr   string `json:"id_str"` // 动态ID
-			Modules struct {
-				Author  Author  `json:"module_author"`  // 动态作者
-				Content Content `json:"module_dynamic"` // 动态内容
-			} `json:"modules"`
-		} `json:"items"`
+		HasMore bool    `json:"has_more"`
+		Items   []Dynamic `json:"items"`
 	} `json:"data"`
 }
 
@@ -41,10 +35,12 @@ type Content struct {
 	} `json:"desc"`
 }
 
-type BriefDynamic struct {
-	IDStr   string  // 动态ID
-	Author  Author  // 动态作者
-	Content Content // 动态内容
+type Dynamic struct {
+	IDStr   string `json:"id_str"` // 动态ID
+	Modules struct {
+		Author  Author  `json:"module_author"`  // 动态作者
+		Content Content `json:"module_dynamic"` // 动态内容
+	} `json:"modules"`
 }
 
 type CommentResponse struct {
@@ -56,22 +52,18 @@ type CommentResponse struct {
 	} `json:"data"`
 }
 
-func GetLatestDynamic(mid string) (*BriefDynamic, error) {
+func GetDynamic(mid string) ([]Dynamic, error) {
 	url := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
 	body, err := utils.Fetch(url)
 	if err != nil {
 		return nil, err
 	}
-	var dynamic Dynamic
-	json.Unmarshal(body, &dynamic)
-	return &BriefDynamic{
-		IDStr:   dynamic.Data.Items[0].IDStr,
-		Author:  dynamic.Data.Items[0].Modules.Author,
-		Content: dynamic.Data.Items[0].Modules.Content,
-	}, nil
+	var dynamicObj DynamicObj
+	json.Unmarshal(body, &dynamicObj)
+	return dynamicObj.Data.Items, nil
 }
 
-func CommentReply(typeID int, oid string, message string) (*CommentResponse, error) {
+func Reply(typeID int, oid string, message string) (*CommentResponse, error) {
 	cookie := "SESSDATA=" + viper.GetString("account.SESSDATA")
 	url := "http://api.bilibili.com/x/v2/reply/add"
 	client := &http.Client{}
@@ -110,12 +102,8 @@ func CommentReply(typeID int, oid string, message string) (*CommentResponse, err
 	return &commentResponse, nil
 }
 
-func DynamicReply(dynamic BriefDynamic, message string) (*CommentResponse, error) {
-	return CommentReply(e.DynamicCommentCode, dynamic.IDStr, message)
-}
-
-func MakeReply(oldDynamics []BriefDynamic, dynamic BriefDynamic, message string) (*CommentResponse, error) {
-	commentResponse, err := DynamicReply(dynamic, message)
+func DynamicReply(dynamic Dynamic, message string) (*CommentResponse, error) {
+	commentResponse, err := Reply(e.DynamicCommentCode, dynamic.IDStr, message)
 	if err != nil {
 		return nil, e.ERR_REPLY_DYNAMIC
 	}
@@ -123,7 +111,7 @@ func MakeReply(oldDynamics []BriefDynamic, dynamic BriefDynamic, message string)
 	return commentResponse, nil
 }
 
-func GetHistoryDynamics(filePath string) ([]BriefDynamic, error) {
+func GetHistoryDynamics(filePath string) ([]Dynamic, error) {
 	// 读出历史数据
 	_, err := os.Stat(filePath)
 	if err != nil {
@@ -142,14 +130,14 @@ func GetHistoryDynamics(filePath string) ([]BriefDynamic, error) {
 	if err != nil {
 		return nil, e.ERR_READFILE
 	}
-	var oldDynamics []BriefDynamic
+	var oldDynamics []Dynamic
 	if err := json.Unmarshal(fileContent, &oldDynamics); err != nil && len(fileContent) != 0 {
 		return nil, e.ERR_UNMARSHAL
 	}
 	return oldDynamics, nil
 }
 
-func IsExistDynamic(dynamics []BriefDynamic, dynamic BriefDynamic) bool {
+func IsExistDynamic(dynamics []Dynamic, dynamic Dynamic) bool {
 	for _, v := range dynamics {
 		if v.IDStr == dynamic.IDStr {
 			return true
@@ -158,7 +146,7 @@ func IsExistDynamic(dynamics []BriefDynamic, dynamic BriefDynamic) bool {
 	return false
 }
 
-func AddNewDynamic(oldDynamics []BriefDynamic, dynamic BriefDynamic) ([]BriefDynamic, error) {
+func AddNewDynamic(oldDynamics []Dynamic, dynamic Dynamic) ([]Dynamic, error) {
 	if IsExistDynamic(oldDynamics, dynamic) {
 		return oldDynamics, e.ERR_DYNAMIC_EXIST
 	}

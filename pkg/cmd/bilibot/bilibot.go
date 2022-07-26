@@ -25,7 +25,11 @@ func BotLogin() {
 		os.Mkdir("./logs", os.ModePerm)
 	}
 
-	account, err := model.Login()
+	qrCodeResponse, err := model.GetLoginUrl()
+	if err != nil {
+		log.Fatal(err)
+	}
+	account, err := model.GetLoginInfo(qrCodeResponse.Data.OauthKey, 60)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +48,7 @@ func BotLogin() {
 	for {
 		<-ticker.C
 
-		dynamic, err := model.GetLatestDynamic(Mid)
+		dynamic, err := model.GetDynamic(Mid)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -56,32 +60,32 @@ func BotLogin() {
 		}
 
 		// 判断是否有新的动态
-		if model.IsExistDynamic(oldDynamics, *dynamic) {
+		if model.IsExistDynamic(oldDynamics, dynamic[0]) {
 			if !isPrinted {
 				log.Println("无新的动态")
-				log.Println("上一条动态：", dynamic.Content.Desc.Text)
+				log.Println("上一条动态：", dynamic[0].Modules.Content.Desc.Text)
 				isPrinted = true
 			}
 			log.Println("等待动态更新中...")
 			continue
 		}
 
-		log.Println("有新的动态：", dynamic.Content.Desc.Text)
-		oldDynamics, err = model.AddNewDynamic(oldDynamics, *dynamic)
+		log.Println("有新的动态：", dynamic[0].Modules.Content.Desc.Text)
+		_, err = model.AddNewDynamic(oldDynamics, dynamic[0])
 		if err != nil {
 			log.Println("添加动态错误：", err)
 			continue
 		}
 
 		threshold := 0.1
-		message, err := utils.UnicodeToStr(dynamic.Content.Desc.Text, threshold)
+		message, err := utils.UnicodeToStr(dynamic[0].Modules.Content.Desc.Text, threshold)
 		if err != nil {
 			log.Println("转换为字符错误：", err)
-			message = utils.StrToUnicode(dynamic.Content.Desc.Text)
+			message = utils.StrToUnicode(dynamic[0].Modules.Content.Desc.Text)
 			log.Println("转换为Unicode：", message)
 		}
 		message = viper.GetString("uploader.MessageHead") + "\n" + message + "\n" + viper.GetString("uploader.MessageTail")
-		commentResponse, err := model.MakeReply(oldDynamics, *dynamic, message)
+		commentResponse, err := model.DynamicReply(dynamic[0], message)
 		if err != nil {
 			log.Println("回复出错：", err)
 		}

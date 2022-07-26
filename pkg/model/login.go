@@ -11,7 +11,6 @@ import (
 
 	"github.com/lonzzi/BiliUpDynamicBot/pkg/e"
 	"github.com/lonzzi/BiliUpDynamicBot/pkg/utils"
-	"github.com/spf13/viper"
 )
 
 type QRCodeResponse struct {
@@ -31,7 +30,12 @@ type LoginResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-func Login() (*AccountInfo, error) {
+type AccountInfo struct {
+	SESSDATA string
+	BiliJct  string
+}
+
+func GetLoginUrl() (*QRCodeResponse, error) {
 	qrCodeBody, err := utils.Fetch("http://passport.bilibili.com/qrcode/getLoginUrl")
 	if err != nil {
 		return nil, err
@@ -42,29 +46,26 @@ func Login() (*AccountInfo, error) {
 		return nil, err
 	}
 
-	fmt.Println("Original QR Code url: ", qrCodeResponse.Data.Url)
-	fmt.Println("QR Code url: ",
-		fmt.Sprintf(
-			"https://cli.im/api/qrcode/code?text=%s&mhid=%s",
-			qrCodeResponse.Data.Url,
-			viper.GetString("cli.mhid"),
-		),
-	)
+	return &qrCodeResponse, nil
+}
 
+func GetLoginInfo(oauthKey string, timeout int) (*AccountInfo, error) {
 	client := &http.Client{}
-	ticker := time.NewTicker(time.Second * 5)
+	interval := 3
+	var finalErr error
+	ticker := time.NewTicker(time.Second * time.Duration(interval))
 	defer ticker.Stop()
-	cnt := 1
+	cnt := 0
 	for {
 		<-ticker.C
 		cnt++
-		if cnt > 10 {
+		if cnt > timeout / interval {
 			break
 		}
 		loginReq, err := http.NewRequest(
 			"POST",
 			"http://passport.bilibili.com/qrcode/getLoginInfo",
-			strings.NewReader(fmt.Sprintf("oauthKey=%s", qrCodeResponse.Data.OauthKey)),
+			strings.NewReader(fmt.Sprintf("oauthKey=%s", oauthKey)),
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -81,6 +82,7 @@ func Login() (*AccountInfo, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		var loginResponse LoginResponse
 		err = json.Unmarshal(loginBody, &loginResponse)
 		if err != nil {
@@ -93,12 +95,16 @@ func Login() (*AccountInfo, error) {
 			switch v {
 			case -1:
 				log.Println(e.KEY_INVALID)
+				finalErr = e.KEY_INVALID
 			case -2:
 				log.Println(e.KEY_TIMEOUT)
+				finalErr = e.KEY_TIMEOUT
 			case -4:
 				log.Println(e.NOT_SCAN)
+				finalErr = e.NOT_SCAN
 			case -5:
 				log.Println(e.NOT_CONFIRM)
+				finalErr = e.NOT_CONFIRM
 			default:
 				log.Println("未知代码", v)
 			}
@@ -115,5 +121,6 @@ func Login() (*AccountInfo, error) {
 			}, nil
 		}
 	}
-	return nil, e.ERR_LOGIN_FAIL
+
+	return nil, finalErr
 }
