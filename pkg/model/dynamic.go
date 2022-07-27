@@ -2,12 +2,8 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
-	"net/http"
 	"os"
-	"strings"
 
 	"github.com/lonzzi/BiliUpDynamicBot/pkg/e"
 	"github.com/lonzzi/BiliUpDynamicBot/pkg/utils"
@@ -17,7 +13,7 @@ import (
 type DynamicObj struct {
 	Code int `json:"code"`
 	Data struct {
-		HasMore bool    `json:"has_more"`
+		HasMore bool      `json:"has_more"`
 		Items   []Dynamic `json:"items"`
 	} `json:"data"`
 }
@@ -43,15 +39,6 @@ type Dynamic struct {
 	} `json:"modules"`
 }
 
-type CommentResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    struct {
-		SuccessToast string      `json:"success_toast"`
-		Emote        interface{} `json:"emote"`
-	} `json:"data"`
-}
-
 func GetDynamic(mid string) ([]Dynamic, error) {
 	url := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
 	body, err := utils.Fetch(url)
@@ -63,52 +50,22 @@ func GetDynamic(mid string) ([]Dynamic, error) {
 	return dynamicObj.Data.Items, nil
 }
 
-func Reply(typeID int, oid string, message string) (*CommentResponse, error) {
-	cookie := "SESSDATA=" + viper.GetString("account.SESSDATA")
-	url := "http://api.bilibili.com/x/v2/reply/add"
-	client := &http.Client{}
-	req, err := http.NewRequest(
-		"POST",
-		url,
-		strings.NewReader(
-			fmt.Sprintf("plat=1&type=%d&message=%s&oid=%s&csrf=%s", typeID, message, oid, viper.GetString("account.bili_jct")),
-		),
-	)
-	if err != nil {
-		log.Fatal(err)
+func IsDynamicExist(dynamics []Dynamic, dynamic Dynamic) bool {
+	for _, v := range dynamics {
+		if v.IDStr == dynamic.IDStr {
+			return true
+		}
 	}
-	req.Header.Set("Cookie", cookie)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	var commentResponse CommentResponse
-	err = json.Unmarshal(body, &commentResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return &commentResponse, e.ERR_COMMENT_REPLY_FAIL
-	}
-	return &commentResponse, nil
+	return false
 }
 
-func DynamicReply(dynamic Dynamic, message string) (*CommentResponse, error) {
-	commentResponse, err := Reply(e.DynamicCommentCode, dynamic.IDStr, message)
+func DynamicReply(dynamic Dynamic, message string) (*ReplyResponse, error) {
+	ReplyResponse, err := AddReply(string(rune(e.DynamicCommentCode)), dynamic.IDStr, message)
 	if err != nil {
 		return nil, e.ERR_REPLY_DYNAMIC
 	}
 
-	return commentResponse, nil
+	return ReplyResponse, nil
 }
 
 func GetHistoryDynamics(filePath string) ([]Dynamic, error) {
@@ -137,17 +94,8 @@ func GetHistoryDynamics(filePath string) ([]Dynamic, error) {
 	return oldDynamics, nil
 }
 
-func IsExistDynamic(dynamics []Dynamic, dynamic Dynamic) bool {
-	for _, v := range dynamics {
-		if v.IDStr == dynamic.IDStr {
-			return true
-		}
-	}
-	return false
-}
-
 func AddNewDynamic(oldDynamics []Dynamic, dynamic Dynamic) ([]Dynamic, error) {
-	if IsExistDynamic(oldDynamics, dynamic) {
+	if IsDynamicExist(oldDynamics, dynamic) {
 		return oldDynamics, e.ERR_DYNAMIC_EXIST
 	}
 

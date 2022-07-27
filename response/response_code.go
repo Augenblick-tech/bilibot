@@ -6,4 +6,6 @@ const (
 	CodeLoginTimeout
 	CodeBiliLoginError
 	CodeGetDynamicError
+	CodeReplyError
+	CodeRefreshError
 )

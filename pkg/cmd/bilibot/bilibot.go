@@ -12,7 +12,7 @@ import (
 )
 
 func BotLogin() {
-	
+
 	isPrinted := false // 选择是否打印上一条动态
 	viper.Set("HistroyDynamicPath", "./dynamic_history.json")
 	Mid := viper.GetString("uploader.mid")
@@ -60,7 +60,7 @@ func BotLogin() {
 		}
 
 		// 判断是否有新的动态
-		if model.IsExistDynamic(oldDynamics, dynamic[0]) {
+		if model.IsDynamicExist(oldDynamics, dynamic[0]) {
 			if !isPrinted {
 				log.Println("无新的动态")
 				log.Println("上一条动态：", dynamic[0].Modules.Content.Desc.Text)
@@ -85,16 +85,16 @@ func BotLogin() {
 			log.Println("转换为Unicode：", message)
 		}
 		message = viper.GetString("uploader.MessageHead") + "\n" + message + "\n" + viper.GetString("uploader.MessageTail")
-		commentResponse, err := model.DynamicReply(dynamic[0], message)
+		ReplyResponse, err := model.DynamicReply(dynamic[0], message)
 		if err != nil {
 			log.Println("回复出错：", err)
 		}
 
-		if commentResponse != nil {
-			log.Println(commentResponse.Data.SuccessToast)
+		if ReplyResponse != nil {
+			log.Println(ReplyResponse.Data.SuccessToast)
 			log.Println("发送内容：\n", message)
 		} else {
-			log.Println("commentResponse is nil")
+			log.Println("ReplyResponse is nil")
 		}
 	}
 }

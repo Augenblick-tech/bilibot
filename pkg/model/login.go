@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/http/cookiejar"
 	"strings"
 	"time"
 
@@ -30,7 +31,8 @@ type LoginResponse struct {
 	Data    interface{} `json:"data"`
 }
 
-type AccountInfo struct {
+type LoginInfo struct {
+	UID      string
 	SESSDATA string
 	BiliJct  string
 }
@@ -49,8 +51,13 @@ func GetLoginUrl() (*QRCodeResponse, error) {
 	return &qrCodeResponse, nil
 }
 
-func GetLoginInfo(oauthKey string, timeout int) (*AccountInfo, error) {
+func GetLoginInfo(oauthKey string, timeout int) (*LoginInfo, error) {
 	client := &http.Client{}
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		return nil, err
+	}
+	client.Jar = jar
 	interval := 3
 	var finalErr error
 	ticker := time.NewTicker(time.Second * time.Duration(interval))
@@ -59,7 +66,7 @@ func GetLoginInfo(oauthKey string, timeout int) (*AccountInfo, error) {
 	for {
 		<-ticker.C
 		cnt++
-		if cnt > timeout / interval {
+		if cnt > timeout/interval {
 			break
 		}
 		loginReq, err := http.NewRequest(
@@ -89,7 +96,7 @@ func GetLoginInfo(oauthKey string, timeout int) (*AccountInfo, error) {
 			log.Fatal(err)
 		}
 
-		loginResp.Body.Close()
+		defer loginResp.Body.Close()
 
 		if v, ok := loginResponse.Data.(float64); ok {
 			switch v {
@@ -115,7 +122,8 @@ func GetLoginInfo(oauthKey string, timeout int) (*AccountInfo, error) {
 			url := loginResponse.Data.(map[string]interface{})["url"].(string)
 			params := strings.Split(url, "&")
 			accountData := utils.StrUrlToMap(params)
-			return &AccountInfo{
+			return &LoginInfo{
+				UID:      accountData["DedeUserID"],
 				SESSDATA: accountData["SESSDATA"],
 				BiliJct:  accountData["bili_jct"],
 			}, nil

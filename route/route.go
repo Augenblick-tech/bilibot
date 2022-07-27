@@ -16,12 +16,17 @@ func InitRoute(r *gin.Engine) {
 	v2 := r.Group("/v2")
 	{
 		v2.Handle("POST", "/login", api.Login)
+		v2.Handle("GET", "/dynamic/latest", api.GetLatestDynamic)
+		v2.Handle("GET", "/dynamic/refresh", api.RefreshDynamic)
+		v2.Handle("GET", "/dynamic/status", api.GetStatus)
+		v2.Handle("GET", "/dynamic/stop", api.StopRefreshDynamic)
 	}
 
-	bilibili := v2.Group("/bili")
+	bi := v2.Group("/bili")
 	{
-		bilibili.Handle("GET", "/qrcode/getLoginUrl", bili.GetLoginUrl)
-		bilibili.Handle("POST", "/login/getLoginInfo", bili.GetLoginInfo)
-		bilibili.Handle("GET", "/dynamic/getDynamic", bili.GetDynamic)
+		bi.Handle("GET", "/qrcode/getLoginUrl", bili.GetLoginUrl)
+		bi.Handle("POST", "/login/getLoginInfo", bili.GetLoginInfo)
+		bi.Handle("GET", "/dynamic/getDynamic", bili.GetDynamic)
+		bi.Handle("POST", "/reply/add", bili.AddReply)
 	}
 }
