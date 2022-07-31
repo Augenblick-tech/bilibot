@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/model"
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/utils"
+	"github.com/lonzzi/bilibot/pkg/model"
+	"github.com/lonzzi/bilibot/pkg/utils"
 	"github.com/spf13/viper"
 )
 

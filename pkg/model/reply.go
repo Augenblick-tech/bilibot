@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/e"
+	"github.com/lonzzi/bilibot/pkg/e"
 	"github.com/spf13/viper"
 )
 

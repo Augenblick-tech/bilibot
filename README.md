@@ -1,4 +1,4 @@
-# BiliUpDynamicBot
+# bilibot
 
 ## 目前实现的功能
 
@@ -24,10 +24,10 @@
 
 ### 命令行方式
 
-下载 [releases](https://github.com/lonzzi/BiliUpDynamicBot/releases) 中的 `BiliUpDynamicBot` 到本地，运行以下命令：
+下载 [releases](https://github.com/lonzzi/bilibot/releases) 中的 `bilibot` 到本地，运行以下命令：
 
 ``` sh
-./BiliUpDynamicBot
+./bilibot
 ```
 
 ## 鸣谢

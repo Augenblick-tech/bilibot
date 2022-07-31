@@ -2,8 +2,8 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/BiliUpDynamicBot/api"
-	"github.com/lonzzi/BiliUpDynamicBot/api/bili"
+	"github.com/lonzzi/bilibot/api"
+	"github.com/lonzzi/bilibot/api/bili"
 )
 
 func InitRoute(r *gin.Engine) {

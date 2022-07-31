@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/e"
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/utils"
+	"github.com/lonzzi/bilibot/pkg/e"
+	"github.com/lonzzi/bilibot/pkg/utils"
 	"github.com/spf13/viper"
 )
 

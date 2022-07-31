@@ -4,10 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/BiliUpDynamicBot/response"
+	"github.com/lonzzi/bilibot/response"
 )
-
-
 
 func Login(c *gin.Context) {
 	var r response.Response

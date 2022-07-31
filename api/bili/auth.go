@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/model"
-	"github.com/lonzzi/BiliUpDynamicBot/response"
+	"github.com/lonzzi/bilibot/pkg/model"
+	"github.com/lonzzi/bilibot/response"
 	"github.com/spf13/viper"
 )
 
@@ -31,7 +31,7 @@ func GetLoginInfo(c *gin.Context) {
 		r.JSON(c, http.StatusRequestTimeout, err.Error(), nil)
 		return
 	}
-	
+
 	viper.Set("account.SESSDATA", account.SESSDATA)
 	viper.Set("account.bili_jct", account.BiliJct)
 

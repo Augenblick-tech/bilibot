@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/BiliUpDynamicBot/route"
+	"github.com/lonzzi/bilibot/route"
 	"github.com/spf13/viper"
 )
 

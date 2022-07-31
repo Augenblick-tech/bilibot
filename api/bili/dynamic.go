@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/model"
-	"github.com/lonzzi/BiliUpDynamicBot/response"
+	"github.com/lonzzi/bilibot/pkg/model"
+	"github.com/lonzzi/bilibot/response"
 )
 
 func GetDynamic(c *gin.Context) {

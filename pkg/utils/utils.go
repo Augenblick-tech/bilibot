@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/lonzzi/BiliUpDynamicBot/pkg/e"
+	"github.com/lonzzi/bilibot/pkg/e"
 )
 
 func Fetch(url string) ([]byte, error) {
@@ -52,7 +52,7 @@ func UnicodeToStr(raw string, threshold float64) (string, error) {
 	return str, nil
 }
 
-func StrToUnicode(str string) (string) {
+func StrToUnicode(str string) string {
 	DD := []rune(str)
 	finallStr := ""
 	for i := 0; i < len(DD); i++ {
@@ -60,14 +60,14 @@ func StrToUnicode(str string) (string) {
 			textQuoted := strconv.QuoteToASCII(string(DD[i]))
 			finallStr += textQuoted[1 : len(textQuoted)-1]
 		} else {
-			h := fmt.Sprintf("%x",DD[i])
+			h := fmt.Sprintf("%x", DD[i])
 			finallStr += "\\u" + isFullFour(h)
 		}
 	}
 	return finallStr
 }
 
-func isFullFour(str string) (string) {
+func isFullFour(str string) string {
 	if len(str) == 1 {
 		str = "000" + str
 	} else if len(str) == 2 {
@@ -77,7 +77,6 @@ func isFullFour(str string) (string) {
 	}
 	return str
 }
-
 
 func StrUrlToMap(params []string) map[string]string {
 	m := make(map[string]string)

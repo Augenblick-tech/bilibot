@@ -1,4 +1,4 @@
-module github.com/lonzzi/BiliUpDynamicBot
+module github.com/lonzzi/bilibot
 
 go 1.18
 
