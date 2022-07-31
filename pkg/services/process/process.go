@@ -64,7 +64,7 @@ func (p *process) Add(t Task) error {
 	return nil
 }
 
-// 任务任务
+// 删除任务
 func (p *process) Del(mid string) error {
 	p.Lock()
 	defer p.Unlock()
@@ -78,6 +78,17 @@ func (p *process) Del(mid string) error {
 		return err
 	}
 	delete(p.tasks, t.GetMid())
+	return nil
+}
+
+func (p *process) Stop(mid string) error {
+	p.Lock()
+	defer p.Unlock()
+
+	if t, ok := p.tasks[mid]; ok {
+		return t.Stop()
+	}
+
 	return nil
 }
 
