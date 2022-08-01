@@ -1,24 +1,22 @@
 package api
 
 import (
-	"net/http"
-
-	"github.com/Augenblick-tech/bilibot/response"
-	"github.com/gin-gonic/gin"
+	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 )
 
-func Login(c *gin.Context) {
-	var r response.Response
-
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-
-	if username == "" || password == "" {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, "username or password is empty", nil)
-		return
+func Login(c *engine.Context) (interface{}, error) {
+	user := c.PostBody()
+	if len(user) == 0 {
+		return nil, e.RespCode_ParamError
 	}
 
-	r.Code = response.CodeSuccess
-	r.JSON(c, http.StatusOK, "login success", nil)
+	username := user["username"].(string)
+	password := user["password"].(string)
+
+	if username == "" || password == "" {
+		return nil, e.RespCode_ParamError
+	}
+
+	return len(user), nil
 }

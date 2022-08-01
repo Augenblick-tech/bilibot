@@ -2,12 +2,11 @@ package api
 
 import (
 	"log"
-	"net/http"
 	"time"
 
+	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
-	"github.com/Augenblick-tech/bilibot/response"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
@@ -18,15 +17,12 @@ var (
 	mids     = make(map[string]struct{})
 )
 
-func RefreshDynamic(c *gin.Context) {
-	var r response.Response
+func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
-	mid := c.Query("mid")
+	mid := c.Context.Query("mid")
 
 	if _, ok := mids[mid]; ok {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, "mid already exists", nil)
-		return
+		return nil, e.RespCode_RefreshError
 	} else {
 		mids[mid] = struct{}{}
 		log.Println("add mid", mid)
@@ -39,13 +35,13 @@ func RefreshDynamic(c *gin.Context) {
 		for {
 			select {
 			case v := <-quit:
-				if v == c.Query("mid") {
+				if v == mid {
 					log.Println("quit mid:", v)
 					return
 				}
 			case <-ticker.C:
-				log.Println(c.Query("mid"))
-				temp, err := model.GetDynamic(c.Query("mid"))
+				log.Println(mid)
+				temp, err := model.GetDynamic(mid)
 				if err != nil {
 					log.Println(err)
 					// 处理错误
@@ -57,52 +53,39 @@ func RefreshDynamic(c *gin.Context) {
 		}
 	}()
 
-	r.JSON(c, http.StatusOK, "success", nil)
+	return "success", nil
 }
 
-func GetLatestDynamic(c *gin.Context) {
-	var r response.Response
-
-	mid := c.Query("mid")
+func GetLatestDynamic(c *engine.Context) (interface{}, error) {
+	mid := c.Context.Query("mid")
 
 	if len(dynamics) == 0 {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, "no dynamic", nil)
-		return
+		return nil, e.RespCode_ParamError
 	}
 
-	r.JSON(c, http.StatusOK, "success", dynamics[mid][0])
+	return dynamics[mid][0], nil
 }
 
-func GetStatus(c *gin.Context) {
-	var r response.Response
-
-	mid := c.Query("mid")
+func GetStatus(c *engine.Context) (interface{}, error) {
+	mid := c.Context.Query("mid")
 
 	if _, ok := mids[mid]; ok && status {
-		r.JSON(c, http.StatusOK, "runing", nil)
-		return
+		return "running", nil
 	} else {
-		r.JSON(c, http.StatusOK, "stop", nil)
-		return
+		return "stop", nil
 	}
 }
 
-func StopRefreshDynamic(c *gin.Context) {
-	var r response.Response
-
-	mid := c.Query("mid")
+func StopRefreshDynamic(c *engine.Context) (interface{}, error) {
+	mid := c.Context.Query("mid")
 
 	if status {
 		quit <- mid
 		delete(mids, mid)
 		status = false
 		log.Println("stop mid:", mid)
-		r.JSON(c, http.StatusOK, "success", nil)
-		return
+		return "success", nil
 	} else {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, "stop failed", nil)
-		return
+		return "stop failed", nil
 	}
 }

@@ -1,22 +1,15 @@
 package bili
 
 import (
-	"net/http"
-
+	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
-	"github.com/Augenblick-tech/bilibot/response"
-	"github.com/gin-gonic/gin"
 )
 
-func GetDynamic(c *gin.Context) {
-	var r response.Response
-
-	dynamics, err := model.GetDynamic(c.Query("mid"))
+func GetDynamic(c *engine.Context) (interface{}, error) {
+	dynamics, err := model.GetDynamic(c.Context.Query("mid"))
 	if err != nil {
-		r.Code = response.CodeGetDynamicError
-		r.JSON(c, http.StatusInternalServerError, err.Error(), nil)
-		return
+		return nil, err
 	}
 
-	r.JSON(c, http.StatusOK, "success", dynamics)
+	return dynamics, nil
 }

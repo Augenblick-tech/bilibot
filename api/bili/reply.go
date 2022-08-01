@@ -1,22 +1,19 @@
 package bili
 
 import (
-	"net/http"
-
+	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
-	"github.com/Augenblick-tech/bilibot/response"
-	"github.com/gin-gonic/gin"
 )
 
-func AddReply(c *gin.Context) {
-	var r response.Response
-
-	replyResp, err := model.AddReply(c.PostForm("type"), c.PostForm("oid"), c.PostForm("message"))
+func AddReply(c *engine.Context) (interface{}, error) {
+	comment := c.PostBody()
+	commentType := comment["type"].(string)
+	oid := comment["oid"].(string)
+	message := comment["message"].(string)
+	replyResp, err := model.AddReply(commentType, oid, message)
 	if err != nil {
-		r.Code = response.CodeReplyError
-		r.JSON(c, http.StatusBadGateway, err.Error(), nil)
-		return
+		return nil, err
 	}
 
-	r.JSON(c, http.StatusOK, "success", replyResp)
+	return replyResp, nil
 }

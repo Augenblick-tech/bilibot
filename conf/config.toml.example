@@ -1,5 +1,5 @@
 [server]
-port = 2333 # 服务器运行端口
+addr = "127.0.0.1:2333" # 服务器运行地址
 
 [uploader]
 mid = 13424328 # up主uid

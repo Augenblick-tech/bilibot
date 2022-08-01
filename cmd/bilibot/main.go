@@ -4,15 +4,12 @@ import (
 	"log"
 
 	"github.com/Augenblick-tech/bilibot/route"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
 func main() {
 	InitConfig()
-	r := gin.Default()
-	route.InitRoute(r)
-	r.Run(":" + viper.GetString("server.port"))
+	route.Route(viper.GetString("server.addr"))
 }
 
 func InitConfig() {
