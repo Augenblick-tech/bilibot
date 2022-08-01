@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,28 +12,23 @@ import (
 )
 
 var (
-	quit     = make(chan int)
+	quit     = make(chan string)
 	status   = false
-	dynamics = make(map[int][]model.Dynamic)
-	mids     = make(map[int]interface{})
+	dynamics = make(map[string][]model.Dynamic)
+	mids     = make(map[string]struct{})
 )
 
 func RefreshDynamic(c *gin.Context) {
 	var r response.Response
 
-	mid, err := strconv.Atoi(c.Query("mid"))
-	if err != nil {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, err.Error(), nil)
-		return
-	}
+	mid := c.Query("mid")
 
 	if _, ok := mids[mid]; ok {
 		r.Code = response.CodeParamError
 		r.JSON(c, http.StatusBadRequest, "mid already exists", nil)
 		return
 	} else {
-		mids[mid] = nil
+		mids[mid] = struct{}{}
 		log.Println("add mid", mid)
 	}
 
@@ -45,7 +39,7 @@ func RefreshDynamic(c *gin.Context) {
 		for {
 			select {
 			case v := <-quit:
-				if strconv.Itoa(v) == c.Query("mid") {
+				if v == c.Query("mid") {
 					log.Println("quit mid:", v)
 					return
 				}
@@ -53,8 +47,8 @@ func RefreshDynamic(c *gin.Context) {
 				log.Println(c.Query("mid"))
 				temp, err := model.GetDynamic(c.Query("mid"))
 				if err != nil {
-					r.Code = response.CodeRefreshError
-					r.JSON(c, http.StatusBadGateway, err.Error(), nil)
+					log.Println(err)
+					// 处理错误
 					return
 				}
 				dynamics[mid] = temp
@@ -69,10 +63,11 @@ func RefreshDynamic(c *gin.Context) {
 func GetLatestDynamic(c *gin.Context) {
 	var r response.Response
 
-	mid, err := strconv.Atoi(c.Query("mid"))
-	if err != nil {
+	mid := c.Query("mid")
+
+	if len(dynamics) == 0 {
 		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, err.Error(), nil)
+		r.JSON(c, http.StatusBadRequest, "no dynamic", nil)
 		return
 	}
 
@@ -82,12 +77,7 @@ func GetLatestDynamic(c *gin.Context) {
 func GetStatus(c *gin.Context) {
 	var r response.Response
 
-	mid, err := strconv.Atoi(c.Query("mid"))
-	if err != nil {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, err.Error(), nil)
-		return
-	}
+	mid := c.Query("mid")
 
 	if _, ok := mids[mid]; ok && status {
 		r.JSON(c, http.StatusOK, "runing", nil)
@@ -101,12 +91,7 @@ func GetStatus(c *gin.Context) {
 func StopRefreshDynamic(c *gin.Context) {
 	var r response.Response
 
-	mid, err := strconv.Atoi(c.Query("mid"))
-	if err != nil {
-		r.Code = response.CodeParamError
-		r.JSON(c, http.StatusBadRequest, err.Error(), nil)
-		return
-	}
+	mid := c.Query("mid")
 
 	if status {
 		quit <- mid
