@@ -24,7 +24,7 @@
 
 ### 命令行方式
 
-下载 [releases](https://github.com/lonzzi/bilibot/releases) 中的 `bilibot` 到本地，运行以下命令：
+下载 [releases](https://github.com/Augenblick-tech/bilibot/releases) 中的 `bilibot` 到本地，运行以下命令：
 
 ``` sh
 ./bilibot

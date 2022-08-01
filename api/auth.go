@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
+	"github.com/Augenblick-tech/bilibot/response"
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/bilibot/response"
 )
 
 func Login(c *gin.Context) {

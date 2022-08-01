@@ -1,9 +1,9 @@
 package route
 
 import (
+	"github.com/Augenblick-tech/bilibot/api"
+	"github.com/Augenblick-tech/bilibot/api/bili"
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/bilibot/api"
-	"github.com/lonzzi/bilibot/api/bili"
 )
 
 func InitRoute(r *gin.Engine) {

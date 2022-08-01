@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/lonzzi/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 )
 
 func Fetch(url string) ([]byte, error) {

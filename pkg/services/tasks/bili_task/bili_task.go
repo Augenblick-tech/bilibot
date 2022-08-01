@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/lonzzi/bilibot/pkg/model"
-	"github.com/lonzzi/bilibot/pkg/services/process"
+	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/pkg/services/process"
 )
 
 type biliTask struct {

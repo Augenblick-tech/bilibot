@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/response"
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/bilibot/pkg/model"
-	"github.com/lonzzi/bilibot/response"
 	"github.com/spf13/viper"
 )
 

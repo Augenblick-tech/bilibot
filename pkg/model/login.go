@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lonzzi/bilibot/pkg/e"
-	"github.com/lonzzi/bilibot/pkg/utils"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/utils"
 )
 
 type QRCodeResponse struct {

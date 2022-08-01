@@ -1,4 +1,4 @@
-module github.com/lonzzi/bilibot
+module github.com/Augenblick-tech/bilibot
 
 go 1.18
 

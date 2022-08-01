@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/Augenblick-tech/bilibot/route"
 	"github.com/gin-gonic/gin"
-	"github.com/lonzzi/bilibot/route"
 	"github.com/spf13/viper"
 )
 
