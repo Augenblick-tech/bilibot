@@ -15,11 +15,12 @@ func _() {
 	_ = x[RespCode_GetDynamicError-4]
 	_ = x[RespCode_ReplyError-5]
 	_ = x[RespCode_RefreshError-6]
+	_ = x[RespCode_AlreadyExist-7]
 }
 
-const _ResponseCode_name = "成功参数错误登录超时登录错误获取动态错误回复错误刷新错误"
+const _ResponseCode_name = "成功参数错误登录超时登录错误获取动态错误回复错误刷新错误已存在"
 
-var _ResponseCode_index = [...]uint8{0, 6, 18, 30, 42, 60, 72, 84}
+var _ResponseCode_index = [...]uint8{0, 6, 18, 30, 42, 60, 72, 84, 93}
 
 func (i ResponseCode) String() string {
 	if i < 0 || i >= ResponseCode(len(_ResponseCode_index)-1) {

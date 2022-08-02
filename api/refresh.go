@@ -1,57 +1,28 @@
 package api
 
 import (
-	"log"
 	"time"
 
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
 	"github.com/spf13/viper"
 )
 
-var (
-	quit     = make(chan string)
-	status   = false
-	dynamics = make(map[string][]model.Dynamic)
-	mids     = make(map[string]struct{})
-)
+var biliTasks = make(map[string]*bilitask.BiliTask)
 
 func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
 	mid := c.Query("mid")
 
-	if _, ok := mids[mid]; ok {
-		return nil, e.RespCode_RefreshError
-	} else {
-		mids[mid] = struct{}{}
-		log.Println("add mid", mid)
+	if _, ok := biliTasks[mid]; ok {
+		return nil, e.RespCode_AlreadyExist
 	}
 
-	ticker := time.NewTicker(time.Second * time.Duration(viper.GetInt("user.RefreshTime")))
-
-	go func() {
-		status = true
-		for {
-			select {
-			case v := <-quit:
-				if v == mid {
-					log.Println("quit mid:", v)
-					return
-				}
-			case <-ticker.C:
-				log.Println(mid)
-				temp, err := model.GetDynamic(mid)
-				if err != nil {
-					log.Println(err)
-					// 处理错误
-					return
-				}
-				dynamics[mid] = temp
-				log.Println("refresh")
-			}
-		}
-	}()
+	biliTask := bilitask.NewBiliTask(mid, time.Second*time.Duration(viper.GetInt("user.RefreshTime")))
+	go biliTask.Run()
+	
+	biliTasks[mid] = biliTask
 
 	return "success", nil
 }
@@ -59,33 +30,33 @@ func RefreshDynamic(c *engine.Context) (interface{}, error) {
 func GetLatestDynamic(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
-	if len(dynamics) == 0 {
-		return nil, e.RespCode_ParamError
+	if biliTask, ok := biliTasks[mid]; ok {
+		return biliTask.Data(), nil
 	}
 
-	return dynamics[mid][0], nil
+	return nil, e.RespCode_ParamError
 }
 
 func GetStatus(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
-	if _, ok := mids[mid]; ok && status {
-		return "running", nil
+	if biliTask, ok := biliTasks[mid]; ok {
+		return biliTask.TaskStatus, nil
 	} else {
-		return "stop", nil
+		return nil, e.RespCode_ParamError
 	}
 }
 
 func StopRefreshDynamic(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
-	if status {
-		quit <- mid
-		delete(mids, mid)
-		status = false
-		log.Println("stop mid:", mid)
+	if biliTask, ok := biliTasks[mid]; ok {
+		err := biliTask.Stop()
+		if err != nil {
+			return nil, err
+		}
 		return "success", nil
 	} else {
-		return "stop failed", nil
+		return nil, e.RespCode_ParamError
 	}
 }

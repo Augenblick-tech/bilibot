@@ -8,7 +8,7 @@ import (
 	"github.com/Augenblick-tech/bilibot/pkg/services/process"
 )
 
-type biliTask struct {
+type BiliTask struct {
 	*process.BaseTask
 	data   []model.Dynamic
 	ctx    context.Context
@@ -16,8 +16,8 @@ type biliTask struct {
 	ticker *time.Ticker
 }
 
-func NewBiliTask(mid string, d time.Duration) *biliTask {
-	return &biliTask{
+func NewBiliTask(mid string, d time.Duration) *BiliTask {
+	return &BiliTask{
 		ticker: time.NewTicker(d),
 		data:   make([]model.Dynamic, 0),
 		BaseTask: &process.BaseTask{
@@ -27,11 +27,11 @@ func NewBiliTask(mid string, d time.Duration) *biliTask {
 	}
 }
 
-func (b *biliTask) Data() interface{} {
+func (b *BiliTask) Data() interface{} {
 	return b.data
 }
 
-func (b *biliTask) Run() {
+func (b *BiliTask) Run() {
 	b.ctx, b.cancel = context.WithCancel(context.Background())
 	b.TaskStatus = process.TaskStatus_Running
 	for {
@@ -51,7 +51,7 @@ func (b *biliTask) Run() {
 	}
 }
 
-func (b *biliTask) Stop() error {
+func (b *BiliTask) Stop() error {
 	if b.TaskStatus == process.TaskStatus_Running {
 		b.cancel()
 	}

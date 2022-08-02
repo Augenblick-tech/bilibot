@@ -11,6 +11,7 @@ const (
 	RespCode_GetDynamicError                     // 获取动态错误
 	RespCode_ReplyError                          // 回复错误
 	RespCode_RefreshError                        // 刷新错误
+	RespCode_AlreadyExist                        // 已存在
 )
 
 func (r ResponseCode) Error() string {
