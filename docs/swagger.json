@@ -1,0 +1,103 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "a bilibot server",
+        "title": "bilibot",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "lonzzi",
+            "url": "https://ronki.moe",
+            "email": "lonzzi@qq.com"
+        },
+        "version": "2.0"
+    },
+    "host": "localhost:2333",
+    "basePath": "/v2",
+    "paths": {
+        "/dynamic/latest": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取up主最新动态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "up主id",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/dynamic/refresh": {
+            "get": {
+                "description": "根据设定的时间间隔监听up主动态",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "监听up主动态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "up主id",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/dynamic/status": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取传入的uid的状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "up主id",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/dynamic/stop": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "停止传入的uid的任务",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "up主id",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

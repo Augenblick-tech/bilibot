@@ -1,0 +1,70 @@
+basePath: /v2
+host: localhost:2333
+info:
+  contact:
+    email: lonzzi@qq.com
+    name: lonzzi
+    url: https://ronki.moe
+  description: a bilibot server
+  termsOfService: http://swagger.io/terms/
+  title: bilibot
+  version: "2.0"
+paths:
+  /dynamic/latest:
+    get:
+      parameters:
+      - description: up主id
+        in: query
+        name: mid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取up主最新动态
+      tags:
+      - v2
+  /dynamic/refresh:
+    get:
+      description: 根据设定的时间间隔监听up主动态
+      parameters:
+      - description: up主id
+        in: query
+        name: mid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 监听up主动态
+      tags:
+      - v2
+  /dynamic/status:
+    get:
+      parameters:
+      - description: up主id
+        in: query
+        name: mid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取传入的uid的状态
+      tags:
+      - v2
+  /dynamic/stop:
+    get:
+      parameters:
+      - description: up主id
+        in: query
+        name: mid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 停止传入的uid的任务
+      tags:
+      - v2
+swagger: "2.0"

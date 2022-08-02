@@ -11,6 +11,13 @@ import (
 
 var biliTasks = make(map[string]*bilitask.BiliTask)
 
+// RefreshDynamic godoc
+// @Summary      监听up主动态
+// @Description  根据设定的时间间隔监听up主动态
+// @Tags         v2
+// @Produce      json
+// @Param        mid   query     string  true  "up主id"
+// @Router       /dynamic/refresh [get]
 func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
 	mid := c.Query("mid")
@@ -21,12 +28,19 @@ func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
 	biliTask := bilitask.NewBiliTask(mid, time.Second*time.Duration(viper.GetInt("user.RefreshTime")))
 	go biliTask.Run()
-	
+
 	biliTasks[mid] = biliTask
 
 	return "success", nil
 }
 
+// GetLatestDynamic godoc
+// @Summary      获取up主最新动态
+// @Description  
+// @Tags         v2
+// @Produce      json
+// @Param        mid   query     string  true  "up主id"
+// @Router       /dynamic/latest [get]
 func GetLatestDynamic(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
@@ -37,6 +51,13 @@ func GetLatestDynamic(c *engine.Context) (interface{}, error) {
 	return nil, e.RespCode_ParamError
 }
 
+// GetStatus godoc
+// @Summary      获取传入的uid的状态
+// @Description  
+// @Tags         v2
+// @Produce      json
+// @Param        mid   query     string  true  "up主id"
+// @Router       /dynamic/status [get]
 func GetStatus(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
@@ -47,6 +68,13 @@ func GetStatus(c *engine.Context) (interface{}, error) {
 	}
 }
 
+// StopRefreshDynamic godoc
+// @Summary      停止传入的uid的任务
+// @Description  
+// @Tags         v2
+// @Produce      json
+// @Param        mid   query     string  true  "up主id"
+// @Router       /dynamic/stop [get]
 func StopRefreshDynamic(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
