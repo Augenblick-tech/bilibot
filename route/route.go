@@ -29,7 +29,7 @@ func Route(addr string) {
 	bi := v2.Group("/bili")
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
-		bi.POST("/login/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
+		bi.GET("/login/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
 		bi.GET("/dynamic/getDynamic", "getDynamic", bili.GetDynamic)
 		bi.POST("/reply/add", "addReply", bili.AddReply)
 	}

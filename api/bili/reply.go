@@ -6,11 +6,15 @@ import (
 )
 
 func AddReply(c *engine.Context) (interface{}, error) {
-	comment := c.PostBody()
-	commentType := comment["type"].(string)
-	oid := comment["oid"].(string)
-	message := comment["message"].(string)
-	replyResp, err := model.AddReply(commentType, oid, message)
+	var comment = struct {
+		Type    string
+		Oid     string
+		Message string
+	}{}
+
+	c.Bind(&comment)
+
+	replyResp, err := model.AddReply(comment.Type, comment.Oid, comment.Message)
 	if err != nil {
 		return nil, err
 	}

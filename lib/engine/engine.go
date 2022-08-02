@@ -133,6 +133,10 @@ func (c *Context) PostBody() map[string]interface{} {
 	return m
 }
 
+func (c *Context) Query(key string) string {
+	return c.Context.Query(key)
+}
+
 func (c *Context) Bind(i interface{}) error {
 	return c.Context.ShouldBind(i)
 }

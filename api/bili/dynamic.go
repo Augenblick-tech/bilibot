@@ -6,7 +6,7 @@ import (
 )
 
 func GetDynamic(c *engine.Context) (interface{}, error) {
-	dynamics, err := model.GetDynamic(c.Context.Query("mid"))
+	dynamics, err := model.GetDynamic(c.Query("mid"))
 	if err != nil {
 		return nil, err
 	}

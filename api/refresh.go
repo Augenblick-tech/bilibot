@@ -19,7 +19,7 @@ var (
 
 func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
-	mid := c.Context.Query("mid")
+	mid := c.Query("mid")
 
 	if _, ok := mids[mid]; ok {
 		return nil, e.RespCode_RefreshError
@@ -57,7 +57,7 @@ func RefreshDynamic(c *engine.Context) (interface{}, error) {
 }
 
 func GetLatestDynamic(c *engine.Context) (interface{}, error) {
-	mid := c.Context.Query("mid")
+	mid := c.Query("mid")
 
 	if len(dynamics) == 0 {
 		return nil, e.RespCode_ParamError
@@ -67,7 +67,7 @@ func GetLatestDynamic(c *engine.Context) (interface{}, error) {
 }
 
 func GetStatus(c *engine.Context) (interface{}, error) {
-	mid := c.Context.Query("mid")
+	mid := c.Query("mid")
 
 	if _, ok := mids[mid]; ok && status {
 		return "running", nil
@@ -77,7 +77,7 @@ func GetStatus(c *engine.Context) (interface{}, error) {
 }
 
 func StopRefreshDynamic(c *engine.Context) (interface{}, error) {
-	mid := c.Context.Query("mid")
+	mid := c.Query("mid")
 
 	if status {
 		quit <- mid

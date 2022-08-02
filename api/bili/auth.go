@@ -16,7 +16,7 @@ func GetLoginUrl(c *engine.Context) (interface{}, error) {
 }
 
 func GetLoginInfo(c *engine.Context) (interface{}, error) {
-	account, err := model.GetLoginInfo(c.Context.PostForm("oauthKey"), 60)
+	account, err := model.GetLoginInfo(c.Query("oauthKey"), 60)
 	if err != nil {
 		return nil, err
 	}
