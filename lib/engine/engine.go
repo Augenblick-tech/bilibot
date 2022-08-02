@@ -134,7 +134,7 @@ func (c *Context) PostBody() map[string]interface{} {
 }
 
 func (c *Context) Bind(i interface{}) error {
-	return json.NewDecoder(c.Context.Request.Body).Decode(i)
+	return c.Context.ShouldBind(i)
 }
 
 func (c *Context) ImageResult(b []byte, s string) {

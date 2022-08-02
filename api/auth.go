@@ -2,21 +2,15 @@ package api
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
-	"github.com/Augenblick-tech/bilibot/pkg/e"
 )
 
 func Login(c *engine.Context) (interface{}, error) {
-	user := c.PostBody()
-	if len(user) == 0 {
-		return nil, e.RespCode_ParamError
-	}
+	var user = struct {
+		Username string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}{}
 
-	username := user["username"].(string)
-	password := user["password"].(string)
+	err := c.Bind(&user)
 
-	if username == "" || password == "" {
-		return nil, e.RespCode_ParamError
-	}
-
-	return len(user), nil
+	return user.Username, err
 }

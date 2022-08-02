@@ -1,0 +1,9 @@
+@base_url=http://localhost:7777
+
+### login
+POST {{base_url}}/v2/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username":"a"
+}
