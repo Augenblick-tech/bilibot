@@ -54,19 +54,11 @@ func (e *Engine) RunTLS(addr string, certFile string, keyFile string) error {
 	return e.g.RunTLS(addr, certFile, keyFile)
 }
 
-func (e *Engine) Group(path string) *RouteGroup {
-	return &RouteGroup{
-		Path: path,
-		g:    e.g.Group(path),
-		m:    make([]Middleware, 0),
-	}
-}
-
 func (g *RouteGroup) Group(path string) *RouteGroup {
 	return &RouteGroup{
 		Path: g.Path + path,
 		g:    g.g.Group(path),
-		m:    make([]Middleware, 0),
+		m:    g.m,
 	}
 }
 

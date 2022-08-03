@@ -5,27 +5,25 @@ import (
 	"github.com/Augenblick-tech/bilibot/api/bili"
 	_ "github.com/Augenblick-tech/bilibot/docs"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
-	"github.com/gin-gonic/gin"
-	gs "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
+	gs "github.com/swaggo/gin-swagger"
 )
 
 func Route(addr string) {
 	engine.SetMode("debug")
 	e := engine.NewDefaultEngine()
+	e.Use(engine.Result)
 
 	e.GET("/ping", "pong", func(ctx *engine.Context) (interface{}, error) {
-		return gin.H{
-			"message": "pong",
-		}, nil
+		return "pong", nil
 	})
 
 	e.GET("/swagger/*any", "swagger", func(ctx *engine.Context) (interface{}, error) {
 		gs.WrapHandler(swaggerFiles.Handler)(ctx.Context)
-		return "success", nil
+		return nil, nil
 	})
 
-	v2 := e.Group("/v2").Use(engine.Result)
+	v2 := e.Group("/v2")
 	{
 		v2.POST("/login", "login", api.Login)
 		v2.GET("/dynamic/latest", "getLatestDynamic", api.GetLatestDynamic)
