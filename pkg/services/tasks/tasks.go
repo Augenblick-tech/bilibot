@@ -23,7 +23,7 @@ func (e DelError) Error() string {
 	s := ""
 	d := ","
 	for n, i := range e {
-		t := i.(Task)
+		t := i
 		if n == len(e)-1 {
 			d = ""
 		}
@@ -207,7 +207,7 @@ func (p *process) run() {
 		case <-p.start:
 			{
 				for _, t := range p.tasks {
-					if t.task.Status() != TaskStatus_NotRunning {
+					if t.task.Status() == TaskStatus_NotRunning {
 						go t.task.Run()
 					}
 				}
