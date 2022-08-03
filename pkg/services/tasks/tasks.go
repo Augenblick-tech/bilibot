@@ -1,4 +1,4 @@
-package process
+package tasks
 
 import (
 	"fmt"
@@ -70,6 +70,14 @@ func init() {
 		start: make(chan struct{}),
 	}
 	go Process.run()
+}
+
+func (p *process) IsExists(mid string) bool {
+	p.RLock()
+	defer p.RUnlock()
+
+	_, ok := p.tasks[mid]
+	return ok
 }
 
 // 添加任务
