@@ -43,7 +43,7 @@ func JsonError(ctx *Context, data interface{}, err error) {
 
 func JsonResult(ctx *Context, data interface{}) {
 	if data == nil {
-		data = "ok"
+		data = "success"
 	}
 	ctx.Context.JSON(http.StatusOK, gin.H{
 		"code": "200",

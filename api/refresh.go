@@ -5,11 +5,10 @@ import (
 
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
+	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
+	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
 	"github.com/spf13/viper"
 )
-
-var biliTasks = make(map[string]*bilitask.BiliTask)
 
 // RefreshDynamic godoc
 // @Summary      监听up主动态
@@ -22,38 +21,37 @@ func RefreshDynamic(c *engine.Context) (interface{}, error) {
 
 	mid := c.Query("mid")
 
-	if _, ok := biliTasks[mid]; ok {
+	if tasks.Process.IsExists(mid) {
 		return nil, e.RespCode_AlreadyExist
 	}
 
-	biliTask := bilitask.NewBiliTask(mid, time.Second*time.Duration(viper.GetInt("user.RefreshTime")))
-	go biliTask.Run()
+	tasks.Process.Add(
+		bilitask.NewBiliTask(
+			mid,
+			time.Second*time.Duration(viper.GetInt("user.RefreshTime"))),
+	)
 
-	biliTasks[mid] = biliTask
-
-	return "success", nil
+	return nil, nil
 }
 
 // GetLatestDynamic godoc
 // @Summary      获取up主最新动态
-// @Description  
+// @Description
 // @Tags         v2
 // @Produce      json
 // @Param        mid   query     string  true  "up主id"
 // @Router       /dynamic/latest [get]
 func GetLatestDynamic(c *engine.Context) (interface{}, error) {
-	mid := c.Query("mid")
-
-	if biliTask, ok := biliTasks[mid]; ok {
-		return biliTask.Data(), nil
+	status := tasks.Process.Status(c.Query("mid"))
+	if len(status) <= 0 {
+		return nil, e.RespCode_ParamError
 	}
-
-	return nil, e.RespCode_ParamError
+	return status[0].Data(), nil
 }
 
 // GetStatus godoc
 // @Summary      获取传入的uid的状态
-// @Description  
+// @Description
 // @Tags         v2
 // @Produce      json
 // @Param        mid   query     string  true  "up主id"
@@ -61,30 +59,27 @@ func GetLatestDynamic(c *engine.Context) (interface{}, error) {
 func GetStatus(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
-	if biliTask, ok := biliTasks[mid]; ok {
-		return biliTask.TaskStatus, nil
-	} else {
-		return nil, e.RespCode_ParamError
+	status := tasks.Process.Status(mid)
+	if len(status) > 0 {
+		return status[0].Status(), nil
 	}
+
+	return nil, e.RespCode_ParamError
+
 }
 
 // StopRefreshDynamic godoc
 // @Summary      停止传入的uid的任务
-// @Description  
+// @Description
 // @Tags         v2
 // @Produce      json
 // @Param        mid   query     string  true  "up主id"
 // @Router       /dynamic/stop [get]
-func StopRefreshDynamic(c *engine.Context) (interface{}, error) {
-	mid := c.Query("mid")
-
-	if biliTask, ok := biliTasks[mid]; ok {
-		err := biliTask.Stop()
-		if err != nil {
-			return nil, err
-		}
-		return "success", nil
-	} else {
+func StopRefreshDynamic(c *engine.Context) (r interface{}, err error) {
+	err = tasks.Process.Stop(c.Query("mid"))
+	if err != nil {
+		// print log
 		return nil, e.RespCode_ParamError
 	}
+	return
 }
