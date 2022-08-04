@@ -21,6 +21,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/bili/qrcode/getLoginInfo": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取二维码状态",
+                "parameters": [
+                    {
+                        "description": "oauthKey",
+                        "name": "qrcode",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bili/qrcode/getLoginUrl": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取二维码登录链接",
+                "responses": {}
+            }
+        },
         "/dynamic/latest": {
             "get": {
                 "produces": [

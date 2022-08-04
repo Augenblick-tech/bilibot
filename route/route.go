@@ -12,7 +12,6 @@ import (
 func Route(addr string) {
 	engine.SetMode("debug")
 	e := engine.NewDefaultEngine()
-	e.Use(engine.Result)
 
 	e.GET("/ping", "pong", func(ctx *engine.Context) (interface{}, error) {
 		return "pong", nil
@@ -23,7 +22,7 @@ func Route(addr string) {
 		return nil, nil
 	})
 
-	v2 := e.Group("/v2")
+	v2 := e.Group("/v2").Use(engine.Result)
 	{
 		v2.POST("/login", "login", api.Login)
 		v2.GET("/dynamic/latest", "getLatestDynamic", api.GetLatestDynamic)
@@ -35,7 +34,7 @@ func Route(addr string) {
 	bi := v2.Group("/bili")
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
-		bi.GET("/login/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
+		bi.POST("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
 		bi.GET("/dynamic/getDynamic", "getDynamic", bili.GetDynamic)
 		bi.POST("/reply/add", "addReply", bili.AddReply)
 	}

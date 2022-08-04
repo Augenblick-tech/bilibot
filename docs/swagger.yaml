@@ -10,6 +10,31 @@ info:
   title: bilibot
   version: "2.0"
 paths:
+  /bili/qrcode/getLoginInfo:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: oauthKey
+        in: body
+        name: qrcode
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取二维码状态
+      tags:
+      - v2
+  /bili/qrcode/getLoginUrl:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取二维码登录链接
+      tags:
+      - v2
   /dynamic/latest:
     get:
       parameters:
