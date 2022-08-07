@@ -24,6 +24,7 @@ func Route(addr string) {
 
 	v2 := e.Group("/v2").Use(engine.Result)
 	{
+		v2.POST("/register", "register", api.Register)
 		v2.POST("/login", "login", api.Login)
 		v2.GET("/dynamic/latest", "getLatestDynamic", api.GetLatestDynamic)
 		v2.GET("/dynamic/refresh", "refreshDynamic", api.RefreshDynamic)

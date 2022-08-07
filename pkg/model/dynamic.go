@@ -32,7 +32,7 @@ type Content struct {
 }
 
 type Dynamic struct {
-	IDStr   string `json:"id_str"` // 动态ID
+	ID      string `json:"id_str"` // 动态ID
 	Modules struct {
 		Author  Author  `json:"module_author"`  // 动态作者
 		Content Content `json:"module_dynamic"` // 动态内容
@@ -46,13 +46,14 @@ func GetDynamic(mid string) ([]Dynamic, error) {
 		return nil, err
 	}
 	var dynamicObj DynamicObj
-	json.Unmarshal(body, &dynamicObj)
-	return dynamicObj.Data.Items, nil
+	err = json.Unmarshal(body, &dynamicObj)
+
+	return dynamicObj.Data.Items, err
 }
 
 func IsDynamicExist(dynamics []Dynamic, dynamic Dynamic) bool {
 	for _, v := range dynamics {
-		if v.IDStr == dynamic.IDStr {
+		if v.ID == dynamic.ID {
 			return true
 		}
 	}
@@ -60,7 +61,7 @@ func IsDynamicExist(dynamics []Dynamic, dynamic Dynamic) bool {
 }
 
 func DynamicReply(dynamic Dynamic, message string) (*ReplyResponse, error) {
-	ReplyResponse, err := AddReply(string(rune(e.DynamicCommentCode)), dynamic.IDStr, message)
+	ReplyResponse, err := AddReply(string(rune(e.DynamicCommentCode)), dynamic.ID, message)
 	if err != nil {
 		return nil, e.ERR_REPLY_DYNAMIC
 	}
