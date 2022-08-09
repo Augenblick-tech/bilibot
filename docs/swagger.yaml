@@ -49,7 +49,7 @@ paths:
       summary: 获取up主最新动态
       tags:
       - v2
-  /dynamic/refresh:
+  /dynamic/listen:
     get:
       description: 根据设定的时间间隔监听up主动态
       parameters:

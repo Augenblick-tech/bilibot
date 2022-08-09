@@ -3,6 +3,7 @@ package route
 import (
 	"github.com/Augenblick-tech/bilibot/api"
 	"github.com/Augenblick-tech/bilibot/api/bili"
+	"github.com/Augenblick-tech/bilibot/api/dynamic"
 	_ "github.com/Augenblick-tech/bilibot/docs"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/swaggo/files"
@@ -26,10 +27,10 @@ func Route(addr string) {
 	{
 		v2.POST("/register", "register", api.Register)
 		v2.POST("/login", "login", api.Login)
-		v2.GET("/dynamic/latest", "getLatestDynamic", api.GetLatestDynamic)
-		v2.GET("/dynamic/refresh", "refreshDynamic", api.RefreshDynamic)
-		v2.GET("/dynamic/status", "getStatus", api.GetStatus)
-		v2.GET("/dynamic/stop", "stopRefreshDynamic", api.StopRefreshDynamic)
+		v2.GET("/dynamic/latest", "getLatestDynamic", dynamic.Latest)
+		v2.GET("/dynamic/listen", "listenDynamic", dynamic.Listen)
+		v2.GET("/dynamic/status", "getStatus", dynamic.Status)
+		v2.GET("/dynamic/stop", "stopRefreshDynamic", dynamic.Stop)
 	}
 
 	bi := v2.Group("/bili")

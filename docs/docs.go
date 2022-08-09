@@ -80,7 +80,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/dynamic/refresh": {
+        "/dynamic/listen": {
             "get": {
                 "description": "根据设定的时间间隔监听up主动态",
                 "produces": [
