@@ -3,16 +3,18 @@ package api
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/pkg/db"
 )
 
 func Register(c *engine.Context) (interface{}, error) {
-	var user = model.User{}
+	var user = db.User{}
 
 	err := c.Bind(&user)
 	if err != nil {
 		return nil, err
 	}
+
+	// password encryption
 
 	err = user.Create()
 
@@ -20,11 +22,11 @@ func Register(c *engine.Context) (interface{}, error) {
 }
 
 func Login(c *engine.Context) (interface{}, error) {
-	var user = model.User{}
+	var user = db.User{}
 
 	var tempUser = struct {
-		Name string `json:"username"`
-		Password string `json:"password"`
+		Name     string `json:"username" binding:"required"`
+		Password string `json:"password" binding:"required"`
 	}{}
 
 	err := c.Bind(&tempUser)
@@ -32,10 +34,12 @@ func Login(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	err = user.Get(tempUser.Name)
+	err = user.Find(tempUser.Name)
 	if err != nil {
 		return nil, err
 	}
+
+	// password decryption
 
 	if user.Password != tempUser.Password {
 		return nil, e.RespCode_ParamError

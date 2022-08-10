@@ -15,7 +15,7 @@ CREATE TABLE `bots` (
   FOREIGN KEY (`user_id`) REFERENCES users (`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `uploaders` (
+CREATE TABLE `authors` (
   `uid` INTEGER NOT NULL PRIMARY KEY,
   `name` VARCHAR(255) NOT NULL,
   `face` TEXT,
@@ -28,5 +28,5 @@ CREATE TABLE `dynamics` (
   `pub_ts` INTEGER NOT NULL,
   `content` TEXT NOT NULL,
   `up_id` INTEGER NOT NULL,
-  FOREIGN KEY (`up_id`) REFERENCES uploaders (`uid`) ON DELETE CASCADE
+  FOREIGN KEY (`up_id`) REFERENCES authors (`uid`) ON DELETE CASCADE
 );

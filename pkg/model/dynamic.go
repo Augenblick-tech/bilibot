@@ -10,19 +10,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-type DynamicObj struct {
+type Dynamics struct {
 	Code int `json:"code"`
 	Data struct {
-		HasMore bool      `json:"has_more"`
+		HasMore bool      `json:"has_more"` // 是否还有更多动态
 		Items   []Dynamic `json:"items"`
+		Offset  string    `json:"offset"` // 动态偏移量，触发下一页动态
 	} `json:"data"`
 }
 
 type Author struct {
-	Mid       int    `json:"mid"`    // 作者ID
-	Name      string `json:"name"`   // 作者名称
-	Face      string `json:"face"`   // 作者头像
-	TimeStamp int64  `json:"pub_ts"` // 作者发布时间
+	Mid   int    `json:"mid"`    // 作者ID
+	Name  string `json:"name"`   // 作者名称
+	Face  string `json:"face"`   // 作者头像
+	PubTS int64  `json:"pub_ts"` // 作者发布时间
 }
 
 type Content struct {
@@ -45,10 +46,11 @@ func GetDynamic(mid string) ([]Dynamic, error) {
 	if err != nil {
 		return nil, err
 	}
-	var dynamicObj DynamicObj
-	err = json.Unmarshal(body, &dynamicObj)
 
-	return dynamicObj.Data.Items, err
+	var dynamics Dynamics
+	err = json.Unmarshal(body, &dynamics)
+
+	return dynamics.Data.Items, err
 }
 
 func IsDynamicExist(dynamics []Dynamic, dynamic Dynamic) bool {
@@ -61,7 +63,7 @@ func IsDynamicExist(dynamics []Dynamic, dynamic Dynamic) bool {
 }
 
 func DynamicReply(dynamic Dynamic, message string) (*ReplyResponse, error) {
-	ReplyResponse, err := AddReply(string(rune(e.DynamicCommentCode)), dynamic.ID, message)
+	ReplyResponse, err := AddReply(17, dynamic.ID, message)
 	if err != nil {
 		return nil, e.ERR_REPLY_DYNAMIC
 	}

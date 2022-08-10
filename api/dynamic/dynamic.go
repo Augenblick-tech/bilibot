@@ -18,7 +18,6 @@ import (
 // @Param        mid   query     string  true  "up主id"
 // @Router       /dynamic/listen [get]
 func Listen(c *engine.Context) (interface{}, error) {
-
 	mid := c.Query("mid")
 
 	if tasks.Process.IsExists(mid) {

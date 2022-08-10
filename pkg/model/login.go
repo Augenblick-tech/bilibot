@@ -10,6 +10,7 @@ import (
 
 	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/utils"
+	"github.com/spf13/viper"
 )
 
 type QRCodeResponse struct {
@@ -60,7 +61,7 @@ func GetLoginInfo(oauthKey string) (interface{}, error) {
 		return nil, err
 	}
 	loginReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	loginReq.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+	loginReq.Header.Set("User-Agent", viper.GetString("server.user_agent"))
 
 	loginResp, err := client.Do(loginReq)
 	if err != nil {

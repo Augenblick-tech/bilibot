@@ -20,7 +20,7 @@ type ReplyResponse struct {
 	} `json:"data"`
 }
 
-func AddReply(typeID string, oid string, message string) (*ReplyResponse, error) {
+func AddReply(typeID int, oid string, message string) (*ReplyResponse, error) {
 	cookie := "SESSDATA=" + viper.GetString("account.SESSDATA")
 	url := "http://api.bilibili.com/x/v2/reply/add"
 	client := &http.Client{}
@@ -28,7 +28,7 @@ func AddReply(typeID string, oid string, message string) (*ReplyResponse, error)
 		"POST",
 		url,
 		strings.NewReader(
-			fmt.Sprintf("plat=1&type=%s&oid=%s&message=%s&csrf=%s", typeID, oid, message, viper.GetString("account.bili_jct")),
+			fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, viper.GetString("account.bili_jct")),
 		),
 	)
 	if err != nil {
@@ -36,7 +36,7 @@ func AddReply(typeID string, oid string, message string) (*ReplyResponse, error)
 	}
 	req.Header.Set("Cookie", cookie)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+	req.Header.Set("User-Agent", viper.GetString("server.user_agent"))
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
