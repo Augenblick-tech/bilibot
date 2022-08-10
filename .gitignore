@@ -1,4 +1,4 @@
 config.toml
 dynamic_history.json
 logs/*.log
-pkg/db/*.db
+db/*.db

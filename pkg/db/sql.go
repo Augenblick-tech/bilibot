@@ -8,10 +8,13 @@ import (
 var DB *gorm.DB
 
 func init() {
-	db, err := gorm.Open(sqlite.Open("./pkg/db/bilibot.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./db/bilibot.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
+
+	db.AutoMigrate(&User{}, &Bot{}, &Author{}, &Dynamic{})
+
 	DB = db
 }
 
