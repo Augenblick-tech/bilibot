@@ -2,11 +2,11 @@ package bili
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
 )
 
 func GetDynamic(c *engine.Context) (interface{}, error) {
-	dynamics, err := model.GetDynamic(c.Query("mid"))
+	dynamics, err := bilibot.GetDynamic(c.Query("mid"))
 	if err != nil {
 		return nil, err
 	}

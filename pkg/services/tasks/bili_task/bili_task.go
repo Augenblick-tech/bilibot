@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 )
 
 type biliTask struct {
 	*tasks.BaseTask
-	data   []model.Dynamic
+	data   []bilibot.Dynamic
 	ctx    context.Context
 	cancel context.CancelFunc
 	ticker *time.Ticker
@@ -19,7 +19,7 @@ type biliTask struct {
 func NewBiliTask(mid string, d time.Duration) *biliTask {
 	return &biliTask{
 		ticker: time.NewTicker(d),
-		data:   make([]model.Dynamic, 0),
+		data:   make([]bilibot.Dynamic, 0),
 		BaseTask: &tasks.BaseTask{
 			TaskStatus: tasks.TaskStatus_NotRunning,
 			Mid:        mid,
@@ -40,7 +40,7 @@ func (b *biliTask) Run() {
 			b.TaskStatus = tasks.TaskStatus_Stoped
 			return
 		case <-b.ticker.C:
-			temp, err := model.GetDynamic(b.Mid)
+			temp, err := bilibot.GetDynamic(b.Mid)
 			if err != nil {
 				b.E = err
 				b.TaskStatus = tasks.TaskStatus_Error

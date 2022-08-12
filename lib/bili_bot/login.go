@@ -1,4 +1,4 @@
-package model
+package bilibot
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package db
+package model
 
 type Bot struct {
 	UID    uint   `gorm:"type:integer;not null;primary_key"`

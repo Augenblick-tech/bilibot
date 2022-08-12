@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/Augenblick-tech/bilibot/lib/db"
+	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/route"
 	"github.com/spf13/viper"
 )
@@ -20,7 +22,23 @@ import (
 // @BasePath /v2
 func main() {
 	InitConfig()
+	InitDB()
 	route.Route(viper.GetString("server.addr"))
+}
+
+func InitDB() {
+	if err := db.Init(db.DbType(viper.GetInt("db.type")), viper.GetString("db.data")); err != nil {
+		panic(err)
+	}
+
+	if err := db.AutoMigrate(
+		model.User{},
+		model.Author{},
+		model.Dynamic{},
+		model.Bot{},
+	); err != nil {
+		panic(err)
+	}
 }
 
 func InitConfig() {

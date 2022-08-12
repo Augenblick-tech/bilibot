@@ -2,7 +2,7 @@ package bili
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
 )
 
 // GetLoginUrl godoc
@@ -12,7 +12,7 @@ import (
 // @Produce      json
 // @Router       /bili/qrcode/getLoginUrl [get]
 func GetLoginUrl(c *engine.Context) (interface{}, error) {
-	qrcode, err := model.GetLoginUrl()
+	qrcode, err := bilibot.GetLoginUrl()
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func GetLoginInfo(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	cookie, err := model.GetLoginInfo(oauth.OauthKey)
+	cookie, err := bilibot.GetLoginInfo(oauth.OauthKey)
 	if err != nil {
 		return nil, err
 	}
