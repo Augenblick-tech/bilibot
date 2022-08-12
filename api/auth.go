@@ -2,12 +2,13 @@ package api
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/pkg/dao"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/db"
+	"github.com/Augenblick-tech/bilibot/pkg/model"
 )
 
 func Register(c *engine.Context) (interface{}, error) {
-	var user = db.User{}
+	var user = model.User{}
 
 	err := c.Bind(&user)
 	if err != nil {
@@ -16,13 +17,12 @@ func Register(c *engine.Context) (interface{}, error) {
 
 	// password encryption
 
-	err = user.Create()
+	err = dao.Create(&user)
 
 	return user.Name, err
 }
 
 func Login(c *engine.Context) (interface{}, error) {
-	var user = db.User{}
 
 	var tempUser = struct {
 		Name     string `json:"username" binding:"required"`
@@ -33,8 +33,11 @@ func Login(c *engine.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	var user = model.User{
+		Name: tempUser.Name,
+	}
 
-	err = user.Find(tempUser.Name)
+	err = dao.First(&user)
 	if err != nil {
 		return nil, err
 	}

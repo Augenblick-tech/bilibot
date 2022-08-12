@@ -2,7 +2,7 @@ package bili
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
-	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
 )
 
 func AddReply(c *engine.Context) (interface{}, error) {
@@ -17,7 +17,7 @@ func AddReply(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	replyResp, err := model.AddReply(comment.Type, comment.Oid, comment.Message)
+	replyResp, err := bilibot.AddReply(comment.Type, comment.Oid, comment.Message)
 	if err != nil {
 		return nil, err
 	}
