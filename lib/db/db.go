@@ -53,7 +53,7 @@ func Init(t DbType, d string) error {
 }
 
 func AutoMigrate(dst ...interface{}) error {
-	return DB.AutoMigrate(dst)
+	return DB.AutoMigrate(dst...)
 }
 
 func Transaction(f func(tdb *Database) error) error {
