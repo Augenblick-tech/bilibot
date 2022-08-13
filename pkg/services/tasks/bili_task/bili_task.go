@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
+	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 )
 
@@ -45,6 +46,25 @@ func (b *biliTask) Run() {
 				b.E = err
 				b.TaskStatus = tasks.TaskStatus_Error
 				return
+			}
+			// 初步剪切动态(仅限运行时)
+			if len(b.data) > 0 {
+				for i, v := range temp {
+					// 从data中选取最新动态与temp中最新动态开始比较
+					if v.Modules.Author.PubTS == b.data[0].Modules.Author.PubTS {
+						// 避免空数据
+						if i > 0 {
+							b.SetError(dynamic.Add(temp[:i]...))
+						}
+						break // 截断最新动态后结束循环
+					}
+				}
+				// 捡漏，如果temp最老的动态发布时间都大于data的最老发布时间就全部添加
+				if temp[len(temp)-1].Modules.Author.PubTS > b.data[0].Modules.Author.PubTS {
+					b.SetError(dynamic.Add(temp...))
+				}
+			} else {
+				b.SetError(dynamic.Add(temp...))
 			}
 			b.data = temp
 		}
