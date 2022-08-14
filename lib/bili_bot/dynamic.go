@@ -22,7 +22,7 @@ type Author struct {
 	Mid   int    `json:"mid"`    // 作者ID
 	Name  string `json:"name"`   // 作者名称
 	Face  string `json:"face"`   // 作者头像
-	PubTS int64  `json:"pub_ts"` // 作者发布时间
+	PubTS uint64  `json:"pub_ts"` // 作者发布时间
 }
 
 type Content struct {
