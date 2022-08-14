@@ -10,6 +10,11 @@ func GetDynamic(id uint64) (dynamic model.Dynamic, err error) {
 	return
 }
 
+func GetDynamicByMid(mid string) (dynamic []model.Dynamic, err error) {
+	err = db.DB.Where("author_id = ?", mid).Find(&dynamic).Error
+	return
+}
+
 func GetDynamicByOder(limit int) (dynamic []model.Dynamic, err error) {
 	err = db.DB.Limit(limit).Order("dynamic_id desc").Find(&dynamic).Error
 	return

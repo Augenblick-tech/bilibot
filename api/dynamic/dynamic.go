@@ -20,17 +20,19 @@ import (
 func Listen(c *engine.Context) (interface{}, error) {
 	mid := c.Query("mid")
 
-	if tasks.Process.IsExists(mid) {
-		return nil, e.RespCode_AlreadyExist
+	if !tasks.Process.IsExists(mid) {
+		tasks.Process.Add(
+			bilitask.NewBiliTask(
+				mid,
+				time.Second*time.Duration(viper.GetInt("user.RefreshTime"))),
+		)
+		return nil, nil
+	} else {
+		if tasks.Process.Status(mid)[0].Status() == tasks.TaskStatus_Stoped {
+			return nil, tasks.Process.Run(mid)
+		}
+		return nil, tasks.Process.Status(mid)[0].Status()
 	}
-
-	tasks.Process.Add(
-		bilitask.NewBiliTask(
-			mid,
-			time.Second*time.Duration(viper.GetInt("user.RefreshTime"))),
-	)
-
-	return nil, nil
 }
 
 // Latest godoc
@@ -78,7 +80,7 @@ func Stop(c *engine.Context) (r interface{}, err error) {
 	err = tasks.Process.Stop(c.Query("mid"))
 	if err != nil {
 		// print log
-		return nil, e.RespCode_ParamError
+		return nil, err
 	}
 	return
 }

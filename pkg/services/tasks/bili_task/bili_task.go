@@ -74,6 +74,7 @@ func (b *biliTask) Run() {
 func (b *biliTask) Stop() error {
 	if b.TaskStatus == tasks.TaskStatus_Running {
 		b.cancel()
+		return nil
 	}
-	return nil
+	return b.Status()
 }

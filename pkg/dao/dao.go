@@ -9,3 +9,7 @@ func Create(obj interface{}) error {
 func First(obj interface{}) error {
 	return db.DB.First(&obj).Error
 }
+
+func Delete(obj interface{}) error {
+	return db.DB.Delete(obj).Error
+}

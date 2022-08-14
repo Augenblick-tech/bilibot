@@ -32,6 +32,14 @@ func Add(dynamics ...bilibot.Dynamic) error {
 	return nil
 }
 
+func Delete(id string) error {
+	return dao.Delete(model.Dynamic{DynamicID: id})
+}
+
+func GetByMid(mid string) ([]model.Dynamic, error) {
+	return dao.GetDynamicByMid(mid)
+}
+
 func checkNew(new []bilibot.Dynamic, old []model.Dynamic) (int, int) {
 	// 双指针寻找相同的动态
 	i, j := 0, 0

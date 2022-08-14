@@ -52,15 +52,20 @@ type Task interface {
 	Data() interface{}
 }
 
+//go:generate stringer -type=TaskStatus --linecomment
 type TaskStatus int8
 
 const (
-	TaskStatus_Nil TaskStatus = iota
-	TaskStatus_Running
-	TaskStatus_NotRunning
-	TaskStatus_Error
-	TaskStatus_Stoped
+	TaskStatus_Nil        TaskStatus = iota // 任务不存在
+	TaskStatus_Running                      // 任务运行中
+	TaskStatus_NotRunning                   // 任务未运行
+	TaskStatus_Error                        // 任务出错
+	TaskStatus_Stoped                       // 任务已停止
 )
+
+func (t TaskStatus) Error() string {
+	return t.String()
+}
 
 var Process *process
 
@@ -146,7 +151,7 @@ func (p *process) Stop(mid string) error {
 		return t.task.Stop()
 	}
 
-	return nil
+	return TaskStatus_Nil
 }
 
 func (p *process) Status(mids ...string) []Task {
