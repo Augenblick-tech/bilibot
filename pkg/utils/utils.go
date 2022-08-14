@@ -3,15 +3,19 @@ package utils
 import (
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/spf13/viper"
 )
 
-func Fetch(url string) ([]byte, error) {
+func Fetch(url string, cookie ...*http.Cookie) ([]byte, error) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Set("User-Agent", viper.GetString("server.user_agent"))
+	if len(cookie) > 0 {
+		req.AddCookie(cookie[0])
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -29,4 +33,31 @@ func Fetch(url string) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+func CookieToString(c []*http.Cookie) string {
+	var s []string
+	for _, v := range c {
+		s = append(s, v.Name+"="+v.Value)
+	}
+	return strings.Join(s, "; ")
+}
+
+func CookieToMap(c []*http.Cookie) map[string]string {
+	m := make(map[string]string)
+	for _, v := range c {
+		m[v.Name] = v.Value
+	}
+	return m
+}
+
+func StrToMap(s string) map[string]string {
+	m := make(map[string]string)
+	for _, v := range strings.Split(s, ";") {
+		kv := strings.Split(v, "=")
+		if len(kv) == 2 {
+			m[kv[0]] = kv[1]
+		}
+	}
+	return m
 }

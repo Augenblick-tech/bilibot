@@ -10,6 +10,23 @@ info:
   title: bilibot
   version: "2.0"
 paths:
+  /bili/qrcode/check:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: SESSDATA
+        in: body
+        name: SESSDATA
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 查询登陆状态
+      tags:
+      - v2
   /bili/qrcode/getLoginInfo:
     post:
       consumes:

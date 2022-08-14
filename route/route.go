@@ -37,6 +37,7 @@ func Route(addr string) {
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
 		bi.POST("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
+		bi.POST("/qrcode/check", "checkLogin", bili.CheckLogin)
 		bi.GET("/dynamic/getDynamic", "getDynamic", bili.GetDynamic)
 		bi.POST("/reply/add", "addReply", bili.AddReply)
 	}

@@ -21,6 +21,32 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/bili/qrcode/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "查询登陆状态",
+                "parameters": [
+                    {
+                        "description": "SESSDATA",
+                        "name": "SESSDATA",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/bili/qrcode/getLoginInfo": {
             "post": {
                 "consumes": [

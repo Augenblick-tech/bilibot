@@ -30,21 +30,42 @@ type LoginResponse struct {
 	Data    interface{} `json:"data"`
 }
 
+type AuthorInfo struct {
+	Code    int        `json:"code"`
+	Message string     `json:"message"`
+	Data    AuthorData `json:"data"`
+}
+
+type AuthorData struct {
+	Mid  int    `json:"mid"`
+	Name string `json:"name"`
+	Sex  string `json:"sex"`
+	Face string `json:"face"`
+}
+
+type BotInfo struct {
+	Code    int     `json:"code"`
+	Message string  `json:"message"`
+	Data    BotData `json:"data"`
+}
+
+type BotData struct {
+	Mid     uint   `json:"mid"`
+	Name    string `json:"uname"`
+	IsLogin bool   `json:"isLogin"`
+	Face    string `json:"face"`
+}
+
 func GetLoginUrl() (*QRCodeResponse, error) {
 	qrCodeBody, err := utils.Fetch("http://passport.bilibili.com/qrcode/getLoginUrl")
 	if err != nil {
 		return nil, err
 	}
 	var qrCodeResponse QRCodeResponse
-	err = json.Unmarshal(qrCodeBody, &qrCodeResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	return &qrCodeResponse, nil
+	return &qrCodeResponse, json.Unmarshal(qrCodeBody, &qrCodeResponse)
 }
 
-func GetLoginInfo(oauthKey string) (interface{}, error) {
+func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
 	client := &http.Client{}
 	jar, err := cookiejar.New(nil)
 	if err != nil {
@@ -99,4 +120,22 @@ func GetLoginInfo(oauthKey string) (interface{}, error) {
 	}
 
 	return nil, e.ERR_LOGIN_FAIL
+}
+
+func GetInfo(mid string) (*AuthorInfo, error) {
+	body, err := utils.Fetch(fmt.Sprintf("http://api.bilibili.com/x/space/acc/info?mid=%s", mid))
+	if err != nil {
+		return nil, err
+	}
+	var botInfo AuthorInfo
+	return &botInfo, json.Unmarshal(body, &botInfo)
+}
+
+func GetBotInfo(cookie *http.Cookie) (*BotInfo, error) {
+	body, err := utils.Fetch("http://api.bilibili.com/nav", cookie)
+	if err != nil {
+		return nil, err
+	}
+	var botInfo BotInfo
+	return &botInfo, json.Unmarshal(body, &botInfo)
 }

@@ -13,3 +13,7 @@ func First(obj interface{}) error {
 func Delete(obj interface{}) error {
 	return db.DB.Delete(obj).Error
 }
+
+func Save(obj interface{}) error {
+	return db.DB.Save(obj).Error
+}
