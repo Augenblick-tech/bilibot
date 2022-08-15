@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"log"
 	"net/http"
 
 	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
@@ -15,9 +14,6 @@ func Add(cookie []*http.Cookie, UserID uint) error {
 	if err != nil {
 		return err
 	}
-
-	log.Println("SESSDATA: ", cookie[3].Value)
-	log.Println("botInfo: ", botInfo)
 
 	return dao.Create(&model.Bot{
 		UID:     botInfo.Data.Mid,
@@ -37,6 +33,10 @@ func Get(uid uint) (*model.Bot, error) {
 		return nil, err
 	}
 	return &bot, nil
+}
+
+func GetList(UserID uint) ([]*model.Bot, error) {
+	return dao.GetBotList(UserID)
 }
 
 func Delete(uid uint) error {

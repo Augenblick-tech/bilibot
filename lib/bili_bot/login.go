@@ -37,7 +37,7 @@ type AuthorInfo struct {
 }
 
 type AuthorData struct {
-	Mid  int    `json:"mid"`
+	Mid  string `json:"mid"`
 	Name string `json:"name"`
 	Sex  string `json:"sex"`
 	Face string `json:"face"`

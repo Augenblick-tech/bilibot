@@ -17,3 +17,7 @@ func Delete(id string) error {
 func GetByMid(mid string) ([]model.Dynamic, error) {
 	return dao.GetDynamicByMid(mid)
 }
+
+func GetList(authorID string) ([]*model.Dynamic, error) {
+	return dao.GetDynamicList(authorID)
+}
