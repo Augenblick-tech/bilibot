@@ -2,9 +2,11 @@ package web
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/lib/jwt"
 	"github.com/Augenblick-tech/bilibot/pkg/dao"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
 
 func Register(c *engine.Context) (interface{}, error) {
@@ -33,20 +35,17 @@ func Login(c *engine.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	var user = model.User{
-		Name: tempUser.Name,
-	}
 
-	err = dao.First(&user)
+	u, err := user.Get(tempUser.Name)
 	if err != nil {
 		return nil, err
 	}
 
 	// password decryption
 
-	if user.Password != tempUser.Password {
+	if u.Password != tempUser.Password {
 		return nil, e.RespCode_ParamError
 	}
 
-	return user.Name, err
+	return jwt.GenToken(u.ID, u.Name)
 }

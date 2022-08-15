@@ -6,6 +6,7 @@ import (
 	"github.com/Augenblick-tech/bilibot/api/web"
 	_ "github.com/Augenblick-tech/bilibot/docs"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/lib/jwt"
 	"github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
 )
@@ -40,7 +41,7 @@ func Route(addr string) {
 		webs.GET("/dynamic/list", "getDynamicList", web.GetDynamicList)
 	}
 
-	bi := v2.Group("/bili")
+	bi := v2.Group("/bili").Use(jwt.JWTAuth)
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
 		bi.POST("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)

@@ -79,8 +79,8 @@ func (r *RouteGroup) GET(path, name string, h Handle) {
 	if r.i != nil {
 		r.i.Done(r, path, name, h)
 	}
-	for _, i := range r.m {
-		h = i(h)
+	for i := range r.m {
+		h = r.m[len(r.m)-i-1](h)
 	}
 	r.g.GET(path, handle(h))
 }
@@ -89,8 +89,8 @@ func (r *RouteGroup) POST(path, name string, h Handle) {
 	if r.i != nil {
 		r.i.Done(r, path, name, h)
 	}
-	for _, i := range r.m {
-		h = i(h)
+	for i := range r.m {
+		h = r.m[len(r.m)-i-1](h)
 	}
 	// h = post(h)
 	r.g.POST(path, handle(h))

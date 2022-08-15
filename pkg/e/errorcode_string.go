@@ -21,11 +21,12 @@ func _() {
 	_ = x[ERR_COMMENT_REPLY_FAIL-10]
 	_ = x[ERR_HTTP_STATUS_NOT_OK-11]
 	_ = x[ERR_LOGIN_FAIL-12]
+	_ = x[ERR_AUTH_EMPTY-13]
 }
 
-const _ErrorCode_name = "读取文件错误写入文件错误创建文件错误反序列化错误序列化错误添加动态错误回复动态错误动态已存在无效数字低于阈值评论错误http状态不是200登录失败"
+const _ErrorCode_name = "读取文件错误写入文件错误创建文件错误反序列化错误序列化错误添加动态错误回复动态错误动态已存在无效数字低于阈值评论错误http状态不是200登录失败请求体中auth为空"
 
-var _ErrorCode_index = [...]uint8{0, 18, 36, 54, 72, 87, 105, 123, 138, 150, 162, 174, 193, 205}
+var _ErrorCode_index = [...]uint8{0, 18, 36, 54, 72, 87, 105, 123, 138, 150, 162, 174, 193, 205, 227}
 
 func (i ErrorCode) String() string {
 	if i < 0 || i >= ErrorCode(len(_ErrorCode_index)-1) {

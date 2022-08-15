@@ -17,6 +17,8 @@ const (
 	ERR_COMMENT_REPLY_FAIL                  // 评论错误
 	ERR_HTTP_STATUS_NOT_OK                  // http状态不是200
 	ERR_LOGIN_FAIL                          // 登录失败
+	ERR_AUTH_EMPTY                          // 请求体中auth为空
+	ERR_AUTH_FORMAT                         // 请求体中auth格式错误
 )
 
 func (e ErrorCode) Error() string {
