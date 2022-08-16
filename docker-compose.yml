@@ -3,5 +3,7 @@ services:
   bilibot:
     build: .
     volumes:
-      - ./config.toml:/app/config.toml
-      - ./logs:/app/logs
+      - ./conf:/app/conf
+      - ./db:/app/db
+    ports:
+      - "2333:2333"
