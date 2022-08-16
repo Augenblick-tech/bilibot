@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
-	"github.com/Augenblick-tech/bilibot/pkg/services/author"
 	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 )
@@ -25,7 +24,7 @@ func NewBiliTask(mid string, d time.Duration) *biliTask {
 		BaseTask: &tasks.BaseTask{
 			TaskStatus: tasks.TaskStatus_NotRunning,
 			Mid:        mid,
-			E:          author.Add(mid, 2), // BotID 暂时设为 2
+			E:          nil,
 		},
 	}
 }

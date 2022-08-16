@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/spf13/viper"
 )
 
 type Claims struct {
@@ -12,7 +13,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-var Secret = []byte("fiodgdjbdbxcvkblmdgsgrerg54df654gdfh8jy")
+var Secret = []byte(viper.GetString("jwt.secret"))
 
 func GenToken(userID uint, username string) (string, error) {
 	claims := Claims{

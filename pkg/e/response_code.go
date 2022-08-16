@@ -12,6 +12,7 @@ const (
 	RespCode_ReplyError                          // 回复错误
 	RespCode_RefreshError                        // 刷新错误
 	RespCode_AlreadyExist                        // 已存在
+	RespCode_NO_RECORD                           // 当前用户无此up主/bot数据
 )
 
 func (r ResponseCode) Error() string {

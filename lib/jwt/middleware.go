@@ -19,12 +19,13 @@ func JWTAuth(h engine.Handle) engine.Handle {
 			return nil, e.ERR_AUTH_FORMAT
 		}
 
-		tokenString, err := ParseToken(headers[1])
+		token, err := ParseToken(headers[1])
 		if err != nil {
 			return nil, err
 		}
 
-		c.Context.Set("token", tokenString)
+		c.Context.Set("token", token)
+		c.Context.Set("UserID", token.UserID)
 
 		if r, err := h(c); err == nil {
 			return r, nil

@@ -85,7 +85,88 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/dynamic/latest": {
+        "/web/author/list": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取 up 主列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/bot/list": {
+            "get": {
+                "description": "根据 Token 获取 Bot 列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取 Bot 列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/dynamic/addAuthor": {
+            "post": {
+                "description": "需先添加up主之后才能监听动态",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "添加up主",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/dynamic/latest": {
             "get": {
                 "produces": [
                     "application/json"
@@ -97,6 +178,50 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/dynamic/list": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "获取 up 主的动态列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "up主id",
                         "name": "mid",
                         "in": "query",
@@ -106,7 +231,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/dynamic/listen": {
+        "/web/dynamic/listen": {
             "get": {
                 "description": "根据设定的时间间隔监听up主动态",
                 "produces": [
@@ -119,16 +244,25 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "up主id",
-                        "name": "mid",
-                        "in": "query",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                        }
                     }
                 ],
                 "responses": {}
             }
         },
-        "/dynamic/status": {
+        "/web/dynamic/status": {
             "get": {
                 "produces": [
                     "application/json"
@@ -140,16 +274,25 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "up主id",
-                        "name": "mid",
-                        "in": "query",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                        }
                     }
                 ],
                 "responses": {}
             }
         },
-        "/dynamic/stop": {
+        "/web/dynamic/stop": {
             "get": {
                 "produces": [
                     "application/json"
@@ -161,13 +304,128 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "up主id",
-                        "name": "mid",
-                        "in": "query",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                        }
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/web/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "站点用户登录",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "SESSDATA",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v2"
+                ],
+                "summary": "站点用户注册",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "information",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "api_dynamic.addAuthorInfo": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "mid": {
+                    "type": "string"
+                }
+            }
+        },
+        "api_web.userInfo": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "mid": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_Augenblick-tech_bilibot_api_web.userInfo": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
             }
         }
     }

@@ -26,19 +26,23 @@ func Route(addr string) {
 
 	v2 := e.Group("/v2").Use(engine.Result)
 	{
-		v2.GET("/dynamic/latest", "getLatestDynamic", dynamic.Latest)
-		v2.GET("/dynamic/listen", "listenDynamic", dynamic.Listen)
-		v2.GET("/dynamic/status", "getStatus", dynamic.Status)
-		v2.GET("/dynamic/stop", "stopRefreshDynamic", dynamic.Stop)
+		v2.POST("/web/register", "register", web.Register)
+		v2.POST("/web/login", "login", web.Login)
 	}
 
-	webs := v2.Group("/web")
+	webs := v2.Group("/web").Use(jwt.JWTAuth)
 	{
-		webs.POST("/register", "register", web.Register)
-		webs.POST("/login", "login", web.Login)
 		webs.GET("/bot/list", "getBotList", web.GetBotList)
 		webs.GET("/author/list", "getAuthorList", web.GetAuthorList)
-		webs.GET("/dynamic/list", "getDynamicList", web.GetDynamicList)
+		dynm := webs.Group("/dynamic")
+		{
+			dynm.POST("/addAuthor", "addAuthor", dynamic.AddAuthor)
+			dynm.GET("/list", "getDynamicList", web.GetDynamicList)
+			dynm.GET("/latest", "getLatestDynamic", dynamic.Latest)
+			dynm.GET("/listen", "listenDynamic", dynamic.Listen)
+			dynm.GET("/status", "getStatus", dynamic.Status)
+			dynm.GET("/stop", "stopRefreshDynamic", dynamic.Stop)
+		}
 	}
 
 	bi := v2.Group("/bili").Use(jwt.JWTAuth)

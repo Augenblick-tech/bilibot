@@ -14,7 +14,7 @@ func CreateWithIgonreConflict(obj interface{}) error {
 }
 
 func First(obj interface{}) error {
-	return db.DB.First(&obj).Error
+	return db.DB.First(obj).Error
 }
 
 func Delete(obj interface{}) error {

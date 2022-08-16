@@ -1,4 +1,39 @@
 basePath: /v2
+definitions:
+  api_dynamic.addAuthorInfo:
+    properties:
+      bot_id:
+        type: string
+      mid:
+        type: string
+    type: object
+  api_web.userInfo:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo:
+    properties:
+      bot_id:
+        type: string
+      mid:
+        type: string
+    type: object
+  github.com_Augenblick-tech_bilibot_api_web.userInfo:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
 host: localhost:2333
 info:
   contact:
@@ -52,61 +87,198 @@ paths:
       summary: 获取二维码登录链接
       tags:
       - v2
-  /dynamic/latest:
+  /web/author/list:
     get:
       parameters:
-      - description: up主id
-        in: query
-        name: mid
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
         type: string
+      - description: BotID
+        in: query
+        name: bot_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取 up 主列表
+      tags:
+      - v2
+  /web/bot/list:
+    get:
+      description: 根据 Token 获取 Bot 列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取 Bot 列表
+      tags:
+      - v2
+  /web/dynamic/addAuthor:
+    post:
+      description: 需先添加up主之后才能监听动态
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+      produces:
+      - application/json
+      responses: {}
+      summary: 添加up主
+      tags:
+      - v2
+  /web/dynamic/latest:
+    get:
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
       summary: 获取up主最新动态
       tags:
       - v2
-  /dynamic/listen:
+  /web/dynamic/list:
     get:
-      description: 根据设定的时间间隔监听up主动态
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BotID
+        in: query
+        name: bot_id
+        required: true
+        type: string
       - description: up主id
         in: query
         name: mid
         required: true
         type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取 up 主的动态列表
+      tags:
+      - v2
+  /web/dynamic/listen:
+    get:
+      description: 根据设定的时间间隔监听up主动态
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
       summary: 监听up主动态
       tags:
       - v2
-  /dynamic/status:
+  /web/dynamic/status:
     get:
       parameters:
-      - description: up主id
-        in: query
-        name: mid
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
         type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
       summary: 获取传入的uid的状态
       tags:
       - v2
-  /dynamic/stop:
+  /web/dynamic/stop:
     get:
       parameters:
-      - description: up主id
-        in: query
-        name: mid
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
         type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
       summary: 停止传入的uid的任务
+      tags:
+      - v2
+  /web/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: SESSDATA
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+      produces:
+      - application/json
+      responses: {}
+      summary: 站点用户登录
+      tags:
+      - v2
+  /web/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: information
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+      produces:
+      - application/json
+      responses: {}
+      summary: 站点用户注册
       tags:
       - v2
 swagger: "2.0"

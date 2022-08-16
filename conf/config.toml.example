@@ -1,17 +1,24 @@
 [server]
-addr = "127.0.0.1:2333" # 服务器运行地址
-
-[uploader]
-mid = 13424328 # up主uid
-MessageHead = '' # 自定义回复消息首部
-MessageTail = '' # 自定义回复消息小尾巴
+addr = "127.0.0.1:2333"
+user_agent = ""
 
 [user]
-RefreshTime = 10 # 刷新动态间隔时间
+RefreshTime = 3 # 刷新动态间隔时间
 
 [cli]
 mhid = '4BTGCg7un84hMHYoKdNVPao' # 草料二维码样式
 
+[email]
+host = ''
+port = 587
+user = ''
+passwd = ''
+from = ''
+to = ['']
+
 [db]
 type = 1 # 1: sqlit3 2: mysql
 data = "./db/bilibot.db" # 打开数据库所需的字符串信息
+
+[jwt]
+secret = '' # jwt加密密钥

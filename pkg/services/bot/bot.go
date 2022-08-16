@@ -2,6 +2,7 @@ package bot
 
 import (
 	"net/http"
+	"strconv"
 
 	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
 	"github.com/Augenblick-tech/bilibot/pkg/dao"
@@ -16,7 +17,7 @@ func Add(cookie []*http.Cookie, UserID uint) error {
 	}
 
 	return dao.Create(&model.Bot{
-		UID:     botInfo.Data.Mid,
+		UID:     strconv.Itoa(int(botInfo.Data.Mid)),
 		Name:    botInfo.Data.Name,
 		Face:    botInfo.Data.Face,
 		Cookie:  utils.CookieToString(cookie),
@@ -25,7 +26,7 @@ func Add(cookie []*http.Cookie, UserID uint) error {
 	})
 }
 
-func Get(uid uint) (*model.Bot, error) {
+func Get(uid string) (*model.Bot, error) {
 	bot := model.Bot{
 		UID: uid,
 	}
@@ -39,6 +40,6 @@ func GetList(UserID uint) ([]*model.Bot, error) {
 	return dao.GetBotList(UserID)
 }
 
-func Delete(uid uint) error {
+func Delete(uid string) error {
 	return dao.Delete(&model.Bot{UID: uid})
 }

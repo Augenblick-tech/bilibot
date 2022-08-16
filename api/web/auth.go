@@ -9,8 +9,21 @@ import (
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
 
+type userInfo struct {
+	Name     string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+// Register godoc
+// @Summary      站点用户注册
+// @Description
+// @Tags         v2
+// @Accept       json
+// @Produce      json
+// @Param        information   body     userInfo	true  "用户信息"
+// @Router       /web/register [post]
 func Register(c *engine.Context) (interface{}, error) {
-	var user = model.User{}
+	user := userInfo{}
 
 	err := c.Bind(&user)
 	if err != nil {
@@ -19,17 +32,24 @@ func Register(c *engine.Context) (interface{}, error) {
 
 	// password encryption
 
-	err = dao.Create(&user)
+	err = dao.Create(&model.User{
+		Name:     user.Name,
+		Password: user.Password,
+	})
 
 	return user.Name, err
 }
 
+// Login godoc
+// @Summary      站点用户登录
+// @Description
+// @Tags         v2
+// @Accept       json
+// @Produce      json
+// @Param        SESSDATA   body     userInfo	true  "用户信息"
+// @Router       /web/login [post]
 func Login(c *engine.Context) (interface{}, error) {
-
-	var tempUser = struct {
-		Name     string `json:"username" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}{}
+	tempUser := userInfo{}
 
 	err := c.Bind(&tempUser)
 	if err != nil {
