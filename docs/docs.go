@@ -162,7 +162,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_bili.commentInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo"
                         }
                     }
                 ],
@@ -428,7 +428,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
                         }
                     }
                 ],
@@ -454,7 +454,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
                         }
                     }
                 ],
@@ -611,7 +611,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "2.0",
-	Host:             "0.0.0.0:2333",
+	Host:             "",
 	BasePath:         "/v2",
 	Schemes:          []string{},
 	Title:            "bilibot",

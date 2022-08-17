@@ -67,5 +67,12 @@ func Login(c *engine.Context) (interface{}, error) {
 		return nil, e.RespCode_ParamError
 	}
 
-	return jwt.GenToken(u.ID, u.Name)
+	token, err := jwt.GenToken(u.ID, u.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return map[string]any{
+		"AccessToken": token,
+	}, nil
 }

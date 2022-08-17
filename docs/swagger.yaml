@@ -94,7 +94,6 @@ definitions:
     - password
     - username
     type: object
-host: 0.0.0.0:2333
 info:
   contact:
     email: lonzzi@qq.com
@@ -197,7 +196,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_bili.commentInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo'
       produces:
       - application/json
       responses: {}
@@ -376,7 +375,7 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
       produces:
       - application/json
       responses: {}
@@ -393,7 +392,7 @@ paths:
         name: information
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
       produces:
       - application/json
       responses: {}

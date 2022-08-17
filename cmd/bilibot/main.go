@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/Augenblick-tech/bilibot/docs"
 	"github.com/Augenblick-tech/bilibot/lib/db"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/route"
@@ -18,12 +19,12 @@ import (
 // @contact.url https://ronki.moe
 // @contact.email lonzzi@qq.com
 
-// @host 0.0.0.0:2333
 // @BasePath /v2
 func main() {
 	InitConfig()
 	InitDB()
-	route.Route(viper.GetString("server.addr"))
+	docs.SwaggerInfo.Host = viper.GetString("server.domain") + ":" + viper.GetString("server.port")
+	route.Route(viper.GetString("server.addr") + ":" + viper.GetString("server.port"))
 }
 
 func InitDB() {
