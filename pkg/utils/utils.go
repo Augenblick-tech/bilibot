@@ -53,6 +53,7 @@ func CookieToMap(c []*http.Cookie) map[string]string {
 
 func StrToMap(s string) map[string]string {
 	m := make(map[string]string)
+	s = strings.ReplaceAll(s, " ", "")
 	for _, v := range strings.Split(s, ";") {
 		kv := strings.Split(v, "=")
 		if len(kv) == 2 {

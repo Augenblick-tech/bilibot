@@ -1,5 +1,35 @@
 basePath: /v2
 definitions:
+  api_bili.commentInfo:
+    properties:
+      bot_id:
+        type: string
+      message:
+        type: string
+      oid:
+        type: string
+      type:
+        type: integer
+    required:
+    - bot_id
+    - message
+    - oid
+    - type
+    type: object
+  api_bili.cookieInfo:
+    properties:
+      SESSDATA:
+        type: string
+    required:
+    - SESSDATA
+    type: object
+  api_bili.oauthInfo:
+    properties:
+      oauthKey:
+        type: string
+    required:
+    - oauthKey
+    type: object
   api_dynamic.addAuthorInfo:
     properties:
       bot_id:
@@ -16,6 +46,36 @@ definitions:
     required:
     - password
     - username
+    type: object
+  github.com_Augenblick-tech_bilibot_api_bili.commentInfo:
+    properties:
+      bot_id:
+        type: string
+      message:
+        type: string
+      oid:
+        type: string
+      type:
+        type: integer
+    required:
+    - bot_id
+    - message
+    - oid
+    - type
+    type: object
+  github.com_Augenblick-tech_bilibot_api_bili.cookieInfo:
+    properties:
+      SESSDATA:
+        type: string
+    required:
+    - SESSDATA
+    type: object
+  github.com_Augenblick-tech_bilibot_api_bili.oauthInfo:
+    properties:
+      oauthKey:
+        type: string
+    required:
+    - oauthKey
     type: object
   github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo:
     properties:
@@ -45,48 +105,105 @@ info:
   title: bilibot
   version: "2.0"
 paths:
+  /bili/dynamic/getDynamic:
+    get:
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BotID
+        in: query
+        name: bot_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取动态列表(访问b站api)
+      tags:
+      - bili
   /bili/qrcode/check:
     post:
       consumes:
       - application/json
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: SESSDATA
         in: body
         name: SESSDATA
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/api_bili.cookieInfo'
       produces:
       - application/json
       responses: {}
-      summary: 查询登陆状态
+      summary: 查询Bot登陆状态
       tags:
-      - v2
+      - bili
   /bili/qrcode/getLoginInfo:
     post:
       consumes:
       - application/json
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: oauthKey
         in: body
         name: qrcode
         required: true
         schema:
-          type: string
+          $ref: '#/definitions/api_bili.oauthInfo'
       produces:
       - application/json
       responses: {}
       summary: 获取二维码状态
       tags:
-      - v2
+      - bili
   /bili/qrcode/getLoginUrl:
     get:
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}
       summary: 获取二维码登录链接
       tags:
-      - v2
+      - bili
+  /bili/reply/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 回复评论详细信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo'
+      produces:
+      - application/json
+      responses: {}
+      summary: 根据type与oid进行回复
+      tags:
+      - bili
   /web/author/list:
     get:
       parameters:
@@ -105,7 +222,7 @@ paths:
       responses: {}
       summary: 获取 up 主列表
       tags:
-      - v2
+      - web
   /web/bot/list:
     get:
       description: 根据 Token 获取 Bot 列表
@@ -120,9 +237,11 @@ paths:
       responses: {}
       summary: 获取 Bot 列表
       tags:
-      - v2
+      - web
   /web/dynamic/addAuthor:
     post:
+      consumes:
+      - application/json
       description: 需先添加up主之后才能监听动态
       parameters:
       - description: Bearer 用户令牌
@@ -141,7 +260,7 @@ paths:
       responses: {}
       summary: 添加up主
       tags:
-      - v2
+      - web
   /web/dynamic/latest:
     get:
       parameters:
@@ -161,7 +280,7 @@ paths:
       responses: {}
       summary: 获取up主最新动态
       tags:
-      - v2
+      - web
   /web/dynamic/list:
     get:
       parameters:
@@ -185,7 +304,7 @@ paths:
       responses: {}
       summary: 获取 up 主的动态列表
       tags:
-      - v2
+      - web
   /web/dynamic/listen:
     get:
       description: 根据设定的时间间隔监听up主动态
@@ -206,7 +325,7 @@ paths:
       responses: {}
       summary: 监听up主动态
       tags:
-      - v2
+      - web
   /web/dynamic/status:
     get:
       parameters:
@@ -226,7 +345,7 @@ paths:
       responses: {}
       summary: 获取传入的uid的状态
       tags:
-      - v2
+      - web
   /web/dynamic/stop:
     get:
       parameters:
@@ -246,7 +365,7 @@ paths:
       responses: {}
       summary: 停止传入的uid的任务
       tags:
-      - v2
+      - web
   /web/login:
     post:
       consumes:
@@ -263,7 +382,7 @@ paths:
       responses: {}
       summary: 站点用户登录
       tags:
-      - v2
+      - web
   /web/register:
     post:
       consumes:
@@ -280,5 +399,5 @@ paths:
       responses: {}
       summary: 站点用户注册
       tags:
-      - v2
+      - web
 swagger: "2.0"

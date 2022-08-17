@@ -20,7 +20,8 @@ type addAuthorInfo struct {
 // AddAuthor godoc
 // @Summary      添加up主
 // @Description  需先添加up主之后才能监听动态
-// @Tags         v2
+// @Tags         web
+// @Accept       json
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
 // @Param        object			body	addAuthorInfo	true	"up主id和BotID"
@@ -39,7 +40,7 @@ func AddAuthor(c *engine.Context) (interface{}, error) {
 // Listen godoc
 // @Summary      监听up主动态
 // @Description  根据设定的时间间隔监听up主动态
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
 // @Param        object			body	addAuthorInfo	true	"up主id和BotID"
@@ -71,7 +72,7 @@ func Listen(c *engine.Context) (interface{}, error) {
 // Latest godoc
 // @Summary      获取up主最新动态
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
 // @Param        object			body	addAuthorInfo	true	"up主id和BotID"
@@ -95,7 +96,7 @@ func Latest(c *engine.Context) (interface{}, error) {
 // Status godoc
 // @Summary      获取传入的uid的状态
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
 // @Param        object			body	addAuthorInfo	true	"up主id和BotID"
@@ -121,7 +122,7 @@ func Status(c *engine.Context) (interface{}, error) {
 // Stop godoc
 // @Summary      停止传入的uid的任务
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
 // @Param        object			body	addAuthorInfo	true	"up主id和BotID"

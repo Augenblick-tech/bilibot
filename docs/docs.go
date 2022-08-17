@@ -21,6 +21,34 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/bili/dynamic/getDynamic": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bili"
+                ],
+                "summary": "获取动态列表(访问b站api)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/bili/qrcode/check": {
             "post": {
                 "consumes": [
@@ -30,17 +58,24 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "bili"
                 ],
-                "summary": "查询登陆状态",
+                "summary": "查询Bot登陆状态",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "SESSDATA",
                         "name": "SESSDATA",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/api_bili.cookieInfo"
                         }
                     }
                 ],
@@ -56,17 +91,24 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "bili"
                 ],
                 "summary": "获取二维码状态",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "oauthKey",
                         "name": "qrcode",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/api_bili.oauthInfo"
                         }
                     }
                 ],
@@ -79,9 +121,51 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "bili"
                 ],
                 "summary": "获取二维码登录链接",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bili/reply/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bili"
+                ],
+                "summary": "根据type与oid进行回复",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "回复评论详细信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -91,7 +175,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "获取 up 主列表",
                 "parameters": [
@@ -120,7 +204,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "获取 Bot 列表",
                 "parameters": [
@@ -138,11 +222,14 @@ const docTemplate = `{
         "/web/dynamic/addAuthor": {
             "post": {
                 "description": "需先添加up主之后才能监听动态",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "添加up主",
                 "parameters": [
@@ -172,7 +259,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "获取up主最新动态",
                 "parameters": [
@@ -202,7 +289,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "获取 up 主的动态列表",
                 "parameters": [
@@ -238,7 +325,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "监听up主动态",
                 "parameters": [
@@ -268,7 +355,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "获取传入的uid的状态",
                 "parameters": [
@@ -298,7 +385,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "停止传入的uid的任务",
                 "parameters": [
@@ -331,7 +418,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "站点用户登录",
                 "parameters": [
@@ -357,7 +444,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "v2"
+                    "web"
                 ],
                 "summary": "站点用户注册",
                 "parameters": [
@@ -376,6 +463,51 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "api_bili.commentInfo": {
+            "type": "object",
+            "required": [
+                "bot_id",
+                "message",
+                "oid",
+                "type"
+            ],
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "oid": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api_bili.cookieInfo": {
+            "type": "object",
+            "required": [
+                "SESSDATA"
+            ],
+            "properties": {
+                "SESSDATA": {
+                    "type": "string"
+                }
+            }
+        },
+        "api_bili.oauthInfo": {
+            "type": "object",
+            "required": [
+                "oauthKey"
+            ],
+            "properties": {
+                "oauthKey": {
+                    "type": "string"
+                }
+            }
+        },
         "api_dynamic.addAuthorInfo": {
             "type": "object",
             "properties": {
@@ -398,6 +530,51 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_Augenblick-tech_bilibot_api_bili.commentInfo": {
+            "type": "object",
+            "required": [
+                "bot_id",
+                "message",
+                "oid",
+                "type"
+            ],
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "oid": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_Augenblick-tech_bilibot_api_bili.cookieInfo": {
+            "type": "object",
+            "required": [
+                "SESSDATA"
+            ],
+            "properties": {
+                "SESSDATA": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_Augenblick-tech_bilibot_api_bili.oauthInfo": {
+            "type": "object",
+            "required": [
+                "oauthKey"
+            ],
+            "properties": {
+                "oauthKey": {
                     "type": "string"
                 }
             }

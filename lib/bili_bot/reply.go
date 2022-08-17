@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/Augenblick-tech/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/utils"
 	"github.com/spf13/viper"
 )
 
@@ -20,21 +21,21 @@ type ReplyResponse struct {
 	} `json:"data"`
 }
 
-func AddReply(typeID int, oid string, message string) (*ReplyResponse, error) {
-	cookie := "SESSDATA=" + viper.GetString("account.SESSDATA")
+func AddReply(cookies string, typeID int, oid string, message string) (*ReplyResponse, error) {
+	cookie := utils.StrToMap(cookies)
 	url := "http://api.bilibili.com/x/v2/reply/add"
 	client := &http.Client{}
 	req, err := http.NewRequest(
 		"POST",
 		url,
 		strings.NewReader(
-			fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, viper.GetString("account.bili_jct")),
+			fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, cookie["bili_jct"]),
 		),
 	)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Cookie", cookie)
+	req.AddCookie(&http.Cookie{Name: "SESSDATA", Value: cookie["SESSDATA"]})
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", viper.GetString("server.user_agent"))
 	resp, err := client.Do(req)

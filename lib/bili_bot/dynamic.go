@@ -48,7 +48,3 @@ func GetDynamic(mid string) ([]Dynamic, error) {
 
 	return dynamics.Data.Items, err
 }
-
-func DynamicReply(dynamic Dynamic, message string) (*ReplyResponse, error) {
-	return AddReply(17, dynamic.ID, message)
-}

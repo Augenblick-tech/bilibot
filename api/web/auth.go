@@ -17,7 +17,7 @@ type userInfo struct {
 // Register godoc
 // @Summary      站点用户注册
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Accept       json
 // @Produce      json
 // @Param        information   body     userInfo	true  "用户信息"
@@ -43,7 +43,7 @@ func Register(c *engine.Context) (interface{}, error) {
 // Login godoc
 // @Summary      站点用户登录
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Accept       json
 // @Produce      json
 // @Param        SESSDATA   body     userInfo	true  "用户信息"

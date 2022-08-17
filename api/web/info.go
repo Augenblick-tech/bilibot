@@ -11,7 +11,7 @@ import (
 // GetBotList godoc
 // @Summary      获取 Bot 列表
 // @Description  根据 Token 获取 Bot 列表
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true "Bearer 用户令牌"
 // @Router       /web/bot/list [get]
@@ -23,7 +23,7 @@ func GetBotList(c *engine.Context) (interface{}, error) {
 // GetAuthorList godoc
 // @Summary      获取 up 主列表
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
 // @Param        bot_id			query	string	true	"BotID"
@@ -42,7 +42,7 @@ func GetAuthorList(c *engine.Context) (interface{}, error) {
 // GetDynamicList godoc
 // @Summary      获取 up 主的动态列表
 // @Description
-// @Tags         v2
+// @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
 // @Param        bot_id			query	string	true	"BotID"
