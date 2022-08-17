@@ -18,7 +18,7 @@ import (
 // @contact.url https://ronki.moe
 // @contact.email lonzzi@qq.com
 
-// @host localhost:2333
+// @host 0.0.0.0:2333
 // @BasePath /v2
 func main() {
 	InitConfig()
