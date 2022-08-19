@@ -1,13 +1,9 @@
 [server]
-addr = "0.0.0.0"
-port = 2333
-domain = ""
+addr = "0.0.0.0:2333" # 后端运行地址
+domain = "" # 指定 swagger 的 base url
 
 [user]
-RefreshTime = 3 # 刷新动态间隔时间
-
-[cli]
-mhid = '4BTGCg7un84hMHYoKdNVPao' # 草料二维码样式
+LisenInterval = 3 # 刷新动态间隔时间
 
 [email]
 host = ''

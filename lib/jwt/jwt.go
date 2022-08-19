@@ -3,8 +3,8 @@ package jwt
 import (
 	"time"
 
+	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/spf13/viper"
 )
 
 type Claims struct {
@@ -13,7 +13,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-var Secret = []byte(viper.GetString("jwt.secret"))
+var Secret = []byte(conf.C.JWT.Secret)
 
 func GenToken(userID uint, username string) (string, error) {
 	claims := Claims{

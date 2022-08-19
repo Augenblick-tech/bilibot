@@ -64,7 +64,7 @@ type cookieInfo struct {
 // @Produce      json
 // @Param 		 Authorization 	header	string		true	"Bearer 用户令牌"
 // @Param        SESSDATA   	body    cookieInfo  true  	"SESSDATA"
-// @Router       /bili/qrcode/check [post]
+// @Router       /bili/bot/check [post]
 func CheckLogin(c *engine.Context) (interface{}, error) {
 	var cookie = cookieInfo{}
 

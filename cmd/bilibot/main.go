@@ -1,13 +1,11 @@
 package main
 
 import (
-	"log"
-
 	"github.com/Augenblick-tech/bilibot/docs"
+	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/db"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/route"
-	"github.com/spf13/viper"
 )
 
 // @title bilibot
@@ -21,14 +19,14 @@ import (
 
 // @BasePath /v2
 func main() {
-	InitConfig()
+	conf.LoadDefaultConfig()
 	InitDB()
-	docs.SwaggerInfo.Host = viper.GetString("server.domain") + ":" + viper.GetString("server.port")
-	route.Route(viper.GetString("server.addr") + ":" + viper.GetString("server.port"))
+	docs.SwaggerInfo.Host = conf.C.Server.Domain
+	route.Route(conf.C.Server.Addr)
 }
 
 func InitDB() {
-	if err := db.Init(db.DbType(viper.GetInt("db.type")), viper.GetString("db.data")); err != nil {
+	if err := db.Init(conf.C.DB.DbType, conf.C.DB.Data); err != nil {
 		panic(err)
 	}
 
@@ -39,15 +37,5 @@ func InitDB() {
 		model.Bot{},
 	); err != nil {
 		panic(err)
-	}
-}
-
-func InitConfig() {
-	viper.SetConfigName("config")
-	viper.AddConfigPath("./conf")
-	viper.SetConfigType("toml")
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal(err)
 	}
 }

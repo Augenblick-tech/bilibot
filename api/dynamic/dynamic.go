@@ -3,13 +3,13 @@ package dynamic
 import (
 	"time"
 
+	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/services/author"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
-	"github.com/spf13/viper"
 )
 
 type addAuthorInfo struct {
@@ -58,7 +58,8 @@ func Listen(c *engine.Context) (interface{}, error) {
 		tasks.Process.Add(
 			bilitask.NewBiliTask(
 				mid,
-				time.Second*time.Duration(viper.GetInt("user.RefreshTime"))),
+				time.Second*time.Duration(conf.C.User.LisenInterval),
+			),
 		)
 		return nil, nil
 	} else {

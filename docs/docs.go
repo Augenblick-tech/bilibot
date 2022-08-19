@@ -21,35 +21,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/bili/dynamic/getDynamic": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "bili"
-                ],
-                "summary": "获取动态列表(访问b站api)",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "BotID",
-                        "name": "bot_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/bili/qrcode/check": {
+        "/bili/bot/check": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -77,6 +49,34 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/api_bili.cookieInfo"
                         }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/bili/dynamic/getDynamic": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bili"
+                ],
+                "summary": "获取动态列表(访问b站api)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -246,7 +246,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -276,7 +276,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -342,7 +342,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -372,7 +372,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -402,7 +402,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -428,7 +428,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
+                            "$ref": "#/definitions/api_web.userInfo"
                         }
                     }
                 ],
@@ -454,7 +454,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
+                            "$ref": "#/definitions/api_web.userInfo"
                         }
                     }
                 ],

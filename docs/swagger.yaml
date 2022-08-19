@@ -104,26 +104,7 @@ info:
   title: bilibot
   version: "2.0"
 paths:
-  /bili/dynamic/getDynamic:
-    get:
-      parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: BotID
-        in: query
-        name: bot_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      summary: 获取动态列表(访问b站api)
-      tags:
-      - bili
-  /bili/qrcode/check:
+  /bili/bot/check:
     post:
       consumes:
       - application/json
@@ -143,6 +124,25 @@ paths:
       - application/json
       responses: {}
       summary: 查询Bot登陆状态
+      tags:
+      - bili
+  /bili/dynamic/getDynamic:
+    get:
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BotID
+        in: query
+        name: bot_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 获取动态列表(访问b站api)
       tags:
       - bili
   /bili/qrcode/getLoginInfo:
@@ -253,7 +253,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -273,7 +273,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -318,7 +318,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -338,7 +338,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -358,7 +358,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -375,7 +375,7 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+          $ref: '#/definitions/api_web.userInfo'
       produces:
       - application/json
       responses: {}
@@ -392,7 +392,7 @@ paths:
         name: information
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+          $ref: '#/definitions/api_web.userInfo'
       produces:
       - application/json
       responses: {}

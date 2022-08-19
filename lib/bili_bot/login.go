@@ -3,14 +3,10 @@ package bilibot
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"net/http/cookiejar"
-	"strings"
 
+	"github.com/Augenblick-tech/bilibot/pkg/client"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/utils"
-	"github.com/spf13/viper"
 )
 
 type QRCodeResponse struct {
@@ -37,7 +33,7 @@ type AuthorInfo struct {
 }
 
 type AuthorData struct {
-	Mid  uint `json:"mid"`
+	Mid  uint   `json:"mid"`
 	Name string `json:"name"`
 	Sex  string `json:"sex"`
 	Face string `json:"face"`
@@ -57,50 +53,27 @@ type BotData struct {
 }
 
 func GetLoginUrl() (*QRCodeResponse, error) {
-	qrCodeBody, err := utils.Fetch("http://passport.bilibili.com/qrcode/getLoginUrl")
-	if err != nil {
-		return nil, err
-	}
 	var qrCodeResponse QRCodeResponse
-	return &qrCodeResponse, json.Unmarshal(qrCodeBody, &qrCodeResponse)
+	URL := "http://passport.bilibili.com/qrcode/getLoginUrl"
+
+	v := client.NewVisitor()
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &qrCodeResponse)
+	})
+
+	return &qrCodeResponse, v.Visit(URL)
 }
 
 func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
-	client := &http.Client{}
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
-	}
-	client.Jar = jar
-
-	loginReq, err := http.NewRequest(
-		"POST",
-		"http://passport.bilibili.com/qrcode/getLoginInfo",
-		strings.NewReader(fmt.Sprintf("oauthKey=%s", oauthKey)),
-	)
-	if err != nil {
-		return nil, err
-	}
-	loginReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	loginReq.Header.Set("User-Agent", viper.GetString("server.user_agent"))
-
-	loginResp, err := client.Do(loginReq)
-	if err != nil {
-		return nil, err
-	}
-
-	loginBody, err := io.ReadAll(loginResp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	var loginResponse LoginResponse
-	err = json.Unmarshal(loginBody, &loginResponse)
-	if err != nil {
-		return nil, err
-	}
+	URL := "http://passport.bilibili.com/qrcode/getLoginInfo"
 
-	defer loginResp.Body.Close()
+	v := client.NewVisitor()
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &loginResponse)
+	})
+
+	v.Post(URL, []byte(fmt.Sprintf("oauthKey=%s", oauthKey)))
 
 	if v, ok := loginResponse.Data.(float64); ok {
 		switch v {
@@ -116,26 +89,35 @@ func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
 	}
 
 	if loginResponse.Status {
-		return client.Jar.Cookies(loginReq.URL), nil
+		return v.Cookies(URL), nil
 	}
 
 	return nil, e.ERR_LOGIN_FAIL
 }
 
 func GetInfo(mid string) (*AuthorInfo, error) {
-	body, err := utils.Fetch(fmt.Sprintf("http://api.bilibili.com/x/space/acc/info?mid=%s", mid))
-	if err != nil {
-		return nil, err
-	}
-	var botInfo AuthorInfo
-	return &botInfo, json.Unmarshal(body, &botInfo)
+	var authorInfo AuthorInfo
+	URL := fmt.Sprintf("http://api.bilibili.com/x/space/acc/info?mid=%s", mid)
+
+	v := client.NewVisitor()
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &authorInfo)
+	})
+
+	return &authorInfo, v.Visit(URL)
 }
 
 func GetBotInfo(cookie *http.Cookie) (*BotInfo, error) {
-	body, err := utils.Fetch("http://api.bilibili.com/nav", cookie)
-	if err != nil {
-		return nil, err
-	}
 	var botInfo BotInfo
-	return &botInfo, json.Unmarshal(body, &botInfo)
+	URL := "http://api.bilibili.com/nav"
+
+	v := client.NewVisitor()
+	v.SetCookies(URL, []*http.Cookie{
+		cookie,
+	})
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &botInfo)
+	})
+
+	return &botInfo, v.Visit("http://api.bilibili.com/nav")
 }

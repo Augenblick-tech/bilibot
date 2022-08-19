@@ -3,7 +3,7 @@ package bilibot
 import (
 	"encoding/json"
 
-	"github.com/Augenblick-tech/bilibot/pkg/utils"
+	"github.com/Augenblick-tech/bilibot/pkg/client"
 )
 
 type Dynamics struct {
@@ -37,14 +37,13 @@ type Dynamic struct {
 }
 
 func GetDynamic(mid string) ([]Dynamic, error) {
-	url := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
-	body, err := utils.Fetch(url)
-	if err != nil {
-		return nil, err
-	}
-
 	var dynamics Dynamics
-	err = json.Unmarshal(body, &dynamics)
+	URL := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
 
-	return dynamics.Data.Items, err
+	v := client.NewVisitor()
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &dynamics)
+	})
+
+	return dynamics.Data.Items, v.Visit(URL)
 }

@@ -3,13 +3,9 @@ package bilibot
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"strings"
 
-	"github.com/Augenblick-tech/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/client"
 	"github.com/Augenblick-tech/bilibot/pkg/utils"
-	"github.com/spf13/viper"
 )
 
 type ReplyResponse struct {
@@ -21,41 +17,18 @@ type ReplyResponse struct {
 	} `json:"data"`
 }
 
-func AddReply(cookies string, typeID int, oid string, message string) (*ReplyResponse, error) {
-	cookie := utils.StrToMap(cookies)
-	url := "http://api.bilibili.com/x/v2/reply/add"
-	client := &http.Client{}
-	req, err := http.NewRequest(
-		"POST",
-		url,
-		strings.NewReader(
-			fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, cookie["bili_jct"]),
-		),
-	)
-	if err != nil {
-		return nil, err
-	}
-	req.AddCookie(&http.Cookie{Name: "SESSDATA", Value: cookie["SESSDATA"]})
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", viper.GetString("server.user_agent"))
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
+func AddReply(cookie string, typeID int, oid string, message string) (*ReplyResponse, error) {
 	var ReplyResponse ReplyResponse
-	err = json.Unmarshal(body, &ReplyResponse)
-	if err != nil {
-		return nil, err
-	}
+	URL := "http://api.bilibili.com/x/v2/reply/add"
+	cookies := utils.StrToCookies(cookie)
 
-	if resp.StatusCode != http.StatusOK {
-		return &ReplyResponse, e.ERR_COMMENT_REPLY_FAIL
-	}
+	v := client.NewVisitor()
+	v.SetCookies(URL, cookies)
+	v.OnResponse(func(r *client.Response) {
+		json.Unmarshal(r.Body, &ReplyResponse)
+	})
+
+	v.Post(URL, []byte(fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, cookies[len(cookies)-1].Value)))
+
 	return &ReplyResponse, nil
 }
