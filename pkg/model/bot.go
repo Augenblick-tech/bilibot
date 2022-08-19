@@ -7,5 +7,4 @@ type Bot struct {
 	Cookie  string `gorm:"type:text;not null"`
 	IsLogin bool   `gorm:"type:boolean;not null"`
 	UserID  uint   `gorm:"type:integer;not null"`
-	User    User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

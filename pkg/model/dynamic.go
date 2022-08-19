@@ -7,7 +7,6 @@ type Dynamic struct {
 	PubTS     uint64 `gorm:"type:integer;not null"`
 	Content   string `gorm:"type:text;not null"`
 	AuthorID  uint   `gorm:"type:integer;not null"`
-	Author    Author `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func ToDynamic(dynamic ...bilibot.Dynamic) (dynamics []Dynamic) {

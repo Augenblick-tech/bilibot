@@ -154,7 +154,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo"
+                            "$ref": "#/definitions/api_bili.commentInfo"
                         }
                     }
                 ],
@@ -238,7 +238,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -268,7 +268,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -302,7 +302,7 @@
                     {
                         "type": "string",
                         "description": "up主id",
-                        "name": "mid",
+                        "name": "author_id",
                         "in": "query",
                         "required": true
                     }
@@ -334,7 +334,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -364,7 +364,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -394,7 +394,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api_dynamic.addAuthorInfo"
                         }
                     }
                 ],
@@ -420,7 +420,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
                         }
                     }
                 ],
@@ -446,7 +446,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo"
                         }
                     }
                 ],

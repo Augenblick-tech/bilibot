@@ -46,11 +46,11 @@ func GetAuthorList(c *engine.Context) (interface{}, error) {
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
 // @Param        bot_id			query	string	true	"BotID"
-// @Param        mid			query	string	true	"up主id"
+// @Param        author_id		query	string	true	"up主id"
 // @Router       /web/dynamic/list [get]
 func GetDynamicList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	AuthorID := c.Query("mid")
+	AuthorID := c.Query("author_id")
 	BotID := c.Query("bot_id")
 
 	if err := user.CheckRecordWithID(id, BotID, AuthorID); err != nil {

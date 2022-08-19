@@ -196,7 +196,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_bili.commentInfo'
+          $ref: '#/definitions/api_bili.commentInfo'
       produces:
       - application/json
       responses: {}
@@ -253,7 +253,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -273,7 +273,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -295,7 +295,7 @@ paths:
         type: string
       - description: up主id
         in: query
-        name: mid
+        name: author_id
         required: true
         type: string
       produces:
@@ -318,7 +318,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -338,7 +338,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -358,7 +358,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -375,7 +375,7 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
       produces:
       - application/json
       responses: {}
@@ -392,7 +392,7 @@ paths:
         name: information
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
       produces:
       - application/json
       responses: {}
