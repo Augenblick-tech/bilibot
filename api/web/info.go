@@ -46,11 +46,11 @@ func GetAuthorList(c *engine.Context) (interface{}, error) {
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
 // @Param        bot_id			query	string	true	"BotID"
-// @Param        author_id		query	string	true	"up主id"
+// @Param        mid			query	string	true	"up主id"
 // @Router       /web/dynamic/list [get]
 func GetDynamicList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	AuthorID := c.Query("author_id")
+	AuthorID := c.Query("mid")
 	BotID := c.Query("bot_id")
 
 	if err := user.CheckRecordWithID(id, BotID, AuthorID); err != nil {
@@ -58,4 +58,35 @@ func GetDynamicList(c *engine.Context) (interface{}, error) {
 	}
 
 	return dynamic.GetList(AuthorID)
+}
+
+
+
+type addAuthorInfo struct {
+	Mid   string `json:"mid"`
+	BotID string `json:"bot_id"`
+}
+
+// AddAuthor godoc
+// @Summary      添加up主
+// @Description  需先添加up主之后才能监听动态
+// @Tags         web
+// @Accept       json
+// @Produce      json
+// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
+// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Router       /web/author/add [post]
+func AddAuthor(c *engine.Context) (interface{}, error) {
+	id := c.Context.GetUint("UserID")
+	info := addAuthorInfo{}
+
+	if err := c.Bind(&info); err != nil {
+		return nil, err
+	}
+
+	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
+		return nil, err
+	}
+
+	return nil, author.Add(info.Mid, info.BotID)
 }

@@ -37,6 +37,13 @@ definitions:
       mid:
         type: string
     type: object
+  api_web.addAuthorInfo:
+    properties:
+      bot_id:
+        type: string
+      mid:
+        type: string
+    type: object
   api_web.userInfo:
     properties:
       password:
@@ -78,6 +85,13 @@ definitions:
     - oauthKey
     type: object
   github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo:
+    properties:
+      bot_id:
+        type: string
+      mid:
+        type: string
+    type: object
+  github.com_Augenblick-tech_bilibot_api_web.addAuthorInfo:
     properties:
       bot_id:
         type: string
@@ -134,9 +148,9 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: BotID
+      - description: up主id
         in: query
-        name: bot_id
+        name: mid
         required: true
         type: string
       produces:
@@ -203,6 +217,29 @@ paths:
       summary: 根据type与oid进行回复
       tags:
       - bili
+  /web/author/add:
+    post:
+      consumes:
+      - application/json
+      description: 需先添加up主之后才能监听动态
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: up主id和BotID
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/api_web.addAuthorInfo'
+      produces:
+      - application/json
+      responses: {}
+      summary: 添加up主
+      tags:
+      - web
   /web/author/list:
     get:
       parameters:
@@ -237,29 +274,6 @@ paths:
       summary: 获取 Bot 列表
       tags:
       - web
-  /web/dynamic/addAuthor:
-    post:
-      consumes:
-      - application/json
-      description: 需先添加up主之后才能监听动态
-      parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: up主id和BotID
-        in: body
-        name: object
-        required: true
-        schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
-      produces:
-      - application/json
-      responses: {}
-      summary: 添加up主
-      tags:
-      - web
   /web/dynamic/latest:
     get:
       parameters:
@@ -273,7 +287,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -295,7 +309,7 @@ paths:
         type: string
       - description: up主id
         in: query
-        name: author_id
+        name: mid
         required: true
         type: string
       produces:
@@ -318,7 +332,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -338,7 +352,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -358,7 +372,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -375,7 +389,7 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+          $ref: '#/definitions/api_web.userInfo'
       produces:
       - application/json
       responses: {}
@@ -392,7 +406,7 @@ paths:
         name: information
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_web.userInfo'
+          $ref: '#/definitions/api_web.userInfo'
       produces:
       - application/json
       responses: {}

@@ -11,7 +11,7 @@ import (
 // @Tags         bili
 // @Produce      json
 // @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
-// @Param        bot_id			query	string	true	"BotID"
+// @Param        mid			query	string	true	"up主id"
 // @Router       /bili/dynamic/getDynamic [get]
 func GetDynamic(c *engine.Context) (interface{}, error) {
 	return bilibot.GetDynamic(c.Query("mid"))
