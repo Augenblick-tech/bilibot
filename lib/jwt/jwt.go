@@ -8,30 +8,32 @@ import (
 )
 
 type Claims struct {
-	UserID   uint   `json:"user_id"`
-	Username string `json:"username"`
+	UserID         uint   `json:"user_id"`
+	Username       string `json:"username"`
+	IsRefreshToken bool   `json:"is_refresh_token"`
 	jwt.RegisteredClaims
 }
 
 const (
-	TokenExpireDuration = time.Hour * 2
+	TokenExpireDuration   = time.Hour * 2
 	ReTokenExpireDuration = time.Hour * 24 * 3
 )
 
 var Secret = []byte(conf.C.JWT.Secret)
 
 func GenToken(userID uint, username string) (string, error) {
-	return generate(userID, username, TokenExpireDuration)
+	return generate(userID, username, false, TokenExpireDuration)
 }
 
 func GenReToken(userID uint, username string) (string, error) {
-	return generate(userID, username, ReTokenExpireDuration)
+	return generate(userID, username, true, ReTokenExpireDuration)
 }
 
-func generate(userID uint, username string, ExpireTime time.Duration) (string, error) {
+func generate(userID uint, username string, IsRefreshToken bool, ExpireTime time.Duration) (string, error) {
 	claims := Claims{
 		userID,
 		username,
+		IsRefreshToken,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(ExpireTime)),
 			Issuer:    "bilibot",

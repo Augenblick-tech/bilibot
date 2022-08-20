@@ -24,6 +24,10 @@ func JWTAuth(h engine.Handle) engine.Handle {
 			return nil, err
 		}
 
+		if token.IsRefreshToken {
+			return nil, e.ERR_AUTH_IS_REFRESH_TOKEN
+		}
+
 		c.Context.Set("token", token)
 		c.Context.Set("UserID", token.UserID)
 
