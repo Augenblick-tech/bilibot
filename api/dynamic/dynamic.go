@@ -6,15 +6,11 @@ import (
 	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
-
-type addAuthorInfo struct {
-	Mid   string `json:"mid"`
-	BotID string `json:"bot_id"`
-}
 
 // Listen godoc
 // @Summary      监听up主动态
@@ -22,11 +18,11 @@ type addAuthorInfo struct {
 // @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
 // @Router       /web/dynamic/listen [get]
 func Listen(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := addAuthorInfo{}
+	info := api.AuthorInfo{}
 
 	if err := c.Bind(&info); err != nil {
 		return nil, err
@@ -58,11 +54,11 @@ func Listen(c *engine.Context) (interface{}, error) {
 // @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
 // @Router       /web/dynamic/latest [get]
 func Latest(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := addAuthorInfo{}
+	info := api.AuthorInfo{}
 
 	if err := c.Bind(&info); err != nil {
 		return nil, err
@@ -85,11 +81,11 @@ func Latest(c *engine.Context) (interface{}, error) {
 // @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
 // @Router       /web/dynamic/status [get]
 func Status(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := addAuthorInfo{}
+	info := api.AuthorInfo{}
 
 	if err := c.Bind(&info); err != nil {
 		return nil, err
@@ -114,11 +110,11 @@ func Status(c *engine.Context) (interface{}, error) {
 // @Tags         web
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
 // @Router       /web/dynamic/stop [get]
 func Stop(c *engine.Context) (r interface{}, err error) {
 	id := c.Context.GetUint("UserID")
-	info := addAuthorInfo{}
+	info := api.AuthorInfo{}
 
 	if err := c.Bind(&info); err != nil {
 		return nil, err

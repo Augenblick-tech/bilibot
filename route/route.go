@@ -28,6 +28,7 @@ func Route(addr string) {
 	{
 		v2.POST("/web/register", "register", web.Register)
 		v2.POST("/web/login", "login", web.Login)
+		v2.GET("/web/refreshToken", "refreshToken", web.RefreshToken)
 	}
 
 	webs := v2.Group("/web").Use(jwt.JWTAuth)

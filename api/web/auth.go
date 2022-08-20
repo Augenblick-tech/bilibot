@@ -1,18 +1,16 @@
 package web
 
 import (
+	"time"
+
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/lib/jwt"
 	"github.com/Augenblick-tech/bilibot/pkg/dao"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
+	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
-
-type userInfo struct {
-	Name     string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
 
 // Register godoc
 // @Summary      站点用户注册
@@ -20,10 +18,10 @@ type userInfo struct {
 // @Tags         web
 // @Accept       json
 // @Produce      json
-// @Param        information   body     userInfo	true  "用户信息"
+// @Param        information   body     api.UserInfo	true  "用户信息"
 // @Router       /web/register [post]
 func Register(c *engine.Context) (interface{}, error) {
-	user := userInfo{}
+	user := api.UserInfo{}
 
 	err := c.Bind(&user)
 	if err != nil {
@@ -46,10 +44,10 @@ func Register(c *engine.Context) (interface{}, error) {
 // @Tags         web
 // @Accept       json
 // @Produce      json
-// @Param        SESSDATA   body     userInfo	true  "用户信息"
+// @Param        SESSDATA   body     api.UserInfo	true  "用户信息"
 // @Router       /web/login [post]
 func Login(c *engine.Context) (interface{}, error) {
-	tempUser := userInfo{}
+	tempUser := api.UserInfo{}
 
 	err := c.Bind(&tempUser)
 	if err != nil {
@@ -72,7 +70,42 @@ func Login(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	return map[string]any{
-		"AccessToken": token,
+	reToken, err := jwt.GenReToken(u.ID, u.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.RegisteredToken{
+		BasicJWToken: api.BasicJWToken{
+			AccessToken:         token,
+			AccessTokenExpireAt: time.Now().Add(jwt.TokenExpireDuration).Unix(),
+		},
+		RefreshToken:         reToken,
+		RefreshTokenExpireAt: time.Now().Add(jwt.ReTokenExpireDuration).Unix(),
+	}, nil
+}
+
+// RefreshToken godoc
+// @Summary      刷新 AccessToken
+// @Description
+// @Tags         web
+// @Produce      json
+// @Param 		 Authorization 	header 	string	true	"Bearer 刷新令牌"
+// @Router       /web/refreshToken [get]
+func RefreshToken(c *engine.Context) (interface{}, error) {
+	token, err := jwt.ParseToken(c.Context.Request.Header.Get("Authorization"))
+	if err != nil {
+		return nil, err
+	}
+	if token.ExpiresAt.Unix() < time.Now().Unix() {
+		return nil, e.RespCode_TokenExpired
+	}
+	accessToken, err := jwt.GenToken(token.UserID, token.Username)
+	if err != nil {
+		return nil, err
+	}
+	return api.BasicJWToken{
+		AccessToken:         accessToken,
+		AccessTokenExpireAt: time.Now().Add(jwt.TokenExpireDuration).Unix(),
 	}, nil
 }

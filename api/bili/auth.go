@@ -5,6 +5,7 @@ import (
 
 	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/bot"
 )
 
@@ -24,21 +25,18 @@ func GetLoginUrl(c *engine.Context) (interface{}, error) {
 	return qrcode, nil
 }
 
-type oauthInfo struct {
-	OauthKey string `json:"oauthKey" binding:"required"`
-}
 // GetLoginInfo godoc
 // @Summary      获取二维码状态
 // @Description
 // @Tags         bili
 // @Accept       json
 // @Produce      json
-// @Param 		 Authorization 	header	string		true	"Bearer 用户令牌"
-// @Param        qrcode   		body    oauthInfo  	true  	"oauthKey"
+// @Param 		 Authorization 	header	string				true	"Bearer 用户令牌"
+// @Param        qrcode   		body    api.BiliQrCodeInfo  true  	"oauthKey"
 // @Router       /bili/qrcode/getLoginInfo [post]
 func GetLoginInfo(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	var oauth = oauthInfo{}
+	var oauth = api.BiliQrCodeInfo{}
 
 	err := c.Bind(&oauth)
 	if err != nil {
@@ -53,20 +51,17 @@ func GetLoginInfo(c *engine.Context) (interface{}, error) {
 	return cookie, bot.Add(cookie, id)
 }
 
-type cookieInfo struct {
-	SESSDATA string `json:"SESSDATA" binding:"required"`
-}
 // CheckLogin godoc
 // @Summary      查询Bot登陆状态
 // @Description
 // @Tags         bili
 // @Accept       json
 // @Produce      json
-// @Param 		 Authorization 	header	string		true	"Bearer 用户令牌"
-// @Param        SESSDATA   	body    cookieInfo  true  	"SESSDATA"
+// @Param 		 Authorization 	header	string				true	"Bearer 用户令牌"
+// @Param        SESSDATA   	body    api.BiliAuthInfo  	true  	"SESSDATA"
 // @Router       /bili/bot/check [post]
 func CheckLogin(c *engine.Context) (interface{}, error) {
-	var cookie = cookieInfo{}
+	var cookie = api.BiliAuthInfo{}
 
 	err := c.Bind(&cookie)
 	if err != nil {

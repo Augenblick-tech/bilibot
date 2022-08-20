@@ -47,7 +47,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_bili.cookieInfo"
+                            "$ref": "#/definitions/api.BiliAuthInfo"
                         }
                     }
                 ],
@@ -108,7 +108,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_bili.oauthInfo"
+                            "$ref": "#/definitions/api.BiliQrCodeInfo"
                         }
                     }
                 ],
@@ -162,7 +162,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_bili.commentInfo"
+                            "$ref": "#/definitions/api.CommentInfo"
                         }
                     }
                 ],
@@ -196,7 +196,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.addAuthorInfo"
+                            "$ref": "#/definitions/api.AuthorInfo"
                         }
                     }
                 ],
@@ -276,7 +276,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api.AuthorInfo"
                         }
                     }
                 ],
@@ -342,7 +342,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api.AuthorInfo"
                         }
                     }
                 ],
@@ -372,7 +372,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api.AuthorInfo"
                         }
                     }
                 ],
@@ -402,7 +402,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo"
+                            "$ref": "#/definitions/api.AuthorInfo"
                         }
                     }
                 ],
@@ -428,8 +428,29 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/api.UserInfo"
                         }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/refreshToken": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "web"
+                ],
+                "summary": "刷新 AccessToken",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 刷新令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -454,7 +475,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/api_web.userInfo"
+                            "$ref": "#/definitions/api.UserInfo"
                         }
                     }
                 ],
@@ -463,7 +484,40 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "api_bili.commentInfo": {
+        "api.AuthorInfo": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "mid": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.BiliAuthInfo": {
+            "type": "object",
+            "required": [
+                "SESSDATA"
+            ],
+            "properties": {
+                "SESSDATA": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.BiliQrCodeInfo": {
+            "type": "object",
+            "required": [
+                "oauthKey"
+            ],
+            "properties": {
+                "oauthKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.CommentInfo": {
             "type": "object",
             "required": [
                 "bot_id",
@@ -486,133 +540,7 @@ const docTemplate = `{
                 }
             }
         },
-        "api_bili.cookieInfo": {
-            "type": "object",
-            "required": [
-                "SESSDATA"
-            ],
-            "properties": {
-                "SESSDATA": {
-                    "type": "string"
-                }
-            }
-        },
-        "api_bili.oauthInfo": {
-            "type": "object",
-            "required": [
-                "oauthKey"
-            ],
-            "properties": {
-                "oauthKey": {
-                    "type": "string"
-                }
-            }
-        },
-        "api_dynamic.addAuthorInfo": {
-            "type": "object",
-            "properties": {
-                "bot_id": {
-                    "type": "string"
-                },
-                "mid": {
-                    "type": "string"
-                }
-            }
-        },
-        "api_web.addAuthorInfo": {
-            "type": "object",
-            "properties": {
-                "bot_id": {
-                    "type": "string"
-                },
-                "mid": {
-                    "type": "string"
-                }
-            }
-        },
-        "api_web.userInfo": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_bili.commentInfo": {
-            "type": "object",
-            "required": [
-                "bot_id",
-                "message",
-                "oid",
-                "type"
-            ],
-            "properties": {
-                "bot_id": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "oid": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_bili.cookieInfo": {
-            "type": "object",
-            "required": [
-                "SESSDATA"
-            ],
-            "properties": {
-                "SESSDATA": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_bili.oauthInfo": {
-            "type": "object",
-            "required": [
-                "oauthKey"
-            ],
-            "properties": {
-                "oauthKey": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo": {
-            "type": "object",
-            "properties": {
-                "bot_id": {
-                    "type": "string"
-                },
-                "mid": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_web.addAuthorInfo": {
-            "type": "object",
-            "properties": {
-                "bot_id": {
-                    "type": "string"
-                },
-                "mid": {
-                    "type": "string"
-                }
-            }
-        },
-        "github.com_Augenblick-tech_bilibot_api_web.userInfo": {
+        "api.UserInfo": {
             "type": "object",
             "required": [
                 "password",

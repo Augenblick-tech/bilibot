@@ -1,6 +1,27 @@
 basePath: /v2
 definitions:
-  api_bili.commentInfo:
+  api.AuthorInfo:
+    properties:
+      bot_id:
+        type: string
+      mid:
+        type: string
+    type: object
+  api.BiliAuthInfo:
+    properties:
+      SESSDATA:
+        type: string
+    required:
+    - SESSDATA
+    type: object
+  api.BiliQrCodeInfo:
+    properties:
+      oauthKey:
+        type: string
+    required:
+    - oauthKey
+    type: object
+  api.CommentInfo:
     properties:
       bot_id:
         type: string
@@ -16,89 +37,7 @@ definitions:
     - oid
     - type
     type: object
-  api_bili.cookieInfo:
-    properties:
-      SESSDATA:
-        type: string
-    required:
-    - SESSDATA
-    type: object
-  api_bili.oauthInfo:
-    properties:
-      oauthKey:
-        type: string
-    required:
-    - oauthKey
-    type: object
-  api_dynamic.addAuthorInfo:
-    properties:
-      bot_id:
-        type: string
-      mid:
-        type: string
-    type: object
-  api_web.addAuthorInfo:
-    properties:
-      bot_id:
-        type: string
-      mid:
-        type: string
-    type: object
-  api_web.userInfo:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  github.com_Augenblick-tech_bilibot_api_bili.commentInfo:
-    properties:
-      bot_id:
-        type: string
-      message:
-        type: string
-      oid:
-        type: string
-      type:
-        type: integer
-    required:
-    - bot_id
-    - message
-    - oid
-    - type
-    type: object
-  github.com_Augenblick-tech_bilibot_api_bili.cookieInfo:
-    properties:
-      SESSDATA:
-        type: string
-    required:
-    - SESSDATA
-    type: object
-  github.com_Augenblick-tech_bilibot_api_bili.oauthInfo:
-    properties:
-      oauthKey:
-        type: string
-    required:
-    - oauthKey
-    type: object
-  github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo:
-    properties:
-      bot_id:
-        type: string
-      mid:
-        type: string
-    type: object
-  github.com_Augenblick-tech_bilibot_api_web.addAuthorInfo:
-    properties:
-      bot_id:
-        type: string
-      mid:
-        type: string
-    type: object
-  github.com_Augenblick-tech_bilibot_api_web.userInfo:
+  api.UserInfo:
     properties:
       password:
         type: string
@@ -133,7 +72,7 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/api_bili.cookieInfo'
+          $ref: '#/definitions/api.BiliAuthInfo'
       produces:
       - application/json
       responses: {}
@@ -174,7 +113,7 @@ paths:
         name: qrcode
         required: true
         schema:
-          $ref: '#/definitions/api_bili.oauthInfo'
+          $ref: '#/definitions/api.BiliQrCodeInfo'
       produces:
       - application/json
       responses: {}
@@ -210,7 +149,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_bili.commentInfo'
+          $ref: '#/definitions/api.CommentInfo'
       produces:
       - application/json
       responses: {}
@@ -233,7 +172,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/api_web.addAuthorInfo'
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -287,7 +226,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -332,7 +271,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -352,7 +291,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -372,7 +311,7 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/github.com_Augenblick-tech_bilibot_api_dynamic.addAuthorInfo'
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
       responses: {}
@@ -389,11 +328,25 @@ paths:
         name: SESSDATA
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/api.UserInfo'
       produces:
       - application/json
       responses: {}
       summary: 站点用户登录
+      tags:
+      - web
+  /web/refreshToken:
+    get:
+      parameters:
+      - description: Bearer 刷新令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: 刷新 AccessToken
       tags:
       - web
   /web/register:
@@ -406,7 +359,7 @@ paths:
         name: information
         required: true
         schema:
-          $ref: '#/definitions/api_web.userInfo'
+          $ref: '#/definitions/api.UserInfo'
       produces:
       - application/json
       responses: {}

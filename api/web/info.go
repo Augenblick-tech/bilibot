@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/author"
 	"github.com/Augenblick-tech/bilibot/pkg/services/bot"
 	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
@@ -60,13 +61,6 @@ func GetDynamicList(c *engine.Context) (interface{}, error) {
 	return dynamic.GetList(AuthorID)
 }
 
-
-
-type addAuthorInfo struct {
-	Mid   string `json:"mid"`
-	BotID string `json:"bot_id"`
-}
-
 // AddAuthor godoc
 // @Summary      添加up主
 // @Description  需先添加up主之后才能监听动态
@@ -74,11 +68,11 @@ type addAuthorInfo struct {
 // @Accept       json
 // @Produce      json
 // @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	addAuthorInfo	true	"up主id和BotID"
+// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
 // @Router       /web/author/add [post]
 func AddAuthor(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := addAuthorInfo{}
+	info := api.AuthorInfo{}
 
 	if err := c.Bind(&info); err != nil {
 		return nil, err
