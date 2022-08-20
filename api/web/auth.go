@@ -1,6 +1,7 @@
 package web
 
 import (
+	"log"
 	"time"
 
 	"github.com/Augenblick-tech/bilibot/lib/engine"
@@ -25,7 +26,8 @@ func Register(c *engine.Context) (interface{}, error) {
 
 	err := c.Bind(&user)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, e.ErrBinding
 	}
 
 	// password encryption
@@ -34,8 +36,9 @@ func Register(c *engine.Context) (interface{}, error) {
 		Name:     user.Name,
 		Password: user.Password,
 	})
+	log.Println(err)
 
-	return user.Name, err
+	return user.Name, e.ErrCreate
 }
 
 // Login godoc
@@ -44,25 +47,27 @@ func Register(c *engine.Context) (interface{}, error) {
 // @Tags         web
 // @Accept       json
 // @Produce      json
-// @Param        SESSDATA   body     api.UserInfo	true  "用户信息"
+// @Param        用户信息   body     api.UserInfo	true  "用户信息"
 // @Router       /web/login [post]
 func Login(c *engine.Context) (interface{}, error) {
 	tempUser := api.UserInfo{}
 
 	err := c.Bind(&tempUser)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, e.ErrBinding
 	}
 
 	u, err := user.Get(tempUser.Name)
 	if err != nil {
-		return nil, err
+		log.Println(err)
+		return nil, e.ErrNotFound
 	}
 
 	// password decryption
 
 	if u.Password != tempUser.Password {
-		return nil, e.RespCode_ParamError
+		return nil, e.ErrInvalidPassword
 	}
 
 	token, err := jwt.GenToken(u.ID, u.Name)
@@ -98,7 +103,7 @@ func RefreshToken(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 	if token.ExpiresAt.Unix() < time.Now().Unix() {
-		return nil, e.RespCode_TokenExpired
+		return nil, e.ErrTokenExpired
 	}
 	accessToken, err := jwt.GenToken(token.UserID, token.Username)
 	if err != nil {

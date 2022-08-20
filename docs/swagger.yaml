@@ -325,7 +325,7 @@ paths:
       parameters:
       - description: 用户信息
         in: body
-        name: SESSDATA
+        name: 用户信息
         required: true
         schema:
           $ref: '#/definitions/api.UserInfo'

@@ -11,12 +11,12 @@ func JWTAuth(h engine.Handle) engine.Handle {
 	return func(c *engine.Context) (interface{}, error) {
 		authHeader := c.Context.Request.Header.Get("Authorization")
 		if authHeader == "" {
-			return nil, e.ERR_AUTH_EMPTY
+			return nil, e.ErrEmptyAuth
 		}
 		// Bearer
 		headers := strings.SplitN(authHeader, " ", 2)
 		if len(headers) != 2 || headers[0] != "Bearer" {
-			return nil, e.ERR_AUTH_FORMAT
+			return nil, e.ErrFormat
 		}
 
 		token, err := ParseToken(headers[1])
@@ -25,7 +25,7 @@ func JWTAuth(h engine.Handle) engine.Handle {
 		}
 
 		if token.IsRefreshToken {
-			return nil, e.ERR_AUTH_IS_REFRESH_TOKEN
+			return nil, e.ErrInvalidToken
 		}
 
 		c.Context.Set("token", token)

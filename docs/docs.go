@@ -424,7 +424,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "用户信息",
-                        "name": "SESSDATA",
+                        "name": "用户信息",
                         "in": "body",
                         "required": true,
                         "schema": {

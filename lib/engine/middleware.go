@@ -3,6 +3,7 @@ package engine
 import (
 	"net/http"
 
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,26 +18,15 @@ func Result(h Handle) Handle {
 	}
 }
 
-type Error struct {
-	Code string
-	Err  error
-}
-
-func (e Error) Error() string {
-	return e.Err.Error()
-}
-
 func JsonError(ctx *Context, data interface{}, err error) {
-	code := "500"
-	e := err
-	if es, ok := err.(Error); ok {
-		code = es.Code
-		e = es.Err
+	code := 500
+	if v, ok := err.(e.ErrCode); ok {
+		code = int(v)
 	}
 	ctx.Context.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"data": data,
-		"msg":  e.Error(),
+		"msg":  err.Error(),
 	})
 	ctx.Context.Abort()
 }
@@ -46,7 +36,7 @@ func JsonResult(ctx *Context, data interface{}) {
 		data = "success"
 	}
 	ctx.Context.JSON(http.StatusOK, gin.H{
-		"code": "200",
+		"code": 200,
 		"data": data,
 	})
 }

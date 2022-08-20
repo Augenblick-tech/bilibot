@@ -78,13 +78,13 @@ func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
 	if v, ok := loginResponse.Data.(float64); ok {
 		switch v {
 		case -1:
-			return nil, e.KEY_INVALID
+			return nil, e.KeyInvalid
 		case -2:
-			return nil, e.KEY_TIMEOUT
+			return nil, e.KeyTimeout
 		case -4:
-			return nil, e.NOT_SCAN
+			return nil, e.Waiting
 		case -5:
-			return nil, e.NOT_CONFIRM
+			return nil, e.NotConfirmed
 		}
 	}
 
@@ -92,7 +92,7 @@ func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
 		return v.Cookies(URL), nil
 	}
 
-	return nil, e.ERR_LOGIN_FAIL
+	return nil, e.ErrLoginFailed
 }
 
 func GetInfo(mid string) (*AuthorInfo, error) {

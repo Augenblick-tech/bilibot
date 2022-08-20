@@ -22,7 +22,7 @@ func GetByID(id string) (model.User, error) {
 
 func CheckRecordWithID(id uint, buID ...string) error {
 	if len(buID) <= 0 {
-		return e.RespCode_ParamError
+		return e.ErrInvalidParam
 	}
 	Bot, err := bot.Get(buID[0])
 	if err != nil {
@@ -39,15 +39,14 @@ func CheckRecordWithID(id uint, buID ...string) error {
 			if Author.BotID == buID[0] {
 				return nil
 			} else {
-				return e.RespCode_NO_RECORD
+				return e.ErrNotFound
 			}
 		}
 		return nil
 	} else {
-		return e.RespCode_NO_RECORD
+		return e.ErrNotFound
 	}
 }
-
 
 // 待改进，无法区分 Bot 与A uthor
 // func CheckRecordWithID(id uint, checkID string) error {

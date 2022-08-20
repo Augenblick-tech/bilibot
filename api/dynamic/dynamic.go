@@ -70,7 +70,7 @@ func Latest(c *engine.Context) (interface{}, error) {
 
 	status := tasks.Process.Status(info.Mid)
 	if len(status) <= 0 {
-		return nil, e.RespCode_ParamError
+		return nil, e.ErrInvalidParam
 	}
 	return status[0].Data(), nil
 }
@@ -100,8 +100,7 @@ func Status(c *engine.Context) (interface{}, error) {
 		return status[0].Status(), nil
 	}
 
-	return nil, e.RespCode_ParamError
-
+	return nil, e.ErrInvalidParam
 }
 
 // Stop godoc
