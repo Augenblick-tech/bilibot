@@ -74,7 +74,6 @@ func Login(c *engine.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	reToken, err := jwt.GenReToken(u.ID, u.Name)
 	if err != nil {
 		return nil, err
@@ -102,6 +101,7 @@ func RefreshToken(c *engine.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	
 	if token.ExpiresAt.Unix() < time.Now().Unix() {
 		return nil, e.ErrTokenExpired
 	}
@@ -109,8 +109,17 @@ func RefreshToken(c *engine.Context) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return api.BasicJWToken{
-		AccessToken:         accessToken,
-		AccessTokenExpireAt: time.Now().Add(jwt.TokenExpireDuration).Unix(),
+	reToken, err := jwt.GenReToken(token.UserID, token.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.RegisteredToken{
+		BasicJWToken: api.BasicJWToken{
+			AccessToken:         accessToken,
+			AccessTokenExpireAt: time.Now().Add(jwt.TokenExpireDuration).Unix(),
+		},
+		RefreshToken:         reToken,
+		RefreshTokenExpireAt: time.Now().Add(jwt.ReTokenExpireDuration).Unix(),
 	}, nil
 }

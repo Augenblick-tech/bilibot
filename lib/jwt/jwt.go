@@ -1,9 +1,11 @@
 package jwt
 
 import (
+	"errors"
 	"time"
 
 	"github.com/Augenblick-tech/bilibot/lib/conf"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -51,6 +53,9 @@ func ParseToken(tokenString string) (*Claims, error) {
 		return Secret, nil
 	})
 	if err != nil {
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			return nil, e.ErrTokenExpired
+		}
 		return nil, err
 	}
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
