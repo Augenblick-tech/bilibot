@@ -42,7 +42,7 @@ func (b *biliTask) Run() {
 			b.TaskStatus = tasks.TaskStatus_Stoped
 			return
 		case <-b.ticker.C:
-			temp, err := bilibot.GetDynamic(b.Mid)
+			temp, err := bilibot.GetDynamic(b.Mid, "0")
 			if err != nil {
 				b.E = err
 				b.TaskStatus = tasks.TaskStatus_Error

@@ -22,7 +22,12 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/bili/bot/check": {
-            "post": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -36,26 +41,29 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
+                        "description": "cookie当中的SESSDATA",
+                        "name": "sessdata",
+                        "in": "query",
                         "required": true
-                    },
-                    {
-                        "description": "SESSDATA",
-                        "name": "SESSDATA",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.BiliAuthInfo"
-                        }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.BotInfo"
+                        }
+                    }
+                }
             }
         },
         "/bili/dynamic/getDynamic": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -66,24 +74,38 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "up主id",
                         "name": "mid",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "动态偏移量",
+                        "name": "offset",
+                        "in": "query"
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/bilibot.Dynamic"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/bili/qrcode/getLoginInfo": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -97,19 +119,10 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
+                        "description": "登陆链接中的 oauth_key",
+                        "name": "oauth_key",
+                        "in": "query",
                         "required": true
-                    },
-                    {
-                        "description": "oauthKey",
-                        "name": "qrcode",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.BiliQrCodeInfo"
-                        }
                     }
                 ],
                 "responses": {}
@@ -117,6 +130,11 @@ const docTemplate = `{
         },
         "/bili/qrcode/getLoginUrl": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -124,20 +142,23 @@ const docTemplate = `{
                     "bili"
                 ],
                 "summary": "获取二维码登录链接",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.BiliQrCodeAuth"
+                        }
                     }
-                ],
-                "responses": {}
+                }
             }
         },
         "/bili/reply/add": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -150,13 +171,6 @@ const docTemplate = `{
                 "summary": "根据type与oid进行回复",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
                         "description": "回复评论详细信息",
                         "name": "object",
                         "in": "body",
@@ -166,11 +180,23 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.ReplyInfo"
+                        }
+                    }
+                }
             }
         },
         "/web/author/add": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "需先添加up主之后才能监听动态",
                 "consumes": [
                     "application/json"
@@ -183,13 +209,6 @@ const docTemplate = `{
                 ],
                 "summary": "添加up主",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "up主id和BotID",
                         "name": "object",
@@ -205,6 +224,11 @@ const docTemplate = `{
         },
         "/web/author/list": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -215,24 +239,32 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "BotID",
                         "name": "bot_id",
                         "in": "query",
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Author"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/web/bot/list": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "根据 Token 获取 Bot 列表",
                 "produces": [
                     "application/json"
@@ -241,20 +273,26 @@ const docTemplate = `{
                     "web"
                 ],
                 "summary": "获取 Bot 列表",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Bot"
+                            }
+                        }
                     }
-                ],
-                "responses": {}
+                }
             }
         },
         "/web/dynamic/latest": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -263,13 +301,6 @@ const docTemplate = `{
                 ],
                 "summary": "获取up主最新动态",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "up主id和BotID",
                         "name": "object",
@@ -285,6 +316,11 @@ const docTemplate = `{
         },
         "/web/dynamic/list": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -294,32 +330,35 @@ const docTemplate = `{
                 "summary": "获取 up 主的动态列表",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "BotID",
-                        "name": "bot_id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "up主id",
-                        "name": "mid",
-                        "in": "query",
-                        "required": true
+                        "description": "up主id和BotID",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.AuthorInfo"
+                        }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Dynamic"
+                            }
+                        }
+                    }
+                }
             }
         },
         "/web/dynamic/listen": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "根据设定的时间间隔监听up主动态",
                 "produces": [
                     "application/json"
@@ -329,13 +368,6 @@ const docTemplate = `{
                 ],
                 "summary": "监听up主动态",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "up主id和BotID",
                         "name": "object",
@@ -351,6 +383,11 @@ const docTemplate = `{
         },
         "/web/dynamic/status": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -359,13 +396,6 @@ const docTemplate = `{
                 ],
                 "summary": "获取传入的uid的状态",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "up主id和BotID",
                         "name": "object",
@@ -381,6 +411,11 @@ const docTemplate = `{
         },
         "/web/dynamic/stop": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -389,13 +424,6 @@ const docTemplate = `{
                 ],
                 "summary": "停止传入的uid的任务",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "up主id和BotID",
                         "name": "object",
@@ -432,7 +460,14 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.RegisteredToken"
+                        }
+                    }
+                }
             }
         },
         "/web/refreshToken": {
@@ -453,7 +488,14 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.RegisteredToken"
+                        }
+                    }
+                }
             }
         },
         "/web/register": {
@@ -495,24 +537,33 @@ const docTemplate = `{
                 }
             }
         },
-        "api.BiliAuthInfo": {
+        "api.BiliQrCodeAuth": {
             "type": "object",
-            "required": [
-                "SESSDATA"
-            ],
             "properties": {
-                "SESSDATA": {
+                "oauth_key": {
+                    "type": "string"
+                },
+                "ts": {
+                    "type": "integer"
+                },
+                "url": {
                     "type": "string"
                 }
             }
         },
-        "api.BiliQrCodeInfo": {
+        "api.BotInfo": {
             "type": "object",
-            "required": [
-                "oauthKey"
-            ],
             "properties": {
-                "oauthKey": {
+                "bot_id": {
+                    "type": "integer"
+                },
+                "face": {
+                    "type": "string"
+                },
+                "is_login": {
+                    "type": "boolean"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -540,6 +591,32 @@ const docTemplate = `{
                 }
             }
         },
+        "api.RegisteredToken": {
+            "type": "object",
+            "properties": {
+                "expire_at": {
+                    "type": "integer"
+                },
+                "refresh_expire_at": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ReplyInfo": {
+            "type": "object",
+            "properties": {
+                "emote": {},
+                "success_toast": {
+                    "type": "string"
+                }
+            }
+        },
         "api.UserInfo": {
             "type": "object",
             "required": [
@@ -554,6 +631,127 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "bilibot.Author": {
+            "type": "object",
+            "properties": {
+                "face": {
+                    "description": "作者头像",
+                    "type": "string"
+                },
+                "mid": {
+                    "description": "作者ID",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "作者名称",
+                    "type": "string"
+                },
+                "pub_ts": {
+                    "description": "作者发布时间",
+                    "type": "integer"
+                }
+            }
+        },
+        "bilibot.Content": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "object",
+                    "properties": {
+                        "text": {
+                            "description": "动态内容",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "bilibot.Dynamic": {
+            "type": "object",
+            "properties": {
+                "id_str": {
+                    "description": "动态ID",
+                    "type": "string"
+                },
+                "modules": {
+                    "type": "object",
+                    "properties": {
+                        "module_author": {
+                            "description": "动态作者",
+                            "$ref": "#/definitions/bilibot.Author"
+                        },
+                        "module_dynamic": {
+                            "description": "动态内容",
+                            "$ref": "#/definitions/bilibot.Content"
+                        }
+                    }
+                }
+            }
+        },
+        "model.Author": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "string"
+                },
+                "bot_id": {
+                    "type": "string"
+                },
+                "face": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Bot": {
+            "type": "object",
+            "properties": {
+                "bot_id": {
+                    "type": "string"
+                },
+                "cookie": {
+                    "type": "string"
+                },
+                "face": {
+                    "type": "string"
+                },
+                "is_login": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Dynamic": {
+            "type": "object",
+            "properties": {
+                "author_id": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "dynamic_id": {
+                    "type": "string"
+                },
+                "ts": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -15,6 +15,7 @@ type config struct {
 type Server struct {
 	Addr   string `toml:"addr"`   // 后端运行地址
 	Domain string `toml:"domain"` // 指定 swagger 的 base url
+	Mode   string `toml:"mode"`   // 运行模式
 }
 
 type User struct {
@@ -23,7 +24,7 @@ type User struct {
 
 type DB struct {
 	DbType db.DbType `mapstructure:"type"` // 1: sqlite3, 2: mysql
-	Data   string    `toml:"data"` // 打开数据库所需的字符串信息
+	Data   string    `toml:"data"`         // 打开数据库所需的字符串信息
 }
 
 type JWT struct {

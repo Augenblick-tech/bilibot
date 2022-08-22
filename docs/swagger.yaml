@@ -7,19 +7,25 @@ definitions:
       mid:
         type: string
     type: object
-  api.BiliAuthInfo:
+  api.BiliQrCodeAuth:
     properties:
-      SESSDATA:
+      oauth_key:
         type: string
-    required:
-    - SESSDATA
+      ts:
+        type: integer
+      url:
+        type: string
     type: object
-  api.BiliQrCodeInfo:
+  api.BotInfo:
     properties:
-      oauthKey:
+      bot_id:
+        type: integer
+      face:
         type: string
-    required:
-    - oauthKey
+      is_login:
+        type: boolean
+      name:
+        type: string
     type: object
   api.CommentInfo:
     properties:
@@ -37,6 +43,23 @@ definitions:
     - oid
     - type
     type: object
+  api.RegisteredToken:
+    properties:
+      expire_at:
+        type: integer
+      refresh_expire_at:
+        type: integer
+      refresh_token:
+        type: string
+      token:
+        type: string
+    type: object
+  api.ReplyInfo:
+    properties:
+      emote: {}
+      success_toast:
+        type: string
+    type: object
   api.UserInfo:
     properties:
       password:
@@ -46,6 +69,82 @@ definitions:
     required:
     - password
     - username
+    type: object
+  bilibot.Author:
+    properties:
+      face:
+        description: 作者头像
+        type: string
+      mid:
+        description: 作者ID
+        type: integer
+      name:
+        description: 作者名称
+        type: string
+      pub_ts:
+        description: 作者发布时间
+        type: integer
+    type: object
+  bilibot.Content:
+    properties:
+      desc:
+        properties:
+          text:
+            description: 动态内容
+            type: string
+        type: object
+    type: object
+  bilibot.Dynamic:
+    properties:
+      id_str:
+        description: 动态ID
+        type: string
+      modules:
+        properties:
+          module_author:
+            $ref: '#/definitions/bilibot.Author'
+            description: 动态作者
+          module_dynamic:
+            $ref: '#/definitions/bilibot.Content'
+            description: 动态内容
+        type: object
+    type: object
+  model.Author:
+    properties:
+      author_id:
+        type: string
+      bot_id:
+        type: string
+      face:
+        type: string
+      name:
+        type: string
+    type: object
+  model.Bot:
+    properties:
+      bot_id:
+        type: string
+      cookie:
+        type: string
+      face:
+        type: string
+      is_login:
+        type: boolean
+      name:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.Dynamic:
+    properties:
+      author_id:
+        type: integer
+      content:
+        type: string
+      dynamic_id:
+        type: string
+      ts:
+        type: integer
     type: object
 info:
   contact:
@@ -58,43 +157,50 @@ info:
   version: "2.0"
 paths:
   /bili/bot/check:
-    post:
+    get:
       consumes:
       - application/json
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
+      - description: cookie当中的SESSDATA
+        in: query
+        name: sessdata
         required: true
         type: string
-      - description: SESSDATA
-        in: body
-        name: SESSDATA
-        required: true
-        schema:
-          $ref: '#/definitions/api.BiliAuthInfo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BotInfo'
+      security:
+      - ApiKeyAuth: []
       summary: 查询Bot登陆状态
       tags:
       - bili
   /bili/dynamic/getDynamic:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id
         in: query
         name: mid
         required: true
         type: string
+      - description: 动态偏移量
+        in: query
+        name: offset
+        type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/bilibot.Dynamic'
+            type: array
+      security:
+      - ApiKeyAuth: []
       summary: 获取动态列表(访问b站api)
       tags:
       - bili
@@ -103,34 +209,30 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
+      - description: 登陆链接中的 oauth_key
+        in: query
+        name: oauth_key
         required: true
         type: string
-      - description: oauthKey
-        in: body
-        name: qrcode
-        required: true
-        schema:
-          $ref: '#/definitions/api.BiliQrCodeInfo'
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 获取二维码状态
       tags:
       - bili
   /bili/qrcode/getLoginUrl:
     get:
-      parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BiliQrCodeAuth'
+      security:
+      - ApiKeyAuth: []
       summary: 获取二维码登录链接
       tags:
       - bili
@@ -139,11 +241,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: 回复评论详细信息
         in: body
         name: object
@@ -152,7 +249,13 @@ paths:
           $ref: '#/definitions/api.CommentInfo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ReplyInfo'
+      security:
+      - ApiKeyAuth: []
       summary: 根据type与oid进行回复
       tags:
       - bili
@@ -162,11 +265,6 @@ paths:
       - application/json
       description: 需先添加up主之后才能监听动态
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id和BotID
         in: body
         name: object
@@ -176,17 +274,14 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 添加up主
       tags:
       - web
   /web/author/list:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: BotID
         in: query
         name: bot_id
@@ -194,33 +289,38 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Author'
+            type: array
+      security:
+      - ApiKeyAuth: []
       summary: 获取 up 主列表
       tags:
       - web
   /web/bot/list:
     get:
       description: 根据 Token 获取 Bot 列表
-      parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Bot'
+            type: array
+      security:
+      - ApiKeyAuth: []
       summary: 获取 Bot 列表
       tags:
       - web
   /web/dynamic/latest:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id和BotID
         in: body
         name: object
@@ -230,30 +330,31 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 获取up主最新动态
       tags:
       - web
   /web/dynamic/list:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
+      - description: up主id和BotID
+        in: body
+        name: object
         required: true
-        type: string
-      - description: BotID
-        in: query
-        name: bot_id
-        required: true
-        type: string
-      - description: up主id
-        in: query
-        name: mid
-        required: true
-        type: string
+        schema:
+          $ref: '#/definitions/api.AuthorInfo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Dynamic'
+            type: array
+      security:
+      - ApiKeyAuth: []
       summary: 获取 up 主的动态列表
       tags:
       - web
@@ -261,11 +362,6 @@ paths:
     get:
       description: 根据设定的时间间隔监听up主动态
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id和BotID
         in: body
         name: object
@@ -275,17 +371,14 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 监听up主动态
       tags:
       - web
   /web/dynamic/status:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id和BotID
         in: body
         name: object
@@ -295,17 +388,14 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 获取传入的uid的状态
       tags:
       - web
   /web/dynamic/stop:
     get:
       parameters:
-      - description: Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: up主id和BotID
         in: body
         name: object
@@ -315,6 +405,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - ApiKeyAuth: []
       summary: 停止传入的uid的任务
       tags:
       - web
@@ -331,7 +423,11 @@ paths:
           $ref: '#/definitions/api.UserInfo'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.RegisteredToken'
       summary: 站点用户登录
       tags:
       - web
@@ -345,7 +441,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.RegisteredToken'
       summary: 刷新 AccessToken
       tags:
       - web
@@ -366,4 +466,9 @@ paths:
       summary: 站点用户注册
       tags:
       - web
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

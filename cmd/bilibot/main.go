@@ -18,10 +18,20 @@ import (
 // @contact.email lonzzi@qq.com
 
 // @BasePath /v2
+
+// @securityDefinitions.apikey  ApiKeyAuth
+// @in                          header
+// @name                        Authorization
+// @description					Bearer Token
+
 func main() {
 	conf.LoadDefaultConfig()
 	InitDB()
-	docs.SwaggerInfo.Host = conf.C.Server.Domain
+	if conf.C.Server.Domain == "" {
+		docs.SwaggerInfo.Host = conf.C.Server.Addr
+	} else {
+		docs.SwaggerInfo.Host = conf.C.Server.Domain
+	}
 	route.Route(conf.C.Server.Addr)
 }
 

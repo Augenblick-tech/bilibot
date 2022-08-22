@@ -10,62 +10,67 @@ import (
 )
 
 // GetLoginUrl godoc
-// @Summary      获取二维码登录链接
+// @Summary     获取二维码登录链接
 // @Description
-// @Tags         bili
-// @Produce      json
-// @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
-// @Router       /bili/qrcode/getLoginUrl [get]
+// @Tags        bili
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Success		200			{object}	api.BiliQrCodeAuth
+// @Router      /bili/qrcode/getLoginUrl [get]
 func GetLoginUrl(c *engine.Context) (interface{}, error) {
 	qrcode, err := bilibot.GetLoginUrl()
 	if err != nil {
 		return nil, err
 	}
 
-	return qrcode, nil
+	return api.BiliQrCodeAuth{
+		TS:       qrcode.TS,
+		Url:      qrcode.Data.Url,
+		OauthKey: qrcode.Data.OauthKey,
+	}, nil
 }
 
 // GetLoginInfo godoc
-// @Summary      获取二维码状态
+// @Summary     获取二维码状态
 // @Description
-// @Tags         bili
-// @Accept       json
-// @Produce      json
-// @Param 		 Authorization 	header	string				true	"Bearer 用户令牌"
-// @Param        qrcode   		body    api.BiliQrCodeInfo  true  	"oauthKey"
-// @Router       /bili/qrcode/getLoginInfo [post]
+// @Tags        bili
+// @Accept      json
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       oauth_key	query	string  true  	"登陆链接中的 oauth_key"
+// @Router      /bili/qrcode/getLoginInfo [post]
 func GetLoginInfo(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	var oauth = api.BiliQrCodeInfo{}
+	oauth := c.Query("oauth_key")
 
-	err := c.Bind(&oauth)
+	cookie, err := bilibot.GetLoginInfo(oauth)
 	if err != nil {
 		return nil, err
 	}
 
-	cookie, err := bilibot.GetLoginInfo(oauth.OauthKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return cookie, bot.Add(cookie, id)
+	return nil, bot.Add(cookie, id)
 }
 
 // CheckLogin godoc
-// @Summary      查询Bot登陆状态
+// @Summary     查询Bot登陆状态
 // @Description
-// @Tags         bili
-// @Accept       json
-// @Produce      json
-// @Param 		 Authorization 	header	string				true	"Bearer 用户令牌"
-// @Param        SESSDATA   	body    api.BiliAuthInfo  	true  	"SESSDATA"
-// @Router       /bili/bot/check [post]
+// @Tags        bili
+// @Accept      json
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       sessdata   	query    	string  	true  	"cookie当中的SESSDATA"
+// @Success		200			{object}	api.BotInfo
+// @Router      /bili/bot/check [get]
 func CheckLogin(c *engine.Context) (interface{}, error) {
-	var cookie = api.BiliAuthInfo{}
-
-	err := c.Bind(&cookie)
+	sessdata := c.Query("sessdata")
+	Bot, err := bilibot.GetBotInfo(&http.Cookie{Name: "SESSDATA", Value: sessdata})
 	if err != nil {
 		return nil, err
 	}
-	return bilibot.GetBotInfo(&http.Cookie{Name: "SESSDATA", Value: cookie.SESSDATA})
+	return api.BotInfo{
+		BotID:   Bot.Data.Mid,
+		Name:    Bot.Data.Name,
+		IsLogin: Bot.Data.IsLogin,
+		Face:    Bot.Data.Face,
+	}, nil
 }

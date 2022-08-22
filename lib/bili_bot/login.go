@@ -85,6 +85,8 @@ func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
 			return nil, e.Waiting
 		case -5:
 			return nil, e.NotConfirmed
+		default:
+			return nil, e.ErrBiliUndefined
 		}
 	}
 

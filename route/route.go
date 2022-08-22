@@ -5,6 +5,7 @@ import (
 	"github.com/Augenblick-tech/bilibot/api/dynamic"
 	"github.com/Augenblick-tech/bilibot/api/web"
 	_ "github.com/Augenblick-tech/bilibot/docs"
+	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/lib/jwt"
 	"github.com/swaggo/files"
@@ -12,7 +13,7 @@ import (
 )
 
 func Route(addr string) {
-	engine.SetMode("debug")
+	engine.SetMode(conf.C.Server.Mode)
 	e := engine.NewDefaultEngine()
 
 	e.GET("/ping", "pong", func(ctx *engine.Context) (interface{}, error) {
@@ -50,7 +51,7 @@ func Route(addr string) {
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
 		bi.POST("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
-		bi.POST("/bot/check", "checkLogin", bili.CheckLogin)
+		bi.GET("/bot/check", "checkLogin", bili.CheckLogin)
 		bi.GET("/dynamic/getDynamic", "getDynamic", bili.GetDynamic)
 		bi.POST("/reply/add", "addReply", bili.AddReply)
 	}

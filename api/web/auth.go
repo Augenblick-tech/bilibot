@@ -14,13 +14,13 @@ import (
 )
 
 // Register godoc
-// @Summary      站点用户注册
+// @Summary     站点用户注册
 // @Description
-// @Tags         web
-// @Accept       json
-// @Produce      json
-// @Param        information   body     api.UserInfo	true  "用户信息"
-// @Router       /web/register [post]
+// @Tags        web
+// @Accept      json
+// @Produce     json
+// @Param       information   body     api.UserInfo	true  "用户信息"
+// @Router      /web/register [post]
 func Register(c *engine.Context) (interface{}, error) {
 	user := api.UserInfo{}
 
@@ -42,13 +42,14 @@ func Register(c *engine.Context) (interface{}, error) {
 }
 
 // Login godoc
-// @Summary      站点用户登录
+// @Summary     站点用户登录
 // @Description
-// @Tags         web
-// @Accept       json
-// @Produce      json
-// @Param        用户信息   body     api.UserInfo	true  "用户信息"
-// @Router       /web/login [post]
+// @Tags        web
+// @Accept      json
+// @Produce     json
+// @Param       用户信息  body		api.UserInfo	true  "用户信息"
+// @Success		200		{object}	api.RegisteredToken
+// @Router      /web/login [post]
 func Login(c *engine.Context) (interface{}, error) {
 	tempUser := api.UserInfo{}
 
@@ -90,18 +91,19 @@ func Login(c *engine.Context) (interface{}, error) {
 }
 
 // RefreshToken godoc
-// @Summary      刷新 AccessToken
+// @Summary     刷新 AccessToken
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string	true	"Bearer 刷新令牌"
-// @Router       /web/refreshToken [get]
+// @Tags        web
+// @Produce     json
+// @Param 		Authorization 	header 	string	true	"Bearer 刷新令牌"
+// @Success		200		{object}	api.RegisteredToken
+// @Router      /web/refreshToken [get]
 func RefreshToken(c *engine.Context) (interface{}, error) {
 	token, err := jwt.ParseToken(c.Context.Request.Header.Get("Authorization"))
 	if err != nil {
 		return nil, err
 	}
-	
+
 	if token.ExpiresAt.Unix() < time.Now().Unix() {
 		return nil, e.ErrTokenExpired
 	}

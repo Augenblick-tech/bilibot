@@ -2,6 +2,7 @@ package bilibot
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/Augenblick-tech/bilibot/pkg/client"
 )
@@ -16,10 +17,10 @@ type Dynamics struct {
 }
 
 type Author struct {
-	Mid   uint    `json:"mid"`    // 作者ID
+	Mid   uint   `json:"mid"`    // 作者ID
 	Name  string `json:"name"`   // 作者名称
 	Face  string `json:"face"`   // 作者头像
-	PubTS uint64  `json:"pub_ts"` // 作者发布时间
+	PubTS uint64 `json:"pub_ts"` // 作者发布时间
 }
 
 type Content struct {
@@ -36,9 +37,9 @@ type Dynamic struct {
 	} `json:"modules"`
 }
 
-func GetDynamic(mid string) ([]Dynamic, error) {
+func GetDynamic(mid string, offset string) ([]Dynamic, error) {
 	var dynamics Dynamics
-	URL := "https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=" + mid
+	URL := fmt.Sprintf("https://api.bilibili.com/x/polymer/web-dynamic/v1/feed/space?host_mid=%s&offset=%s", mid, offset)
 
 	v := client.NewVisitor()
 	v.OnResponse(func(r *client.Response) {

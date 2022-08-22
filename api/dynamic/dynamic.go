@@ -13,13 +13,13 @@ import (
 )
 
 // Listen godoc
-// @Summary      监听up主动态
-// @Description  根据设定的时间间隔监听up主动态
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
-// @Router       /web/dynamic/listen [get]
+// @Summary     监听up主动态
+// @Description 根据设定的时间间隔监听up主动态
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Router      /web/dynamic/listen [get]
 func Listen(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	info := api.AuthorInfo{}
@@ -49,13 +49,13 @@ func Listen(c *engine.Context) (interface{}, error) {
 }
 
 // Latest godoc
-// @Summary      获取up主最新动态
+// @Summary     获取up主最新动态
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
-// @Router       /web/dynamic/latest [get]
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object			body	api.AuthorInfo	true	"up主id和BotID"
+// @Router      /web/dynamic/latest [get]
 func Latest(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	info := api.AuthorInfo{}
@@ -76,13 +76,13 @@ func Latest(c *engine.Context) (interface{}, error) {
 }
 
 // Status godoc
-// @Summary      获取传入的uid的状态
+// @Summary     获取传入的uid的状态
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
-// @Router       /web/dynamic/status [get]
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Router      /web/dynamic/status [get]
 func Status(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	info := api.AuthorInfo{}
@@ -104,13 +104,13 @@ func Status(c *engine.Context) (interface{}, error) {
 }
 
 // Stop godoc
-// @Summary      停止传入的uid的任务
+// @Summary     停止传入的uid的任务
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
-// @Router       /web/dynamic/stop [get]
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Router      /web/dynamic/stop [get]
 func Stop(c *engine.Context) (r interface{}, err error) {
 	id := c.Context.GetUint("UserID")
 	info := api.AuthorInfo{}

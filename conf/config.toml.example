@@ -1,6 +1,7 @@
 [server]
 addr = "0.0.0.0:2333" # 后端运行地址
 domain = "" # 指定 swagger 的 base url
+mode = "debug" # debug, release
 
 [user]
 LisenInterval = 3 # 刷新动态间隔时间

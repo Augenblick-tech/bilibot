@@ -42,7 +42,11 @@ func generate(userID uint, username string, IsRefreshToken bool, ExpireTime time
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(Secret)
+	tokenString, err := token.SignedString(Secret)
+	if err != nil {
+		return "", err
+	}
+	return "Bearer " + tokenString, nil
 }
 
 func ParseToken(tokenString string) (*Claims, error) {

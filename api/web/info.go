@@ -7,28 +7,31 @@ import (
 	"github.com/Augenblick-tech/bilibot/pkg/services/bot"
 	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
+	_ "github.com/Augenblick-tech/bilibot/pkg/model"
 )
 
 // GetBotList godoc
-// @Summary      获取 Bot 列表
-// @Description  根据 Token 获取 Bot 列表
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string	true "Bearer 用户令牌"
-// @Router       /web/bot/list [get]
+// @Summary     获取 Bot 列表
+// @Description 根据 Token 获取 Bot 列表
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Success		200			{array}	model.Bot
+// @Router      /web/bot/list [get]
 func GetBotList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	return bot.GetList(id)
 }
 
 // GetAuthorList godoc
-// @Summary      获取 up 主列表
+// @Summary     获取 up 主列表
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
-// @Param        bot_id			query	string	true	"BotID"
-// @Router       /web/author/list [get]
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       bot_id		query	string	true	"BotID"
+// @Success		200			{array}	model.Author
+// @Router      /web/author/list [get]
 func GetAuthorList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	BotID := c.Query("bot_id")
@@ -41,35 +44,34 @@ func GetAuthorList(c *engine.Context) (interface{}, error) {
 }
 
 // GetDynamicList godoc
-// @Summary      获取 up 主的动态列表
+// @Summary     获取 up 主的动态列表
 // @Description
-// @Tags         web
-// @Produce      json
-// @Param 		 Authorization 	header 	string	true	"Bearer 用户令牌"
-// @Param        bot_id			query	string	true	"BotID"
-// @Param        mid			query	string	true	"up主id"
-// @Router       /web/dynamic/list [get]
+// @Tags        web
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Success		200			{array}	model.Dynamic
+// @Router      /web/dynamic/list [get]
 func GetDynamicList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	AuthorID := c.Query("mid")
-	BotID := c.Query("bot_id")
+	info := api.AuthorInfo{}
 
-	if err := user.CheckRecordWithID(id, BotID, AuthorID); err != nil {
+	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
 		return nil, err
 	}
 
-	return dynamic.GetList(AuthorID)
+	return dynamic.GetList(info.Mid)
 }
 
 // AddAuthor godoc
-// @Summary      添加up主
-// @Description  需先添加up主之后才能监听动态
-// @Tags         web
-// @Accept       json
-// @Produce      json
-// @Param 		 Authorization 	header 	string			true	"Bearer 用户令牌"
-// @Param        object			body	api.AuthorInfo	true	"up主id和BotID"
-// @Router       /web/author/add [post]
+// @Summary     添加up主
+// @Description 需先添加up主之后才能监听动态
+// @Tags        web
+// @Accept      json
+// @Produce     json
+// @Security 	ApiKeyAuth
+// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Router      /web/author/add [post]
 func AddAuthor(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	info := api.AuthorInfo{}
