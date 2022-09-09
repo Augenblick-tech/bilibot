@@ -35,7 +35,7 @@ func CheckRecordWithID(id uint, buID ...string) error {
 			if err != nil {
 				return err
 			}
-	
+
 			if Author.BotID == buID[0] {
 				return nil
 			} else {
@@ -48,7 +48,7 @@ func CheckRecordWithID(id uint, buID ...string) error {
 	}
 }
 
-// 待改进，无法区分 Bot 与A uthor
+// 待改进，无法区分 Bot 与 Author
 // func CheckRecordWithID(id uint, checkID string) error {
 // 	Author,err := author.Get(checkID)
 // 	if err != nil {

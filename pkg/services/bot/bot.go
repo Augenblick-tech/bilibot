@@ -6,6 +6,7 @@ import (
 
 	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
 	"github.com/Augenblick-tech/bilibot/pkg/dao"
+	"github.com/Augenblick-tech/bilibot/pkg/e"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/pkg/utils"
 )
@@ -27,6 +28,9 @@ func Add(cookie []*http.Cookie, UserID uint) error {
 }
 
 func Get(uid string) (*model.Bot, error) {
+	if uid == "" {
+		return nil, e.ErrInvalidParam
+	}
 	bot := model.Bot{
 		UID: uid,
 	}

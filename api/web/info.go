@@ -1,13 +1,15 @@
 package web
 
 import (
+	"log"
+
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	_ "github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/author"
 	"github.com/Augenblick-tech/bilibot/pkg/services/bot"
 	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
-	_ "github.com/Augenblick-tech/bilibot/pkg/model"
 )
 
 // GetBotList godoc
@@ -49,18 +51,20 @@ func GetAuthorList(c *engine.Context) (interface{}, error) {
 // @Tags        web
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Param       bot_id		query	string	true	"BotID"
+// @Param       mid			query	string	true	"up主ID"
 // @Success		200			{array}	model.Dynamic
 // @Router      /web/dynamic/list [get]
 func GetDynamicList(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := api.AuthorInfo{}
+	BotID := c.Query("bot_id")
+	Mid := c.Query("mid")
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
+	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	return dynamic.GetList(info.Mid)
+	return dynamic.GetList(Mid)
 }
 
 // AddAuthor godoc
@@ -79,6 +83,8 @@ func AddAuthor(c *engine.Context) (interface{}, error) {
 	if err := c.Bind(&info); err != nil {
 		return nil, err
 	}
+
+	log.Println("add info", info)
 
 	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
 		return nil, err

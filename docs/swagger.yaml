@@ -321,12 +321,16 @@ paths:
   /web/dynamic/latest:
     get:
       parameters:
-      - description: up主id和BotID
-        in: body
-        name: object
+      - description: BotID
+        in: query
+        name: bot_id
         required: true
-        schema:
-          $ref: '#/definitions/api.AuthorInfo'
+        type: string
+      - description: up主ID
+        in: query
+        name: mid
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}
@@ -338,12 +342,16 @@ paths:
   /web/dynamic/list:
     get:
       parameters:
-      - description: up主id和BotID
-        in: body
-        name: object
+      - description: BotID
+        in: query
+        name: bot_id
         required: true
-        schema:
-          $ref: '#/definitions/api.AuthorInfo'
+        type: string
+      - description: up主ID
+        in: query
+        name: mid
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -362,12 +370,16 @@ paths:
     get:
       description: 根据设定的时间间隔监听up主动态
       parameters:
-      - description: up主id和BotID
-        in: body
-        name: object
+      - description: BotID
+        in: query
+        name: bot_id
         required: true
-        schema:
-          $ref: '#/definitions/api.AuthorInfo'
+        type: string
+      - description: up主ID
+        in: query
+        name: mid
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}
@@ -379,12 +391,16 @@ paths:
   /web/dynamic/status:
     get:
       parameters:
-      - description: up主id和BotID
-        in: body
-        name: object
+      - description: BotID
+        in: query
+        name: bot_id
         required: true
-        schema:
-          $ref: '#/definitions/api.AuthorInfo'
+        type: string
+      - description: up主ID
+        in: query
+        name: mid
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}
@@ -396,12 +412,16 @@ paths:
   /web/dynamic/stop:
     get:
       parameters:
-      - description: up主id和BotID
-        in: body
-        name: object
+      - description: BotID
+        in: query
+        name: bot_id
         required: true
-        schema:
-          $ref: '#/definitions/api.AuthorInfo'
+        type: string
+      - description: up主ID
+        in: query
+        name: mid
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}

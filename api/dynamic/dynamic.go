@@ -6,7 +6,6 @@ import (
 	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/model/api"
 	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
 	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
@@ -18,33 +17,31 @@ import (
 // @Tags        web
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Param       bot_id		query	string	true	"BotID"
+// @Param       mid			query	string	true	"up主ID"
 // @Router      /web/dynamic/listen [get]
 func Listen(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := api.AuthorInfo{}
+	BotID := c.Query("bot_id")
+	Mid := c.Query("mid")
 
-	if err := c.Bind(&info); err != nil {
+	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
-		return nil, err
-	}
-
-	if !tasks.Process.IsExists(info.Mid) {
+	if !tasks.Process.IsExists(Mid) {
 		tasks.Process.Add(
 			bilitask.NewBiliTask(
-				info.Mid,
+				Mid,
 				time.Second*time.Duration(conf.C.User.LisenInterval),
 			),
 		)
 		return nil, nil
 	} else {
-		if tasks.Process.Status(info.Mid)[0].Status() == tasks.TaskStatus_Stoped {
-			return nil, tasks.Process.Run(info.Mid)
+		if tasks.Process.Status(Mid)[0].Status() == tasks.TaskStatus_Stoped {
+			return nil, tasks.Process.Run(Mid)
 		}
-		return nil, tasks.Process.Status(info.Mid)[0].Status()
+		return nil, tasks.Process.Status(Mid)[0].Status()
 	}
 }
 
@@ -54,21 +51,19 @@ func Listen(c *engine.Context) (interface{}, error) {
 // @Tags        web
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       object			body	api.AuthorInfo	true	"up主id和BotID"
+// @Param       bot_id		query	string	true	"BotID"
+// @Param       mid			query	string	true	"up主ID"
 // @Router      /web/dynamic/latest [get]
 func Latest(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := api.AuthorInfo{}
+	BotID := c.Query("bot_id")
+	Mid := c.Query("mid")
 
-	if err := c.Bind(&info); err != nil {
+	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
-		return nil, err
-	}
-
-	status := tasks.Process.Status(info.Mid)
+	status := tasks.Process.Status(Mid)
 	if len(status) <= 0 {
 		return nil, e.ErrInvalidParam
 	}
@@ -81,21 +76,19 @@ func Latest(c *engine.Context) (interface{}, error) {
 // @Tags        web
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Param       bot_id		query	string	true	"BotID"
+// @Param       mid			query	string	true	"up主ID"
 // @Router      /web/dynamic/status [get]
 func Status(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	info := api.AuthorInfo{}
+	BotID := c.Query("bot_id")
+	Mid := c.Query("mid")
 
-	if err := c.Bind(&info); err != nil {
+	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
-		return nil, err
-	}
-
-	status := tasks.Process.Status(info.Mid)
+	status := tasks.Process.Status(Mid)
 	if len(status) > 0 {
 		return status[0].Status(), nil
 	}
@@ -109,21 +102,19 @@ func Status(c *engine.Context) (interface{}, error) {
 // @Tags        web
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       object		body	api.AuthorInfo	true	"up主id和BotID"
+// @Param       bot_id		query	string	true	"BotID"
+// @Param       mid			query	string	true	"up主ID"
 // @Router      /web/dynamic/stop [get]
 func Stop(c *engine.Context) (r interface{}, err error) {
 	id := c.Context.GetUint("UserID")
-	info := api.AuthorInfo{}
+	BotID := c.Query("bot_id")
+	Mid := c.Query("mid")
 
-	if err := c.Bind(&info); err != nil {
+	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
-		return nil, err
-	}
-
-	err = tasks.Process.Stop(info.Mid)
+	err = tasks.Process.Stop(Mid)
 	if err != nil {
 		// print log
 		return nil, err

@@ -302,13 +302,18 @@ const docTemplate = `{
                 "summary": "获取up主最新动态",
                 "parameters": [
                     {
-                        "description": "up主id和BotID",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.AuthorInfo"
-                        }
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "up主ID",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -330,13 +335,18 @@ const docTemplate = `{
                 "summary": "获取 up 主的动态列表",
                 "parameters": [
                     {
-                        "description": "up主id和BotID",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.AuthorInfo"
-                        }
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "up主ID",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -369,13 +379,18 @@ const docTemplate = `{
                 "summary": "监听up主动态",
                 "parameters": [
                     {
-                        "description": "up主id和BotID",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.AuthorInfo"
-                        }
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "up主ID",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -397,13 +412,18 @@ const docTemplate = `{
                 "summary": "获取传入的uid的状态",
                 "parameters": [
                     {
-                        "description": "up主id和BotID",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.AuthorInfo"
-                        }
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "up主ID",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -425,13 +445,18 @@ const docTemplate = `{
                 "summary": "停止传入的uid的任务",
                 "parameters": [
                     {
-                        "description": "up主id和BotID",
-                        "name": "object",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.AuthorInfo"
-                        }
+                        "type": "string",
+                        "description": "BotID",
+                        "name": "bot_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "up主ID",
+                        "name": "mid",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}

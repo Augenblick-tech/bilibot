@@ -32,13 +32,14 @@ func Register(c *engine.Context) (interface{}, error) {
 
 	// password encryption
 
-	err = dao.Create(&model.User{
+	if err := dao.Create(&model.User{
 		Name:     user.Name,
 		Password: user.Password,
-	})
-	log.Println(err)
+	}); err != nil {
+		return nil, e.ErrCreate
+	}
 
-	return user.Name, e.ErrCreate
+	return user.Name, nil
 }
 
 // Login godoc

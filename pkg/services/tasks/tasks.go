@@ -35,8 +35,8 @@ func (e DelError) Error() string {
 
 type Task interface {
 	// key
-	SetMid(string)
-	GetMid() string
+	SetId(string)
+	GetId() string
 
 	Status() TaskStatus
 	GetError() error
@@ -77,11 +77,11 @@ func init() {
 	go Process.run()
 }
 
-func (p *process) IsExists(mid string) bool {
+func (p *process) IsExists(id string) bool {
 	p.RLock()
 	defer p.RUnlock()
 
-	_, ok := p.tasks[mid]
+	_, ok := p.tasks[id]
 	return ok
 }
 
@@ -90,10 +90,10 @@ func (p *process) Add(ts ...Task) {
 	p.Lock()
 	defer p.Unlock()
 	for _, t := range ts {
-		if _, ok := p.tasks[t.GetMid()]; ok {
+		if _, ok := p.tasks[t.GetId()]; ok {
 			continue
 		}
-		p.tasks[t.GetMid()] = &pTask{
+		p.tasks[t.GetId()] = &pTask{
 			index: len(p.tasks) + 1,
 			task:  t,
 		}
@@ -102,12 +102,12 @@ func (p *process) Add(ts ...Task) {
 }
 
 // 删除任务
-func (p *process) Dels(mids ...string) error {
+func (p *process) Dels(ids ...string) error {
 	p.Lock()
 	defer p.Unlock()
 	e := make(DelError, 0)
-	for _, mid := range mids {
-		t, ok := p.tasks[mid]
+	for _, id := range ids {
+		t, ok := p.tasks[id]
 		if !ok {
 			continue
 		}
@@ -117,7 +117,7 @@ func (p *process) Dels(mids ...string) error {
 			e = append(e, t.task)
 			continue
 		}
-		delete(p.tasks, t.task.GetMid())
+		delete(p.tasks, t.task.GetId())
 	}
 
 	if len(e) > 0 {
@@ -127,10 +127,10 @@ func (p *process) Dels(mids ...string) error {
 	return nil
 }
 
-func (p *process) Del(mid string) error {
+func (p *process) Del(id string) error {
 	p.Lock()
 	defer p.Unlock()
-	t, ok := p.tasks[mid]
+	t, ok := p.tasks[id]
 	if !ok {
 		return nil
 	}
@@ -139,31 +139,31 @@ func (p *process) Del(mid string) error {
 		t.task.SetError(err)
 		return t.task
 	}
-	delete(p.tasks, t.task.GetMid())
+	delete(p.tasks, t.task.GetId())
 	return nil
 }
 
-func (p *process) Stop(mid string) error {
+func (p *process) Stop(id string) error {
 	p.Lock()
 	defer p.Unlock()
 
-	if t, ok := p.tasks[mid]; ok {
+	if t, ok := p.tasks[id]; ok {
 		return t.task.Stop()
 	}
 
 	return TaskStatus_Nil
 }
 
-func (p *process) Status(mids ...string) []Task {
+func (p *process) Status(ids ...string) []Task {
 	p.RLock()
 	defer p.RUnlock()
 	l := make([]*pTask, 0)
-	if len(mids) <= 0 {
+	if len(ids) <= 0 {
 		for _, s := range p.tasks {
 			l = append(l, s)
 		}
 	} else {
-		for _, id := range mids {
+		for _, id := range ids {
 			s, ok := p.tasks[id]
 			if !ok {
 				continue
@@ -186,10 +186,10 @@ func (p *process) Status(mids ...string) []Task {
 	return r
 }
 
-func (p *process) Run(mid string) error {
-	t, ok := p.tasks[mid]
+func (p *process) Run(id string) error {
+	t, ok := p.tasks[id]
 	if !ok {
-		return fmt.Errorf("%s 不存在", mid)
+		return fmt.Errorf("%s 不存在", id)
 	}
 
 	if t.task.Status() != TaskStatus_Running {
@@ -224,15 +224,15 @@ func (p *process) run() {
 type BaseTask struct {
 	TaskStatus TaskStatus
 	E          error
-	Mid        string
+	Id         string
 }
 
-func (b *BaseTask) SetMid(mid string) {
-	b.Mid = mid
+func (b *BaseTask) SetId(id string) {
+	b.Id = id
 }
 
-func (b *BaseTask) GetMid() string {
-	return b.Mid
+func (b *BaseTask) GetId() string {
+	return b.Id
 }
 
 func (b *BaseTask) Status() TaskStatus {
@@ -252,5 +252,5 @@ func (b *BaseTask) Error() string {
 	if b.E != nil {
 		e = b.E.Error()
 	}
-	return fmt.Sprintf("{\"mid\": \"%s\", \"error\": \"%s\"}", b.Mid, e)
+	return fmt.Sprintf("{\"mid\": \"%s\", \"error\": \"%s\"}", b.Id, e)
 }

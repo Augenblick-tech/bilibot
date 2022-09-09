@@ -11,6 +11,7 @@ require (
 	github.com/swaggo/swag v1.8.4
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.8
+	github.com/robfig/cron/v3 v3.0.1
 )
 
 require (

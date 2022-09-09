@@ -7,6 +7,9 @@ import (
 )
 
 func Add(dynamics ...bilibot.Dynamic) error {
+	if len(dynamics) == 0 {
+		return nil
+	}
 	return dao.CreateWithIgonreConflict(model.ToDynamic(dynamics...))
 }
 
