@@ -1,13 +1,13 @@
 package dynamic
 
 import (
-	"time"
+	"fmt"
 
 	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/services/tasks"
-	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/tasks/bili_task"
+	"github.com/Augenblick-tech/bilibot/pkg/services/task"
+	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/task/bili_task"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
 
@@ -29,20 +29,8 @@ func Listen(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	if !tasks.Process.IsExists(Mid) {
-		tasks.Process.Add(
-			bilitask.NewBiliTask(
-				Mid,
-				time.Second*time.Duration(conf.C.User.LisenInterval),
-			),
-		)
-		return nil, nil
-	} else {
-		if tasks.Process.Status(Mid)[0].Status() == tasks.TaskStatus_Stoped {
-			return nil, tasks.Process.Run(Mid)
-		}
-		return nil, tasks.Process.Status(Mid)[0].Status()
-	}
+	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid)
+	return task.Add(b)
 }
 
 // Latest godoc
@@ -63,11 +51,8 @@ func Latest(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	status := tasks.Process.Status(Mid)
-	if len(status) <= 0 {
-		return nil, e.ErrInvalidParam
-	}
-	return status[0].Data(), nil
+	dynm := task.Task(Mid)
+	return dynm.Task().Data(), nil
 }
 
 // Status godoc
@@ -88,12 +73,11 @@ func Status(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	status := tasks.Process.Status(Mid)
-	if len(status) > 0 {
-		return status[0].Status(), nil
+	dynm := task.Task(Mid)
+	if dynm == nil {
+		return nil, e.ErrNotFound
 	}
-
-	return nil, e.ErrInvalidParam
+	return dynm, nil
 }
 
 // Stop godoc
@@ -114,10 +98,6 @@ func Stop(c *engine.Context) (r interface{}, err error) {
 		return nil, err
 	}
 
-	err = tasks.Process.Stop(Mid)
-	if err != nil {
-		// print log
-		return nil, err
-	}
+	task.Remove(Mid)
 	return
 }

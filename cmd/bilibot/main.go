@@ -45,6 +45,7 @@ func InitDB() {
 		model.Author{},
 		model.Dynamic{},
 		model.Bot{},
+		model.Task{},
 	); err != nil {
 		panic(err)
 	}
