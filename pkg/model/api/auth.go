@@ -4,6 +4,7 @@ package api
 type UserInfo struct {
 	Name     string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Email    string `json:"email"`
 }
 
 type AuthorInfo struct {

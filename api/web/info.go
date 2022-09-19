@@ -86,7 +86,7 @@ func AddAuthor(c *engine.Context) (interface{}, error) {
 
 	log.Println("add info", info)
 
-	if err := user.CheckRecordWithID(id, info.BotID, info.Mid); err != nil {
+	if err := user.CheckRecordWithID(id, info.BotID); err != nil {
 		return nil, err
 	}
 

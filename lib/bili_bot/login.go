@@ -106,7 +106,15 @@ func GetInfo(mid string) (*AuthorInfo, error) {
 		json.Unmarshal(r.Body, &authorInfo)
 	})
 
-	return &authorInfo, v.Visit(URL)
+	if err := v.Visit(URL); err != nil {
+		return nil, err
+	}
+
+	if authorInfo.Code == -404 {
+		return nil, e.ErrNotFound
+	}
+
+	return &authorInfo, nil
 }
 
 func GetBotInfo(cookie *http.Cookie) (*BotInfo, error) {

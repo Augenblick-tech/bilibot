@@ -35,11 +35,12 @@ func Register(c *engine.Context) (interface{}, error) {
 	if err := dao.Create(&model.User{
 		Name:     user.Name,
 		Password: user.Password,
+		Email:    user.Email,
 	}); err != nil {
 		return nil, e.ErrCreate
 	}
 
-	return user.Name, nil
+	return nil, nil
 }
 
 // Login godoc

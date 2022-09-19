@@ -1,6 +1,7 @@
 package author
 
 import (
+	"log"
 	"strconv"
 
 	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
@@ -13,6 +14,8 @@ func Add(mid string, BotID string) error {
 	if err != nil {
 		return err
 	}
+
+	log.Println(mid)
 
 	return dao.CreateWithIgonreConflict(&model.Author{
 		UID:   strconv.Itoa(int(author.Data.Mid)),

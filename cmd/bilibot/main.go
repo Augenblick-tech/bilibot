@@ -4,6 +4,7 @@ import (
 	"github.com/Augenblick-tech/bilibot/docs"
 	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/db"
+	"github.com/Augenblick-tech/bilibot/lib/task"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/route"
 )
@@ -27,6 +28,7 @@ import (
 func main() {
 	conf.LoadDefaultConfig()
 	InitDB()
+	task.Start()
 	if conf.C.Server.Domain == "" {
 		docs.SwaggerInfo.Host = conf.C.Server.Addr
 	} else {
@@ -46,6 +48,7 @@ func InitDB() {
 		model.Dynamic{},
 		model.Bot{},
 		model.Task{},
+		model.Email{},
 	); err != nil {
 		panic(err)
 	}

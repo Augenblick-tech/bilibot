@@ -5,9 +5,10 @@ import (
 
 	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
+	"github.com/Augenblick-tech/bilibot/lib/task"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	"github.com/Augenblick-tech/bilibot/pkg/services/task"
 	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/task/bili_task"
+	checklogin "github.com/Augenblick-tech/bilibot/pkg/services/task/check_login"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
 )
 
@@ -30,7 +31,9 @@ func Listen(c *engine.Context) (interface{}, error) {
 	}
 
 	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid)
-	return task.Add(b)
+	check := checklogin.New("@every 1s", BotID)
+	task.Add(c.Context.GetUint("UserID"), check)
+	return task.Add(c.Context.GetUint("UserID"), b)
 }
 
 // Latest godoc

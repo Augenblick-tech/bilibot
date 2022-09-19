@@ -8,7 +8,7 @@ const (
 	ErrMarshal                                // 序列化错误
 	ErrAddDynamic                             // 添加动态错误
 	ErrReplyFailed                            // 回复错误
-	ErrExisted                                // 动态已存在
+	ErrExisted                                // 数据已存在
 	ErrInvalidNumber                          // 无效数字
 	ErrLoginFailed                            // 登录失败
 	ErrInvalidPassword                        // 密码错误
@@ -20,6 +20,7 @@ const (
 	ErrNotFound                               // 没有找到此条记录
 	ErrCreate                                 // 创建失败
 	ErrBinding                                // 绑定失败
+	ErrNotLogin                               // 未登录
 )
 
 func (e ErrCode) Error() string {

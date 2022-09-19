@@ -7,7 +7,7 @@ import (
 
 func GetBotList(UserID uint) ([]*model.Bot, error) {
 	bots := []*model.Bot{}
-	if err := db.DB.Where("user_id = ?", UserID).Find(&bots).Error; err != nil {
+	if err := db.DB.Find(&bots, "user_id = ?", UserID).Error; err != nil {
 		return nil, err
 	}
 	return bots, nil

@@ -37,6 +37,7 @@ func Route(addr string) {
 		webs.GET("/bot/list", "getBotList", web.GetBotList)
 		webs.GET("/author/list", "getAuthorList", web.GetAuthorList)
 		webs.POST("/author/add", "addAuthor", web.AddAuthor)
+		webs.POST("/setting/add", "UpdateSetting", web.UpdateSettings)
 		dynm := webs.Group("/dynamic")
 		{
 			dynm.GET("/list", "getDynamicList", web.GetDynamicList)
