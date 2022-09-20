@@ -7,9 +7,10 @@ import (
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/lib/task"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
-	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/task/bili_task"
-	checklogin "github.com/Augenblick-tech/bilibot/pkg/services/task/check_login"
+	"github.com/Augenblick-tech/bilibot/pkg/services/dynamic"
 	"github.com/Augenblick-tech/bilibot/pkg/services/user"
+	"github.com/Augenblick-tech/bilibot/pkg/task/bili/bilitask"
+	"github.com/Augenblick-tech/bilibot/pkg/task/bili/check"
 )
 
 // Listen godoc
@@ -31,8 +32,8 @@ func Listen(c *engine.Context) (interface{}, error) {
 	}
 
 	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid)
-	check := checklogin.New("@every 1s", BotID)
-	task.Add(c.Context.GetUint("UserID"), check)
+	checker := check.New("@every 1s", BotID)
+	task.Add(c.Context.GetUint("UserID"), checker)
 	return task.Add(c.Context.GetUint("UserID"), b)
 }
 
@@ -54,8 +55,8 @@ func Latest(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	dynm := task.Task(Mid)
-	return dynm.Task().Data(), nil
+	dynm, err := dynamic.GetByMid(Mid, 1)
+	return dynm[0], err
 }
 
 // Status godoc
@@ -102,5 +103,6 @@ func Stop(c *engine.Context) (r interface{}, err error) {
 	}
 
 	task.Remove(Mid)
+	task.Remove(BotID)
 	return
 }

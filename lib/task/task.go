@@ -8,17 +8,16 @@ import (
 	"runtime"
 
 	"github.com/Augenblick-tech/bilibot/pkg/dao"
-	"github.com/Augenblick-tech/bilibot/pkg/email"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
-	bilitask "github.com/Augenblick-tech/bilibot/pkg/services/task/bili_task"
-	checklogin "github.com/Augenblick-tech/bilibot/pkg/services/task/check_login"
+	"github.com/Augenblick-tech/bilibot/pkg/task/basetask"
+	"github.com/Augenblick-tech/bilibot/pkg/task/bili/bilitask"
+	"github.com/Augenblick-tech/bilibot/pkg/task/bili/check"
 	"github.com/robfig/cron/v3"
 )
 
 type Process struct {
-	c      *cron.Cron
-	tasks  map[string]*TaskWrapper
-	Status TaskStatus
+	c     *cron.Cron
+	tasks map[string]*TaskWrapper
 }
 
 type TaskWrapper struct {
@@ -27,13 +26,6 @@ type TaskWrapper struct {
 	t    *Job
 	Type string
 }
-
-type TaskStatus int
-
-const (
-	Running TaskStatus = iota
-	Warning
-)
 
 func (tw *TaskWrapper) Task() Job {
 	return *tw.t
@@ -61,7 +53,6 @@ func Recover(logger cron.Logger) cron.JobWrapper {
 					logger.Error(err, "panic", "stack", "...\n"+string(buf))
 
 					// TODO: send email to admin
-					email.SendEmail(1, "发生错误", err)
 				}
 			}()
 			j.Run()
@@ -86,7 +77,6 @@ func New(opts ...cron.Option) *Process {
 	return &Process{
 		c:     cron.New(opts...),
 		tasks: make(map[string]*TaskWrapper),
-		Status: Running,
 	}
 }
 
@@ -95,8 +85,6 @@ func (P *Process) Start() {
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("tasks")
 
 	attr := map[string]interface{}{}
 
@@ -109,7 +97,7 @@ func (P *Process) Start() {
 			case "*bilitask.BiliTask":
 				P.Add(t.UserID, bilitask.NewWithAttr(t.Spec, attr))
 			case "*checklogin.BotLoginInfo":
-				P.Add(t.UserID, checklogin.NewWithAttr(t.Spec, attr))
+				P.Add(t.UserID, check.NewWithAttr(t.Spec, attr))
 			}
 		}
 	}
@@ -146,7 +134,7 @@ func (P *Process) Add(UserID uint, tasks ...Job) (int, error) {
 			panic(err)
 		}
 
-		dao.Create(&model.Task{
+		dao.CreateWithIgonreConflict(&model.Task{
 			Name:      t.Name(),
 			Spec:      t.Spec(),
 			Type:      reflect.TypeOf(t).String(),
@@ -216,6 +204,7 @@ type Job interface {
 	cron.Job
 	Name() string // unique field
 	Attribute() interface{}
+	SetStatus(basetask.Status)
 	Data() interface{}
 	Spec() string
 }

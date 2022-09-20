@@ -548,6 +548,37 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/web/setting/add": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "web"
+                ],
+                "summary": "更新设置",
+                "parameters": [
+                    {
+                        "description": "邮件相关设置",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Email"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -649,6 +680,9 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "email": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
                 },
@@ -767,6 +801,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "ts": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Email": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "string"
+                },
+                "host": {
+                    "type": "string"
+                },
+                "pass": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "integer"
                 }
             }
