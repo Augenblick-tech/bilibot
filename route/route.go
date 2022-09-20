@@ -51,7 +51,7 @@ func Route(addr string) {
 	bi := v2.Group("/bili").Use(jwt.JWTAuth)
 	{
 		bi.GET("/qrcode/getLoginUrl", "getLoginUrl", bili.GetLoginUrl)
-		bi.POST("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
+		bi.GET("/qrcode/getLoginInfo", "getLoginInfo", bili.GetLoginInfo)
 		bi.GET("/bot/check", "checkLogin", bili.CheckLogin)
 		bi.GET("/dynamic/getDynamic", "getDynamic", bili.GetDynamic)
 		bi.POST("/reply/add", "addReply", bili.AddReply)

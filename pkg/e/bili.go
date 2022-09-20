@@ -2,11 +2,10 @@ package e
 
 // bili scan code
 const (
-	NotConfirmed     ErrCode = -5 + iota // 已扫码，未确认
-	Waiting                              // 等待扫码
-	ErrBiliUndefined                     // 未定义
-	KeyTimeout                           // 秘钥超时
-	KeyInvalid                           // 秘钥无效
+	LoginSucess   ErrCode = 0     // 登录成功
+	QrCodeExpired ErrCode = 86038 // 二维码已失效
+	NotConfirmed  ErrCode = 86090 // 二维码已扫码未确认
+	NotScan       ErrCode = 86101 // 未扫码
 )
 
 // bili response code

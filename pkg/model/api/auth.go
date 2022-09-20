@@ -25,9 +25,9 @@ type RegisteredToken struct {
 }
 
 type BiliQrCodeAuth struct {
-	TS       int    `json:"ts"`
-	Url      string `json:"url"`
-	OauthKey string `json:"oauth_key"`
+	TS        int    `json:"ts"`
+	Url       string `json:"url"`
+	QrcodeKey string `json:"qrcode_key"`
 }
 
 type BotInfo struct {

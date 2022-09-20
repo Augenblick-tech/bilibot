@@ -12,7 +12,7 @@ import (
 )
 
 func Add(cookie []*http.Cookie, UserID uint) error {
-	botInfo, err := bilibot.GetBotInfo(cookie[3]) // cookie[3] 表示 SESSDATA
+	botInfo, err := bilibot.GetBotInfo(cookie[0]) // cookie[0] 表示 SESSDATA
 	if err != nil {
 		return err
 	}

@@ -24,9 +24,9 @@ func GetLoginUrl(c *engine.Context) (interface{}, error) {
 	}
 
 	return api.BiliQrCodeAuth{
-		TS:       qrcode.TS,
-		Url:      qrcode.Data.Url,
-		OauthKey: qrcode.Data.OauthKey,
+		TS:        qrcode.TS,
+		Url:       qrcode.Data.Url,
+		QrcodeKey: qrcode.Data.QrcodeKey,
 	}, nil
 }
 
@@ -37,13 +37,13 @@ func GetLoginUrl(c *engine.Context) (interface{}, error) {
 // @Accept      json
 // @Produce     json
 // @Security 	ApiKeyAuth
-// @Param       oauth_key	query	string  true  	"登陆链接中的 oauth_key"
-// @Router      /bili/qrcode/getLoginInfo [post]
+// @Param       qrcode_key   	query    	string  	true  	"QrcodeKey"
+// @Router      /bili/qrcode/getLoginInfo [get]
 func GetLoginInfo(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
-	oauth := c.Query("oauth_key")
+	key := c.Query("qrcode_key")
 
-	cookie, err := bilibot.GetLoginInfo(oauth)
+	cookie, err := bilibot.GetLoginInfo(key)
 	if err != nil {
 		return nil, err
 	}

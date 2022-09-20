@@ -8,11 +8,10 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[NotConfirmed - -5]
-	_ = x[Waiting - -4]
-	_ = x[ErrBiliUndefined - -3]
-	_ = x[KeyTimeout - -2]
-	_ = x[KeyInvalid - -1]
+	_ = x[LoginSucess-0]
+	_ = x[QrCodeExpired-86038]
+	_ = x[NotConfirmed-86090]
+	_ = x[NotScan-86101]
 	_ = x[ErrUnmarshal-50000]
 	_ = x[ErrMarshal-50001]
 	_ = x[ErrAddDynamic-50002]
@@ -33,23 +32,30 @@ func _() {
 }
 
 const (
-	_ErrCode_name_0 = "已扫码，未确认等待扫码未定义秘钥超时秘钥无效"
+	_ErrCode_name_0 = "登录成功"
 	_ErrCode_name_1 = "反序列化错误序列化错误添加动态错误回复错误数据已存在无效数字登录失败密码错误请求体中auth为空格式错误Token非法参数非法token已过期没有找到此条记录创建失败绑定失败未登录"
+	_ErrCode_name_2 = "二维码已失效"
+	_ErrCode_name_3 = "二维码已扫码未确认"
+	_ErrCode_name_4 = "未扫码"
 )
 
 var (
-	_ErrCode_index_0 = [...]uint8{0, 21, 33, 42, 54, 66}
 	_ErrCode_index_1 = [...]uint8{0, 18, 33, 51, 63, 78, 90, 102, 114, 136, 148, 159, 171, 185, 209, 221, 233, 242}
 )
 
 func (i ErrCode) String() string {
 	switch {
-	case -5 <= i && i <= -1:
-		i -= -5
-		return _ErrCode_name_0[_ErrCode_index_0[i]:_ErrCode_index_0[i+1]]
+	case i == 0:
+		return _ErrCode_name_0
 	case 50000 <= i && i <= 50016:
 		i -= 50000
 		return _ErrCode_name_1[_ErrCode_index_1[i]:_ErrCode_index_1[i+1]]
+	case i == 86038:
+		return _ErrCode_name_2
+	case i == 86090:
+		return _ErrCode_name_3
+	case i == 86101:
+		return _ErrCode_name_4
 	default:
 		return "ErrCode(" + strconv.FormatInt(int64(i), 10) + ")"
 	}

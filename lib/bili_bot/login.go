@@ -13,17 +13,22 @@ type QRCodeResponse struct {
 	Code int `json:"code"`
 	TS   int `json:"ts"`
 	Data struct {
-		Url      string `json:"url"`      // 二维码内容url
-		OauthKey string `json:"oauthKey"` // 扫码登录秘钥
+		Url       string `json:"url"`        // 二维码内容url
+		QrcodeKey string `json:"qrcode_key"` // 扫码登录秘钥
 	} `json:"data"`
 }
 
 type LoginResponse struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	TS      int         `json:"ts"`
-	Status  bool        `json:"status"`
-	Data    interface{} `json:"data"`
+	Code    int       `json:"code"`
+	Message string    `json:"message"`
+	Data    LoginData `json:"data"`
+}
+
+type LoginData struct {
+	RefreshToken string `json:"refresh_token"`
+	TimeStamp    int    `json:"timestamp"`
+	Code         int    `json:"code"`
+	Message      string `json:"message"`
 }
 
 type AuthorInfo struct {
@@ -54,7 +59,7 @@ type BotData struct {
 
 func GetLoginUrl() (*QRCodeResponse, error) {
 	var qrCodeResponse QRCodeResponse
-	URL := "http://passport.bilibili.com/qrcode/getLoginUrl"
+	URL := "https://passport.bilibili.com/x/passport-login/web/qrcode/generate"
 
 	v := client.NewVisitor()
 	v.OnResponse(func(r *client.Response) {
@@ -64,37 +69,18 @@ func GetLoginUrl() (*QRCodeResponse, error) {
 	return &qrCodeResponse, v.Visit(URL)
 }
 
-func GetLoginInfo(oauthKey string) ([]*http.Cookie, error) {
+func GetLoginInfo(QrcodeKey string) ([]*http.Cookie, error) {
 	var loginResponse LoginResponse
-	URL := "http://passport.bilibili.com/qrcode/getLoginInfo"
+	URL := fmt.Sprintf("https://passport.bilibili.com/x/passport-login/web/qrcode/poll?qrcode_key=%s", QrcodeKey)
 
 	v := client.NewVisitor()
 	v.OnResponse(func(r *client.Response) {
 		json.Unmarshal(r.Body, &loginResponse)
 	})
 
-	v.Post(URL, []byte(fmt.Sprintf("oauthKey=%s", oauthKey)))
+	v.Visit(URL)
 
-	if v, ok := loginResponse.Data.(float64); ok {
-		switch v {
-		case -1:
-			return nil, e.KeyInvalid
-		case -2:
-			return nil, e.KeyTimeout
-		case -4:
-			return nil, e.Waiting
-		case -5:
-			return nil, e.NotConfirmed
-		default:
-			return nil, e.ErrBiliUndefined
-		}
-	}
-
-	if loginResponse.Status {
-		return v.Cookies(URL), nil
-	}
-
-	return nil, e.ErrLoginFailed
+	return v.Cookies(URL), nil
 }
 
 func GetInfo(mid string) (*AuthorInfo, error) {
