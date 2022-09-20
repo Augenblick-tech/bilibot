@@ -65,7 +65,7 @@ func (b *BiliTask) Run() {
 
 	if data[0].Modules.Author.PubTS > b.lastPubTS {
 		log.Println("新动态", data[0].Modules.Content.Desc.Text)
-		convetStr, err := plugin.GetFunc("UnicodeToStr")(data[0].Modules.Content.Desc.Text)
+		convetStr, err := plugin.UnicodeToStr(data[0].Modules.Content.Desc.Text)
 		if err != nil {
 			panic(err)
 		}

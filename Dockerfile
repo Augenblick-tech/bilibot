@@ -24,4 +24,5 @@ RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 
 COPY --from=builder /go/src/github.com/go/bilibot/bilibot /app/bilibot
 
+
 ENTRYPOINT ["/app/bilibot"]

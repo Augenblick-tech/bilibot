@@ -1,11 +1,8 @@
-// go build -buildmode=plugin -o plugin/unicodeToStr.so plugin/unicodeToStr.go
-package main
+package plugin
 
 import (
 	"strconv"
 	"strings"
-
-	"github.com/Augenblick-tech/bilibot/pkg/plugin"
 )
 
 func UnicodeToStr(raw string) (string, error) {
@@ -18,8 +15,4 @@ func UnicodeToStr(raw string) (string, error) {
 		return "", err
 	}
 	return str, nil
-}
-
-func ExecuteFunc() plugin.PluginFunc {
-	return plugin.PluginFunc(UnicodeToStr)
 }

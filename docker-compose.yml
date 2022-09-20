@@ -5,6 +5,5 @@ services:
     volumes:
       - ./conf:/app/conf
       - ./db:/app/db
-      - ./plugin:/app/plugin
     ports:
       - "2333:2333"
