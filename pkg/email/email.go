@@ -69,7 +69,14 @@ func SendEmail(UserID uint, subject string, content interface{}) error {
 		return nil
 	}
 
-	t, _ := template.ParseFiles("./pkg/email/template.html")
+	t, _ := template.New("email").Parse(`<!DOCTYPE html>
+	<html>
+	
+	<body>
+		<div>{{.}}</div>
+	</body>
+	
+	</html>`)
 
 	var body bytes.Buffer
 
