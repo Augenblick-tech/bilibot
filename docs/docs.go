@@ -100,7 +100,7 @@ const docTemplate = `{
             }
         },
         "/bili/qrcode/getLoginInfo": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -119,8 +119,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "登陆链接中的 oauth_key",
-                        "name": "oauth_key",
+                        "description": "QrcodeKey",
+                        "name": "qrcode_key",
                         "in": "query",
                         "required": true
                     }
@@ -596,7 +596,7 @@ const docTemplate = `{
         "api.BiliQrCodeAuth": {
             "type": "object",
             "properties": {
-                "oauth_key": {
+                "qrcode_key": {
                     "type": "string"
                 },
                 "ts": {

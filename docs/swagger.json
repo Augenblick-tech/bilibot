@@ -92,7 +92,7 @@
             }
         },
         "/bili/qrcode/getLoginInfo": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -111,8 +111,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "登陆链接中的 oauth_key",
-                        "name": "oauth_key",
+                        "description": "QrcodeKey",
+                        "name": "qrcode_key",
                         "in": "query",
                         "required": true
                     }
@@ -588,7 +588,7 @@
         "api.BiliQrCodeAuth": {
             "type": "object",
             "properties": {
-                "oauth_key": {
+                "qrcode_key": {
                     "type": "string"
                 },
                 "ts": {

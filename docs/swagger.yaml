@@ -9,7 +9,7 @@ definitions:
     type: object
   api.BiliQrCodeAuth:
     properties:
-      oauth_key:
+      qrcode_key:
         type: string
       ts:
         type: integer
@@ -222,13 +222,13 @@ paths:
       tags:
       - bili
   /bili/qrcode/getLoginInfo:
-    post:
+    get:
       consumes:
       - application/json
       parameters:
-      - description: 登陆链接中的 oauth_key
+      - description: QrcodeKey
         in: query
-        name: oauth_key
+        name: qrcode_key
         required: true
         type: string
       produces:
