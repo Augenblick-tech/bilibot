@@ -28,7 +28,9 @@ func AddReply(cookie string, typeID int, oid string, message string) (*ReplyResp
 		json.Unmarshal(r.Body, &ReplyResponse)
 	})
 
-	v.Post(URL, []byte(fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, cookies[len(cookies)-1].Value)))
+	cookieMap := utils.CookieToMap(cookies)
+
+	v.Post(URL, []byte(fmt.Sprintf("plat=1&type=%d&oid=%s&message=%s&csrf=%s", typeID, oid, message, cookieMap["bili_jct"])))
 
 	return &ReplyResponse, nil
 }
