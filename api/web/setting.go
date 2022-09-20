@@ -5,6 +5,7 @@ import (
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/pkg/services/email"
 )
+
 // UpdateSettings godoc
 // @Summary     更新设置
 // @Description 

@@ -31,7 +31,7 @@ func Listen(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid)
+	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid, BotID)
 	checker := check.New("@every 1s", BotID)
 	task.Add(c.Context.GetUint("UserID"), checker)
 	return task.Add(c.Context.GetUint("UserID"), b)

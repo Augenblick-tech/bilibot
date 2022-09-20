@@ -34,3 +34,7 @@ func AddReply(cookie string, typeID int, oid string, message string) (*ReplyResp
 
 	return &ReplyResponse, nil
 }
+
+func DynamicReply(cookie string, dynamicID string, message string) (*ReplyResponse, error) {
+	return AddReply(cookie, 17, dynamicID, message)
+}

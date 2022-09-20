@@ -579,6 +579,42 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/web/task/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "web"
+                ],
+                "summary": "更新任务状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "任务名称",
+                        "name": "task",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "任务状态",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {

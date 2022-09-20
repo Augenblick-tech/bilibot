@@ -48,7 +48,13 @@ func GetLoginInfo(c *engine.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	return nil, bot.Add(cookie, id)
+	if err := bot.Add(cookie, id); err != nil {
+		if err := bot.Update(cookie, id); err != nil {
+			return nil, err
+		}
+	}
+
+	return nil, nil
 }
 
 // CheckLogin godoc

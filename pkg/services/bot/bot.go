@@ -11,13 +11,33 @@ import (
 	"github.com/Augenblick-tech/bilibot/pkg/utils"
 )
 
+func getBotInfo(SESSDATA *http.Cookie) (*bilibot.BotInfo, error) {
+	return bilibot.GetBotInfo(SESSDATA) // cookie[0] 表示 SESSDATA
+}
+
 func Add(cookie []*http.Cookie, UserID uint) error {
-	botInfo, err := bilibot.GetBotInfo(cookie[0]) // cookie[0] 表示 SESSDATA
+	botInfo, err := getBotInfo(cookie[0])
 	if err != nil {
 		return err
 	}
 
 	return dao.Create(&model.Bot{
+		UID:     strconv.Itoa(int(botInfo.Data.Mid)),
+		Name:    botInfo.Data.Name,
+		Face:    botInfo.Data.Face,
+		Cookie:  utils.CookieToString(cookie),
+		IsLogin: botInfo.Data.IsLogin,
+		UserID:  UserID,
+	})
+}
+
+func Update(cookie []*http.Cookie, UserID uint) error {
+	botInfo, err := getBotInfo(cookie[0])
+	if err != nil {
+		return err
+	}
+
+	return dao.Save(&model.Bot{
 		UID:     strconv.Itoa(int(botInfo.Data.Mid)),
 		Name:    botInfo.Data.Name,
 		Face:    botInfo.Data.Face,

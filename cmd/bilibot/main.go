@@ -7,6 +7,8 @@ import (
 	"github.com/Augenblick-tech/bilibot/lib/task"
 	"github.com/Augenblick-tech/bilibot/pkg/model"
 	"github.com/Augenblick-tech/bilibot/route"
+
+	"github.com/Augenblick-tech/bilibot/pkg/plugin"
 )
 
 // @title bilibot
@@ -29,6 +31,7 @@ func main() {
 	conf.LoadDefaultConfig()
 	InitDB()
 	task.Start()
+	plugin.LoadLocalPlugins()
 	if conf.C.Server.Domain == "" {
 		docs.SwaggerInfo.Host = conf.C.Server.Addr
 	} else {

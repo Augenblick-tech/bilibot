@@ -522,6 +522,29 @@ paths:
       summary: 更新设置
       tags:
       - web
+  /web/task/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 任务名称
+        in: query
+        name: task
+        required: true
+        type: string
+      - description: 任务状态
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 更新任务状态
+      tags:
+      - web
 securityDefinitions:
   ApiKeyAuth:
     in: header
