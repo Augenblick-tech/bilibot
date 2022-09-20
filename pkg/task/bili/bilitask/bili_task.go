@@ -70,17 +70,18 @@ func (b *BiliTask) Run() {
 			panic(err)
 		}
 
-		Bot, err := bot.Get(b.BotID)
-		if err != nil {
-			panic(err)
-		}
-
-		resp, err := bilibot.DynamicReply(Bot.Cookie, data[0].ID, convetStr)
-		if err != nil {
-			panic(err)
-		}
-		if resp.Code != 0 {
-			panic(resp)
+		if convetStr != "" {
+			Bot, err := bot.Get(b.BotID)
+			if err != nil {
+				panic(err)
+			}
+			resp, err := bilibot.DynamicReply(Bot.Cookie, data[0].ID, convetStr)
+			if err != nil {
+				panic(err)
+			}
+			if resp.Code != 0 {
+				panic(resp)
+			}
 		}
 
 		email.SendEmail(1, "有新的动态！", fmt.Sprintf("%s:\n%s", data[0].Modules.Author.Name, data[0].Modules.Content.Desc.Text))
