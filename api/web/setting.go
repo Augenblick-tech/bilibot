@@ -14,7 +14,7 @@ import (
 // @Produce     json
 // @Security 	ApiKeyAuth
 // @Param       object		body	model.Email	true	"邮件相关设置"
-// @Router      /web/setting/add [post]
+// @Router      /web/setting/update [post]
 func UpdateSettings(c *engine.Context) (interface{}, error) {
 	UserID := c.Context.GetUint("UserID")
 	emailConfig := model.Email{}

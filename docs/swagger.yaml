@@ -503,7 +503,7 @@ paths:
       summary: 站点用户注册
       tags:
       - web
-  /web/setting/add:
+  /web/setting/update:
     post:
       consumes:
       - application/json
@@ -520,6 +520,24 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 更新设置
+      tags:
+      - web
+  /web/task/status:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 任务名称
+        in: query
+        name: task
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 获取任务状态
       tags:
       - web
   /web/task/update:

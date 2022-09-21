@@ -39,7 +39,7 @@ func (b *BiliTask) Run() {
 	defer func() {
 		if r := recover(); r != nil {
 			if b.Status == basetask.Running {
-				email.SendEmail(1, "发生错误", r)
+				email.SendEmail(1, fmt.Sprintf("任务%s: 发生错误", b.name), r)
 				b.Status = basetask.Warning
 				panic(r)
 			}
@@ -63,7 +63,7 @@ func (b *BiliTask) Run() {
 		}
 	}
 
-	if data[0].Modules.Author.PubTS > b.lastPubTS {
+	if len(data) > 0 && data[0].Modules.Author.PubTS > b.lastPubTS {
 		log.Println("新动态", data[0].Modules.Content.Desc.Text)
 		convetStr, err := plugin.UnicodeToStr(data[0].Modules.Content.Desc.Text)
 		if err != nil {
@@ -111,6 +111,10 @@ func (b *BiliTask) Attribute() interface{} {
 
 func (b *BiliTask) SetStatus(s basetask.Status) {
 	b.Status = s
+}
+
+func (b *BiliTask) GetStatus() basetask.Status {
+	return b.Status
 }
 
 func (b *BiliTask) Spec() string {

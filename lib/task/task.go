@@ -205,6 +205,7 @@ type Job interface {
 	Name() string // unique field
 	Attribute() interface{}
 	SetStatus(basetask.Status)
+	GetStatus() basetask.Status
 	Data() interface{}
 	Spec() string
 }

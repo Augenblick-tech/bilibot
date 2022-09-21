@@ -1,6 +1,7 @@
 package check
 
 import (
+	"fmt"
 	"net/http"
 
 	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
@@ -32,7 +33,7 @@ func (b *BotLoginInfo) Run() {
 	defer func() {
 		if r := recover(); r != nil {
 			if b.Status == basetask.Running {
-				email.SendEmail(1, "发生错误", r)
+				email.SendEmail(1, fmt.Sprintf("任务Check %s: 发生错误", b.BotID), r)
 				b.Status = basetask.Warning
 				panic(r)
 			}
@@ -70,6 +71,10 @@ func (b *BotLoginInfo) Data() interface{} {
 
 func (b *BotLoginInfo) SetStatus(s basetask.Status) {
 	b.Status = s
+}
+
+func (b *BotLoginInfo) GetStatus() basetask.Status {
+	return b.Status
 }
 
 func (b *BotLoginInfo) Spec() string {

@@ -549,7 +549,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/web/setting/add": {
+        "/web/setting/update": {
             "post": {
                 "security": [
                     {
@@ -575,6 +575,35 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/model.Email"
                         }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/web/task/status": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "web"
+                ],
+                "summary": "获取任务状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "任务名称",
+                        "name": "task",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
