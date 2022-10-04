@@ -96,7 +96,7 @@ func (P *Process) Start() {
 			switch t.Type {
 			case "*bilitask.BiliTask":
 				P.Add(t.UserID, bilitask.NewWithAttr(t.Spec, attr))
-			case "*checklogin.BotLoginInfo":
+			case "*check.BotLoginInfo":
 				P.Add(t.UserID, check.NewWithAttr(t.Spec, attr))
 			}
 		}

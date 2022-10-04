@@ -59,5 +59,5 @@ func GetTaskStatus(c *engine.Context) (interface{}, error) {
 		return nil, e.ErrInvalidParam
 	}
 
-	return tw.Task().GetStatus().String(), nil
+	return tw.Task().GetStatus(), nil
 }

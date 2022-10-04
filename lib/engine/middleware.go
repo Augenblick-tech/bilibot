@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Augenblick-tech/bilibot/pkg/e"
+	"github.com/Augenblick-tech/bilibot/pkg/task/basetask"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,11 +33,16 @@ func JsonError(ctx *Context, data interface{}, err error) {
 }
 
 func JsonResult(ctx *Context, data interface{}) {
+	code := 200
+	if v, ok := data.(basetask.Status); ok {
+		code = int(v)
+		data = v.String()
+	}
 	if data == nil {
 		data = "success"
 	}
 	ctx.Context.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code": code,
 		"data": data,
 	})
 }

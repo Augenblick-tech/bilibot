@@ -397,6 +397,11 @@ paths:
         name: mid
         required: true
         type: string
+      - description: 监听时间间隔(s)
+        in: query
+        name: interval
+        required: true
+        type: string
       produces:
       - application/json
       responses: {}

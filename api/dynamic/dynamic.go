@@ -3,7 +3,6 @@ package dynamic
 import (
 	"fmt"
 
-	"github.com/Augenblick-tech/bilibot/lib/conf"
 	"github.com/Augenblick-tech/bilibot/lib/engine"
 	"github.com/Augenblick-tech/bilibot/lib/task"
 	"github.com/Augenblick-tech/bilibot/pkg/e"
@@ -21,20 +20,22 @@ import (
 // @Security 	ApiKeyAuth
 // @Param       bot_id		query	string	true	"BotID"
 // @Param       mid			query	string	true	"up主ID"
+// @Param       interval	query	string	true	"监听时间间隔(s)"
 // @Router      /web/dynamic/listen [get]
 func Listen(c *engine.Context) (interface{}, error) {
 	id := c.Context.GetUint("UserID")
 	BotID := c.Query("bot_id")
 	Mid := c.Query("mid")
+	interval := c.Query("interval")
 
 	if err := user.CheckRecordWithID(id, BotID, Mid); err != nil {
 		return nil, err
 	}
 
-	b := bilitask.New(fmt.Sprintf("@every %ds", conf.C.User.LisenInterval), Mid, BotID)
-	checker := check.New("@every 1s", BotID)
-	task.Add(c.Context.GetUint("UserID"), checker)
-	return task.Add(c.Context.GetUint("UserID"), b)
+	b := bilitask.New(fmt.Sprintf("@every %ss", interval), Mid, BotID)
+	checker := check.New("@every 30s", BotID)
+
+	return task.Add(c.Context.GetUint("UserID"), b, checker)
 }
 
 // Latest godoc

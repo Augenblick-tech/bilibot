@@ -64,6 +64,9 @@ func (b *BiliTask) Run() {
 	}
 
 	if len(data) > 0 && data[0].Modules.Author.PubTS > b.lastPubTS {
+		if len(data[0].Modules.Content.Desc.Text) == 0 { // 可能为直播动态或者其他无效动态...
+			return
+		}
 		log.Println("新动态", data[0].Modules.Content.Desc.Text)
 		convetStr, err := plugin.UnicodeToStr(data[0].Modules.Content.Desc.Text)
 		if err != nil {
@@ -84,7 +87,7 @@ func (b *BiliTask) Run() {
 			}
 		}
 
-		email.SendEmail(1, "有新的动态！", fmt.Sprintf("%s:\n%s", data[0].Modules.Author.Name, data[0].Modules.Content.Desc.Text))
+		email.SendEmail(1, "有新的动态！", fmt.Sprintf("%s:\n%s\n%s", data[0].Modules.Author.Name, data[0].Modules.Content.Desc.Text, convetStr))
 		b.lastPubTS = data[0].Modules.Author.PubTS
 	}
 
@@ -92,7 +95,7 @@ func (b *BiliTask) Run() {
 }
 
 func (b *BiliTask) Name() string {
-	return b.name
+	return "Listen " + b.name
 }
 
 func (b *BiliTask) Data() interface{} {

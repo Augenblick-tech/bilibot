@@ -391,6 +391,13 @@ const docTemplate = `{
                         "name": "mid",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "监听时间间隔(s)",
+                        "name": "interval",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
