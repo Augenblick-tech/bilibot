@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Augenblick-tech/bilibot/lib/bili_bot"
+	bilibot "github.com/Augenblick-tech/bilibot/lib/bili_bot"
 	"github.com/Augenblick-tech/bilibot/pkg/email"
 	"github.com/Augenblick-tech/bilibot/pkg/plugin"
 	"github.com/Augenblick-tech/bilibot/pkg/services/bot"
@@ -64,30 +64,30 @@ func (b *BiliTask) Run() {
 	}
 
 	if len(data) > 0 && data[0].Modules.Author.PubTS > b.lastPubTS {
-		if len(data[0].Modules.Content.Desc.Text) == 0 { // 可能为直播动态或者其他无效动态...
-			return
-		}
-		log.Println("新动态", data[0].Modules.Content.Desc.Text)
-		convetStr, err := plugin.UnicodeToStr(data[0].Modules.Content.Desc.Text)
-		if err != nil {
-			panic(err)
-		}
-
-		if convetStr != "" {
-			Bot, err := bot.Get(b.BotID)
+		if len(data[0].Modules.Content.Desc.Text) != 0 { // 长度为0时可能为直播动态或者其他无效动态...
+			log.Println("新动态", data[0].Modules.Content.Desc.Text)
+			convetStr, err := plugin.UnicodeToStr(data[0].Modules.Content.Desc.Text)
 			if err != nil {
 				panic(err)
 			}
-			resp, err := bilibot.DynamicReply(Bot.Cookie, data[0].ID, convetStr)
-			if err != nil {
-				panic(err)
+
+			if convetStr != "" {
+				Bot, err := bot.Get(b.BotID)
+				if err != nil {
+					panic(err)
+				}
+				resp, err := bilibot.DynamicReply(Bot.Cookie, data[0].ID, convetStr)
+				if err != nil {
+					panic(err)
+				}
+				if resp.Code != 0 {
+					panic(resp)
+				}
 			}
-			if resp.Code != 0 {
-				panic(resp)
-			}
+
+			email.SendEmail(1, "有新的动态！", fmt.Sprintf("%s:<br>%s<br>%s", data[0].Modules.Author.Name, data[0].Modules.Content.Desc.Text, convetStr))
 		}
 
-		email.SendEmail(1, "有新的动态！", fmt.Sprintf("%s:\n%s\n%s", data[0].Modules.Author.Name, data[0].Modules.Content.Desc.Text, convetStr))
 		b.lastPubTS = data[0].Modules.Author.PubTS
 	}
 
